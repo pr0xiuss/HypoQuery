@@ -58,3 +58,117 @@ FAKER_LOCALES = {
     "Canada": "en_CA",
     "Australia": "en_AU",
 }
+
+PRODUCT_CATEGORIES = {
+    "Electronics": {
+        "brands": [
+            "Apple",
+            "Samsung",
+            "Sony",
+            "LG",
+            "Dell",
+        ],
+        "products": [
+            "Laptop",
+            "Smartphone",
+            "Monitor",
+            "TV",
+            "Headphones",
+            "Keyboard",
+            "Mouse",
+        ],
+    },
+    "Fashion": {
+        "brands": [
+            "Nike",
+            "Adidas",
+            "Puma",
+            "Levis",
+        ],
+        "products": [
+            "Shoes",
+            "Jacket",
+            "T-Shirt",
+            "Jeans",
+            "Cap",
+        ],
+    },
+    "Books": {
+        "brands": [
+            "Penguin",
+            "OReilly",
+            "Pearson",
+        ],
+        "products": [
+            "Python Guide",
+            "SQL Handbook",
+            "Algorithms",
+            "System Design",
+        ],
+    },
+    "Furniture": {
+        "brands": [
+            "IKEA",
+            "Urban Ladder",
+            "Nilkamal",
+        ],
+        "products": [
+            "Chair",
+            "Table",
+            "Desk",
+            "Bookshelf",
+        ],
+    },
+    "Groceries": {
+        "brands": [
+            "Nestle",
+            "Amul",
+            "Tata",
+            "Britannia",
+        ],
+        "products": [
+            "Coffee",
+            "Milk",
+            "Biscuits",
+            "Rice",
+        ],
+    },
+}
+
+WAREHOUSES = [
+    "Mumbai Warehouse",
+    "Delhi Warehouse",
+    "Bangalore Warehouse",
+    "Hyderabad Warehouse",
+    "Chennai Warehouse",
+]
+
+ORDER_STATUSES = [
+    "PENDING",
+    "PROCESSING",
+    "SHIPPED",
+    "DELIVERED",
+    "CANCELLED",
+]
+
+REVIEW_TEMPLATES = [
+    "Excellent product. Highly recommended.",
+    "Good value for money.",
+    "Average quality.",
+    "Very satisfied with the purchase.",
+    "Would definitely buy again.",
+    "Packaging could have been better.",
+    "Product arrived on time.",
+    "Not worth the price.",
+    "Exceeded my expectations.",
+    "Works exactly as described.",
+]
+
+PRODUCT_EVENT_TYPES = [
+    "PRODUCT_VIEWED",
+    "PRODUCT_CLICKED",
+    "PRODUCT_ADDED_TO_CART",
+    "PRODUCT_REMOVED_FROM_CART",
+    "PRODUCT_PURCHASED",
+    "PRODUCT_WISHLISTED",
+]

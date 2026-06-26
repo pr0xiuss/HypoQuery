@@ -6,8 +6,9 @@ from infrastructure.postgres.scripts.interfaces.seeder import Seeder
 
 class BaseSeeder(Seeder, ABC):
 
-    def __init__(self, connection):
-        self.connection = connection
+    def __init__(self, repository):
+        self.repository = repository
+        self.connection = repository.connection
         self.logger = get_logger(self.__class__.__name__)
 
     def run(self) -> None:
@@ -21,6 +22,8 @@ class BaseSeeder(Seeder, ABC):
 
         try:
             self.before_run()
+
+            self.repository.truncate()
 
             data = self.generate()
 
