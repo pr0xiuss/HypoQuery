@@ -37,7 +37,10 @@ from dataclasses import asdict
 
 class OptimizationPipelineService:
 
-    def __init__(self,connection: Connection,):
+    def __init__(
+        self,
+        connection: Connection,
+    ):
 
         self.connection = connection
 
@@ -48,9 +51,12 @@ class OptimizationPipelineService:
         self.result_repository = OptimizationResultRepository(connection)
 
         self.observability = ObservabilityService(connection)
-    
 
-    def start_run(self, query, original_cost: float,) -> int:
+    def start_run(
+        self,
+        query,
+        original_cost: float,
+    ) -> int:
 
         match query.category:
 
@@ -69,17 +75,11 @@ class OptimizationPipelineService:
                 query_type = QueryType.OTHER
 
         run = OptimizationRun(
-
             trace_id=uuid4(),
-
             query_signature=query.id,
-
             query_type=query_type,
-
             classifier_route=ClassifierRoute.INDEX_SUGGESTER,
-
             pipeline_status=PipelineStatus.RUNNING,
-
             original_cost=original_cost,
         )
 
@@ -88,20 +88,19 @@ class OptimizationPipelineService:
         self.connection.commit()
 
         return run_id
-    
 
-    def log(self, run_id: int, node_name: str, message: str,):
+    def log(
+        self,
+        run_id: int,
+        node_name: str,
+        message: str,
+    ):
 
         log = PipelineLog(
-
             run_id=run_id,
-
             service_name="Observability",
-
             node_name=node_name,
-
             log_level=LogLevel.INFO,
-
             message=message,
         )
 
@@ -109,21 +108,20 @@ class OptimizationPipelineService:
 
         self.connection.commit()
 
-
-    def save_findings(self, run_id: int, findings, execution_plan,):
+    def save_findings(
+        self,
+        run_id: int,
+        findings,
+        execution_plan,
+    ):
 
         for finding in findings:
 
             result = OptimizationResult(
-
                 run_id=run_id,
-
                 diagnosis=finding.issue,
-
                 remediation_type=RemediationType.INDEX,
-
                 validation_status=ValidationStatus.PENDING,
-
                 original_explain_plan=asdict(execution_plan),
             )
 
@@ -131,22 +129,33 @@ class OptimizationPipelineService:
 
         self.connection.commit()
 
+    def complete_run(
+        self,
+        run_id: int,
+        optimized_cost: float,
+    ):
 
-    def complete_run(self, run_id: int, optimized_cost: float,):
-
-        self.run_repository.mark_completed(run_id, optimized_cost, 0.0,)
+        self.run_repository.mark_completed(
+            run_id,
+            optimized_cost,
+            0.0,
+        )
 
         self.connection.commit()
 
-    
-    def fail_run(self, run_id: int,):
+    def fail_run(
+        self,
+        run_id: int,
+    ):
 
         self.run_repository.mark_failed(run_id)
 
         self.connection.commit()
 
-    
-    def optimize(self, query,):
+    def optimize(
+        self,
+        query,
+    ):
 
         run_id = None
 

@@ -35,16 +35,12 @@ class BaseSeeder(Seeder, ABC):
 
             self.after_run()
 
-            self.logger.info(
-                f"{self.__class__.__name__} completed successfully."
-            )
+            self.logger.info(f"{self.__class__.__name__} completed successfully.")
 
         except Exception:
             self.connection.rollback()
 
-            self.logger.exception(
-                f"{self.__class__.__name__} failed."
-            )
+            self.logger.exception(f"{self.__class__.__name__} failed.")
 
             raise
 

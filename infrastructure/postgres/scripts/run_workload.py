@@ -8,11 +8,7 @@ def main():
 
     workload = Workload(connection)
 
-    results = workload.execute()
-
-    for result in results:
-
-        print(result)
+    workload.execute()
 
     connection.close()
 

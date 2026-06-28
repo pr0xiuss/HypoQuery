@@ -8,35 +8,25 @@ from infrastructure.postgres.scripts.workload.metadata_parser import (
 
 class QueryCatalog:
 
-    QUERY_DIRECTORY = (
-        Path(__file__).parent / "queries"
-    )
+    QUERY_DIRECTORY = Path(__file__).parent / "queries"
 
     @classmethod
     def get_queries(cls) -> list[Query]:
 
         queries = []
 
-        sql_files = sorted(
-            cls.QUERY_DIRECTORY.rglob("*.sql")
-        )
+        sql_files = sorted(cls.QUERY_DIRECTORY.rglob("*.sql"))
 
         for sql_file in sql_files:
 
-            content = sql_file.read_text(
-                encoding="utf-8"
-            )
+            content = sql_file.read_text(encoding="utf-8")
 
             lines = content.splitlines()
-            print(f"Loading: {sql_file}")
+            # print(f"Loading: {sql_file}")
 
             metadata = MetadataParser.parse(lines)
 
-            sql = "\n".join(
-                line
-                for line in lines
-                if not line.startswith("--")
-            ).strip()
+            sql = "\n".join(line for line in lines if not line.startswith("--")).strip()
 
             queries.append(
                 Query(
@@ -52,16 +42,16 @@ class QueryCatalog:
             )
 
         return queries
-    
 
     @classmethod
-    def get_query(cls, query_id: str,) -> Query:
+    def get_query(
+        cls,
+        query_id: str,
+    ) -> Query:
 
         for query in cls.get_queries():
 
             if query.id == query_id:
                 return query
 
-        raise ValueError(
-            f"Query '{query_id}' not found."
-        )
+        raise ValueError(f"Query '{query_id}' not found.")

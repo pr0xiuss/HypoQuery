@@ -8,6 +8,7 @@ from infrastructure.postgres.scripts.observability.models.execution_plan import 
     ExecutionPlan,
 )
 
+
 class SharedBufferRule(BaseRule):
 
     def check(self, plan: ExecutionPlan) -> list[OptimizationFinding]:

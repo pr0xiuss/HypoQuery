@@ -16,7 +16,8 @@ class MetadataParser:
 
             line = line.strip()
 
-            if not line: continue
+            if not line:
+                continue
 
             if not line.startswith("--"):
                 break
@@ -30,10 +31,7 @@ class MetadataParser:
             "name": metadata["name"],
             "category": QueryCategory[metadata["category"]],
             "difficulty": Difficulty[metadata["difficulty"]],
-            "expected_issue": ExpectedIssue[
-                metadata["expected_issue"]
-            ]
-            ,
+            "expected_issue": ExpectedIssue[metadata["expected_issue"]],
             "description": metadata["description"],
             "expected_fix": metadata["expected_fix"],
         }

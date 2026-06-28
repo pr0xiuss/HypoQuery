@@ -34,11 +34,7 @@ class ProductEventSeeder(BaseSeeder):
 
         for _ in range(CONFIG.product_events):
 
-            events.append(
-                self.generator.generate(
-                    random.choice(product_ids)
-                )
-            )
+            events.append(self.generator.generate(random.choice(product_ids)))
 
         return events
 

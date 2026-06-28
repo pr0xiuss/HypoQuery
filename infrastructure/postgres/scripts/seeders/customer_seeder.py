@@ -22,9 +22,7 @@ class CustomerSeeder(BaseSeeder):
         customers = []
 
         for _ in range(CONFIG.customers):
-            customers.append(
-                self.generator.generate()
-            )
+            customers.append(self.generator.generate())
 
         return customers
 

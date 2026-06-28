@@ -2,6 +2,7 @@ from infrastructure.postgres.scripts.models.product import Product
 from infrastructure.postgres.scripts.repositories.base_repo import BaseRepository
 from psycopg.types.json import Json
 
+
 class ProductRepository(BaseRepository):
 
     TABLE_NAME: str = "products"
@@ -40,15 +41,13 @@ class ProductRepository(BaseRepository):
                 query,
                 values,
             )
-    
+
     def get_all_product_ids(self) -> list[int]:
 
         with self.connection.cursor() as cursor:
-            cursor.execute(
-                """
+            cursor.execute("""
                 SELECT product_id
                 FROM products
-                """
-            )
+                """)
 
             return [row[0] for row in cursor.fetchall()]

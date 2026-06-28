@@ -16,7 +16,7 @@ class ReviewDataGenerator:
         return Review(
             customer_id=customer_id,
             product_id=product_id,
-            rating = random.choices(
+            rating=random.choices(
                 [1, 2, 3, 4, 5],
                 weights=[5, 10, 20, 35, 30],
                 k=1,

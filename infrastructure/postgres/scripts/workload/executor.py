@@ -22,9 +22,7 @@ class QueryExecutor:
 
                 rows = cursor.fetchall() if cursor.description else []
 
-            execution_time = (
-                time.perf_counter() - start
-            ) * 1000
+            execution_time = (time.perf_counter() - start) * 1000
 
             return QueryResult(
                 query_id=query.id,
@@ -37,9 +35,7 @@ class QueryExecutor:
 
         except Exception as e:
 
-            execution_time = (
-                time.perf_counter() - start
-            ) * 1000
+            execution_time = (time.perf_counter() - start) * 1000
 
             self.connection.rollback()
 

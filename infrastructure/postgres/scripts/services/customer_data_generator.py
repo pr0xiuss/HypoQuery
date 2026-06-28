@@ -1,5 +1,4 @@
 import random
-from datetime import datetime
 
 from faker import Faker
 
@@ -15,8 +14,7 @@ class CustomerDataGenerator:
 
     def __init__(self):
         self.fakers = {
-            country: Faker(locale)
-            for country, locale in FAKER_LOCALES.items()
+            country: Faker(locale) for country, locale in FAKER_LOCALES.items()
         }
 
         self.countries = list(COUNTRY_DISTRIBUTION.keys())
