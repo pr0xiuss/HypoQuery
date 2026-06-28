@@ -11,8 +11,17 @@ from infrastructure.postgres.scripts.models.enums import (
 class Query:
 
     id: str
+
     name: str
+
     category: QueryCategory
+
     difficulty: Difficulty
+
     expected_issue: ExpectedIssue
+
+    description: str
+
+    expected_fix: str
+
     sql: str

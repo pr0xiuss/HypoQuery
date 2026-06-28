@@ -14,6 +14,10 @@ class MetadataParser:
 
         for line in lines:
 
+            line = line.strip()
+
+            if not line: continue
+
             if not line.startswith("--"):
                 break
 
@@ -24,9 +28,12 @@ class MetadataParser:
         return {
             "id": metadata["id"],
             "name": metadata["name"],
-            "category": QueryCategory(metadata["category"]),
-            "difficulty": Difficulty(metadata["difficulty"]),
-            "expected_issue": ExpectedIssue(
+            "category": QueryCategory[metadata["category"]],
+            "difficulty": Difficulty[metadata["difficulty"]],
+            "expected_issue": ExpectedIssue[
                 metadata["expected_issue"]
-            ),
+            ]
+            ,
+            "description": metadata["description"],
+            "expected_fix": metadata["expected_fix"],
         }

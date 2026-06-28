@@ -9,3 +9,9 @@ class OptimizationFinding:
     severity: str
 
     recommendation: str
+
+    node_type: str
+
+    estimated_cost: float
+
+    estimated_rows: int

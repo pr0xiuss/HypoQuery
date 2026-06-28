@@ -33,6 +33,43 @@ class ProductDataGenerator:
             category=category,
             description=f"{brand} {item} from {category} category.",
             price=price,
-            metadata={"brand":brand},
+            metadata={
+                "brand": brand,
+                "country": random.choice(
+                    [
+                        "India",
+                        "USA",
+                        "Germany",
+                        "Japan",
+                        "China",
+                    ]
+                ),
+                "tier": random.choice(
+                    [
+                        "Premium",
+                        "Standard",
+                        "Budget",
+                    ]
+                ),
+                "warranty": random.choice(
+                    [
+                        "1 Year",
+                        "2 Years",
+                        "3 Years",
+                    ]
+                ),
+                "features": random.sample(
+                    [
+                        "Bluetooth",
+                        "WiFi",
+                        "5G",
+                        "OLED",
+                        "NFC",
+                        "Fast Charging",
+                        "Water Resistant",
+                    ],
+                    k=3,
+                ),
+            },
             created_at=datetime.now(),
         )

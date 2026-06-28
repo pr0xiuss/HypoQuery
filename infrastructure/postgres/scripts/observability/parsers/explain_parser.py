@@ -10,29 +10,79 @@ class ExplainParser:
         explain_json: dict,
     ) -> ExecutionPlan:
 
-        plan = explain_json["Plan"]
+        return self._parse_node(
+            explain_json["Plan"],
+            explain_json,
+        )
+
+    def _parse_node(
+        self,
+        node: dict,
+        explain_json: dict,
+    ) -> ExecutionPlan:
+
+        children = []
+
+        for child in node.get("Plans", []):
+
+            children.append(
+                self._parse_node(
+                    child,
+                    explain_json,
+                )
+            )
 
         return ExecutionPlan(
 
-            node_type=plan["Node Type"],
+            node_type=node["Node Type"],
 
-            estimated_rows=plan["Plan Rows"],
+            relation_name=node.get("Relation Name"),
 
-            actual_rows=plan["Actual Rows"],
+            schema_name=node.get("Schema"),
 
-            startup_cost=plan["Startup Cost"],
+            alias=node.get("Alias"),
 
-            total_cost=plan["Total Cost"],
+            parent_relationship=node.get("Parent Relationship"),
+
+            join_type=node.get("Join Type"),
+
+            index_name=node.get("Index Name"),
+
+            hash_condition=node.get("Hash Cond"),
+
+            filter_condition=node.get("Filter"),
+
+            estimated_rows=node["Plan Rows"],
+
+            actual_rows=node["Actual Rows"],
+
+            startup_cost=node["Startup Cost"],
+
+            total_cost=node["Total Cost"],
 
             planning_time_ms=explain_json["Planning Time"],
 
             execution_time_ms=explain_json["Execution Time"],
 
-            shared_hit_blocks=plan["Shared Hit Blocks"],
+            shared_hit_blocks=node.get(
+                "Shared Hit Blocks",
+                0,
+            ),
 
-            shared_read_blocks=plan["Shared Read Blocks"],
+            shared_read_blocks=node.get(
+                "Shared Read Blocks",
+                0,
+            ),
 
-            temp_read_blocks=plan["Temp Read Blocks"],
+            temp_read_blocks=node.get(
+                "Temp Read Blocks",
+                0,
+            ),
 
-            temp_written_blocks=plan["Temp Written Blocks"],
+            temp_written_blocks=node.get(
+                "Temp Written Blocks",
+                0,
+            ),
+
+            children=children,
         )
