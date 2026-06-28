@@ -26,4 +26,8 @@ class ExplainCollector:
 
             result = cursor.fetchone()[0]
 
+        print(
+            json.dumps(result[0], indent=4,)
+        )
+
         return result[0]

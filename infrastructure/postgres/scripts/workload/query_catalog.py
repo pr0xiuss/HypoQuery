@@ -28,6 +28,7 @@ class QueryCatalog:
             )
 
             lines = content.splitlines()
+            print(f"Loading: {sql_file}")
 
             metadata = MetadataParser.parse(lines)
 
@@ -44,8 +45,23 @@ class QueryCatalog:
                     category=metadata["category"],
                     difficulty=metadata["difficulty"],
                     expected_issue=metadata["expected_issue"],
+                    description=metadata["description"],
+                    expected_fix=metadata["expected_fix"],
                     sql=sql,
                 )
             )
 
         return queries
+    
+
+    @classmethod
+    def get_query(cls, query_id: str,) -> Query:
+
+        for query in cls.get_queries():
+
+            if query.id == query_id:
+                return query
+
+        raise ValueError(
+            f"Query '{query_id}' not found."
+        )

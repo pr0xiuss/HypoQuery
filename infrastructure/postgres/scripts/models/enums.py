@@ -47,7 +47,10 @@ class ExpectedIssue(Enum):
 
     JSONB_SCAN = "JSONB Scan"
 
+    SUBQUERY = "Subquery"
+
     CORRELATED_SUBQUERY = "Correlated Subquery"
+
 
 class QueryType(Enum):
 

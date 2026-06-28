@@ -8,7 +8,9 @@ from infrastructure.postgres.scripts.models.query import Query
 from infrastructure.postgres.scripts.observability.services.optimization_pipeline_service import (
     OptimizationPipelineService,
 )
-
+from infrastructure.postgres.scripts.workload.query_catalog import (
+    QueryCatalog,
+)
 
 def main():
 
@@ -16,16 +18,22 @@ def main():
 
     service = OptimizationPipelineService(connection)
 
-    query = Query(
-        id="TEST001",
-        name="Explain Test",
-        category=QueryCategory.SEQUENTIAL_SCAN,
-        difficulty=Difficulty.EASY,
-        expected_issue=ExpectedIssue.SEQUENTIAL_SCAN,
-        sql="""
-        SELECT *
-        FROM products;
-        """,
+    # query = Query(
+    #     id="TEST001",
+    #     name="Explain Test",
+    #     category=QueryCategory.SEQUENTIAL_SCAN,
+    #     difficulty=Difficulty.EASY,
+    #     expected_issue=ExpectedIssue.SEQUENTIAL_SCAN,
+    #     description="Simple sequential scan test.",
+    #     expected_fix="Create an index on frequently filtered columns.",
+    #     sql="""
+    #     SELECT *
+    #     FROM products;
+    #     """,
+    # )
+
+    query = QueryCatalog.get_query(
+        "JOIN001"
     )
 
     plan, findings = service.optimize(query)

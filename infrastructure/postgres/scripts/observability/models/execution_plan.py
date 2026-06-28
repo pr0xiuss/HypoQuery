@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 
 @dataclass(slots=True)
@@ -6,22 +6,42 @@ class ExecutionPlan:
 
     node_type: str
 
-    estimated_rows: int
+    relation_name: str | None = None
 
-    actual_rows: int
+    schema_name: str | None = None
 
-    startup_cost: float
+    alias: str | None = None
 
-    total_cost: float
+    parent_relationship: str | None = None
 
-    planning_time_ms: float
+    join_type: str | None = None
 
-    execution_time_ms: float
+    index_name: str | None = None
 
-    shared_hit_blocks: int
+    hash_condition: str | None = None
 
-    shared_read_blocks: int
+    filter_condition: str | None = None
 
-    temp_read_blocks: int
+    estimated_rows: int = 0
 
-    temp_written_blocks: int
+    actual_rows: int = 0
+
+    startup_cost: float = 0.0
+
+    total_cost: float = 0.0
+
+    planning_time_ms: float = 0.0
+
+    execution_time_ms: float = 0.0
+
+    shared_hit_blocks: int = 0
+
+    shared_read_blocks: int = 0
+
+    temp_read_blocks: int = 0
+
+    temp_written_blocks: int = 0
+
+    children: list["ExecutionPlan"] = field(
+        default_factory=list
+    )
