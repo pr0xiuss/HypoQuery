@@ -9,9 +9,7 @@ class ProductDataGenerator:
 
     def generate(self) -> Product:
 
-        category = random.choice(
-            list(PRODUCT_CATEGORIES.keys())
-        )
+        category = random.choice(list(PRODUCT_CATEGORIES.keys()))
 
         info = PRODUCT_CATEGORIES[category]
 

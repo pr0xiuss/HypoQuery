@@ -30,23 +30,17 @@ class InventorySeeder(BaseSeeder):
         product_ids = self.product_repository.get_all_product_ids()
 
         for product_id in product_ids:
-            inventory.append(
-                self.generator.generate(product_id)
-            )
+            inventory.append(self.generator.generate(product_id))
 
         return inventory
 
     def persist(self, inventory):
 
-        self.repository.insert_many(
-            inventory
-        )
+        self.repository.insert_many(inventory)
 
     def validate(self):
 
-        expected = len(
-            self.product_repository.get_all_product_ids()
-        )
+        expected = len(self.product_repository.get_all_product_ids())
 
         actual = self.repository.count()
 

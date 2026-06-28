@@ -36,15 +36,13 @@ class CustomerRepository(BaseRepository):
 
         with self.connection.cursor() as cursor:
             cursor.executemany(query, values)
-    
+
     def get_all_customer_ids(self) -> list[int]:
 
         with self.connection.cursor() as cursor:
-            cursor.execute(
-                """
+            cursor.execute("""
                 SELECT customer_id
                 FROM customers
-                """
-            )
+                """)
 
             return [row[0] for row in cursor.fetchall()]

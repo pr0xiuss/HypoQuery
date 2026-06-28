@@ -24,9 +24,7 @@ class ProductSeeder(BaseSeeder):
         products = []
 
         for _ in range(CONFIG.products):
-            products.append(
-                self.generator.generate()
-            )
+            products.append(self.generator.generate())
 
         return products
 
@@ -35,9 +33,7 @@ class ProductSeeder(BaseSeeder):
         products,
     ):
 
-        self.repository.insert_many(
-            products
-        )
+        self.repository.insert_many(products)
 
     def validate(self):
 

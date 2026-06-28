@@ -16,13 +16,9 @@ class BaseRepository(ABC):
 
     def count(self) -> int:
         with self.connection.cursor() as cursor:
-            cursor.execute(
-                f"SELECT COUNT(*) FROM {self.TABLE_NAME}"
-            )
+            cursor.execute(f"SELECT COUNT(*) FROM {self.TABLE_NAME}")
             return cursor.fetchone()[0]
 
     def truncate(self) -> None:
         with self.connection.cursor() as cursor:
-            cursor.execute(
-                f"TRUNCATE TABLE {self.TABLE_NAME} RESTART IDENTITY CASCADE"
-            )
+            cursor.execute(f"TRUNCATE TABLE {self.TABLE_NAME} RESTART IDENTITY CASCADE")

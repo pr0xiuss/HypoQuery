@@ -1,16 +1,11 @@
 from infrastructure.postgres.scripts.common.db import get_connection
-from infrastructure.postgres.scripts.models.enums import (
-    Difficulty,
-    ExpectedIssue,
-    QueryCategory,
-)
-from infrastructure.postgres.scripts.models.query import Query
 from infrastructure.postgres.scripts.observability.services.optimization_pipeline_service import (
     OptimizationPipelineService,
 )
 from infrastructure.postgres.scripts.workload.query_catalog import (
     QueryCatalog,
 )
+
 
 def main():
 
@@ -32,18 +27,16 @@ def main():
     #     """,
     # )
 
-    query = QueryCatalog.get_query(
-        "JOIN001"
-    )
+    query = QueryCatalog.get_query("JOIN001")
 
     plan, findings = service.optimize(query)
 
-    print(plan)
+    # print(plan)
 
-    print()
+    # print()
 
-    for finding in findings:
-        print(finding)
+    # for finding in findings:
+    #     print(finding)
 
     connection.close()
 

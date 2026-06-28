@@ -55,29 +55,41 @@ class PlanAnalyzer:
             BitmapScanRule(),
             IndexScanRule(),
             IndexOnlyScanRule(),
-
         ]
 
-
-    def analyze(self, plan: ExecutionPlan,) -> list[OptimizationFinding]:
+    def analyze(
+        self,
+        plan: ExecutionPlan,
+    ) -> list[OptimizationFinding]:
 
         findings = []
 
-        self._traverse(plan, findings,)
+        self._traverse(
+            plan,
+            findings,
+        )
 
         return self._aggregate(findings)
-    
 
-    def _traverse(self, plan: ExecutionPlan, findings: list[OptimizationFinding],) -> None:
+    def _traverse(
+        self,
+        plan: ExecutionPlan,
+        findings: list[OptimizationFinding],
+    ) -> None:
 
         for rule in self.rules:
             findings.extend(rule.check(plan))
 
         for child in plan.children:
-            self._traverse(child, findings,)
-    
+            self._traverse(
+                child,
+                findings,
+            )
 
-    def _aggregate(self, findings: list[OptimizationFinding],) -> list[OptimizationFinding]:
+    def _aggregate(
+        self,
+        findings: list[OptimizationFinding],
+    ) -> list[OptimizationFinding]:
 
         grouped = {}
 

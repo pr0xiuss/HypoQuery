@@ -17,9 +17,7 @@ class SeqScanRule(BaseRule):
             OptimizationFinding(
                 issue="Sequential Scan Detected",
                 severity="HIGH",
-                recommendation=(
-                    "Consider creating an index or reducing scanned rows."
-                ),
+                recommendation=("Consider creating an index or reducing scanned rows."),
                 node_type=plan.node_type,
                 estimated_cost=plan.total_cost,
                 estimated_rows=plan.estimated_rows,

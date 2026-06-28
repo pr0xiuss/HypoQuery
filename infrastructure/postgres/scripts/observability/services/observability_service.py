@@ -12,6 +12,7 @@ from infrastructure.postgres.scripts.observability.parsers.explain_parser import
 from infrastructure.postgres.scripts.observability.analyzers.plan_analyzer import (
     PlanAnalyzer,
 )
+
 # from infrastructure.postgres.scripts.observability.services.optimization_pipeline_service import (
 #     OptimizationPipelineService,
 # )
@@ -27,8 +28,10 @@ class ObservabilityService:
         self.analyzer = PlanAnalyzer()
         # self.pipeline = OptimizationPipelineService(connection)
 
-
-    def collect_plan(self, sql: str,):
+    def collect_plan(
+        self,
+        sql: str,
+    ):
 
         explain_json = self.explain.collect(sql)
 
@@ -36,8 +39,10 @@ class ObservabilityService:
 
         return execution_plan
 
-
-    def analyze_query(self, query,):
+    def analyze_query(
+        self,
+        query,
+    ):
 
         plan = self.collect_plan(query.sql)
 

@@ -47,18 +47,19 @@ class OptimizationResultRepository(BaseRepository):
                     result.remediation_type.value,
                     result.recommended_index_sql,
                     result.rewritten_query,
-                    result.llm_confidence.value
-                    if result.llm_confidence
-                    else None,
+                    result.llm_confidence.value if result.llm_confidence else None,
                     result.retrieval_score,
                     result.faithfulness_score,
                     result.validation_status.value,
-                    Jsonb(result.original_explain_plan)
-                    if result.original_explain_plan is not None
-                    else None,
-
-                    Jsonb(result.optimized_explain_plan)
-                    if result.optimized_explain_plan is not None
-                    else None,
+                    (
+                        Jsonb(result.original_explain_plan)
+                        if result.original_explain_plan is not None
+                        else None
+                    ),
+                    (
+                        Jsonb(result.optimized_explain_plan)
+                        if result.optimized_explain_plan is not None
+                        else None
+                    ),
                 ),
             )

@@ -2,7 +2,9 @@ import random
 
 from infrastructure.postgres.scripts.common.config import CONFIG
 from infrastructure.postgres.scripts.common.exceptions import ValidationError
-from infrastructure.postgres.scripts.repositories.customer_repo import CustomerRepository
+from infrastructure.postgres.scripts.repositories.customer_repo import (
+    CustomerRepository,
+)
 from infrastructure.postgres.scripts.repositories.product_repo import ProductRepository
 from infrastructure.postgres.scripts.repositories.review_repo import ReviewRepository
 from infrastructure.postgres.scripts.seeders.base_seeder import BaseSeeder
@@ -45,9 +47,7 @@ class ReviewSeeder(BaseSeeder):
 
     def persist(self, reviews):
 
-        self.repository.insert_many(
-            reviews
-        )
+        self.repository.insert_many(reviews)
 
     def validate(self):
 

@@ -42,6 +42,4 @@ class ExecutionPlan:
 
     temp_written_blocks: int = 0
 
-    children: list["ExecutionPlan"] = field(
-        default_factory=list
-    )
+    children: list["ExecutionPlan"] = field(default_factory=list)

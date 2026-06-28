@@ -28,33 +28,23 @@ class OrderSeeder(BaseSeeder):
 
         orders = []
 
-        customer_ids = (
-            self.customer_repository.get_all_customer_ids()
-        )
+        customer_ids = self.customer_repository.get_all_customer_ids()
 
         while len(orders) < CONFIG.orders:
 
-            customer = customer_ids[
-                len(orders) % len(customer_ids)
-            ]
+            customer = customer_ids[len(orders) % len(customer_ids)]
 
-            orders.append(
-                self.generator.generate(customer)
-            )
+            orders.append(self.generator.generate(customer))
 
         return orders
 
     def persist(self, orders):
 
-        self.repository.insert_many(
-            orders
-        )
+        self.repository.insert_many(orders)
 
     def validate(self):
 
         count = self.repository.count()
 
         if count != CONFIG.orders:
-            raise ValidationError(
-                f"Expected {CONFIG.orders} orders but found {count}"
-            )
+            raise ValidationError(f"Expected {CONFIG.orders} orders but found {count}")
