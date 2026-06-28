@@ -17,6 +17,9 @@ class TempWriteRule(BaseRule):
             OptimizationFinding(
                 issue="Temporary Disk Writes",
                 severity="MEDIUM",
-                recommendation=("Increase work_mem or optimize sorting."),
+                recommendation="Increase work_mem or optimize sorting.",
+                node_type=plan.node_type,
+                estimated_cost=plan.total_cost,
+                estimated_rows=plan.estimated_rows,
             )
         ]
