@@ -1,10 +1,10 @@
-from infrastructure.postgres.scripts.observability.analyzers.rules.base_rule import (
+from backend.optimization.rules.base_rule import (
     BaseRule,
 )
-from infrastructure.postgres.scripts.observability.models.optimization_finding import (
+from backend.optimization.models.optimization_finding import (
     OptimizationFinding,
 )
-from infrastructure.postgres.scripts.observability.models.execution_plan import (
+from backend.optimization.models.execution_plan import (
     ExecutionPlan,
 )
 

@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import Any
 from .base_node import PipelineNode
 from .definition import PipelineDefinition
 from backend.execution.contracts.exceptions import PipelineExecutionError

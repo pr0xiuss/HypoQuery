@@ -1,5 +1,5 @@
 from __future__ import annotations
-
+from backend.execution.contracts.result import PipelineResult
 from backend.execution.pipeline.pipeline import Pipeline
 from backend.execution.queue.base_queue import BaseQueue
 from backend.execution.queue.job_record import QueueEntry
@@ -23,9 +23,11 @@ class IngestionService:
         self._queue = queue
         self._dispatcher = dispatcher
 
-    def run(self, pipeline: Pipeline,) -> None:
+    def run(self, pipeline: Pipeline,) -> list[PipelineResult]:
         
         executions = self._collector.collect()
+
+        results: list[PipelineResult] = []
 
         for execution in executions:
             self._queue.enqueue(
@@ -41,4 +43,7 @@ class IngestionService:
             if worker is None:
                 break
 
-            worker.process(pipeline)
+            result = worker.process(pipeline)
+            if result is not None: results.append(result)
+        
+        return results

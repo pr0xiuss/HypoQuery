@@ -1,4 +1,4 @@
-from infrastructure.postgres.scripts.models.enums import (
+from backend.models.enums import (
     Difficulty,
     ExpectedIssue,
     QueryCategory,

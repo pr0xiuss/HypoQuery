@@ -1,7 +1,7 @@
 from pathlib import Path
 
-from infrastructure.postgres.scripts.models.query import Query
-from infrastructure.postgres.scripts.workload.metadata_parser import (
+from backend.ingestion.models.query import Query
+from backend.ingestion.metadata_parser import (
     MetadataParser,
 )
 
@@ -55,3 +55,7 @@ class QueryCatalog:
                 return query
 
         raise ValueError(f"Query '{query_id}' not found.")
+    
+
+    def all(self) -> list[Query]:
+        return self.get_queries()
