@@ -1,17 +1,17 @@
 from psycopg import Connection
 
-from infrastructure.postgres.scripts.observability.repositories.optimization_run_repo import (
+from backend.repositories.optimization_run_repo import (
     OptimizationRunRepository,
 )
-from infrastructure.postgres.scripts.observability.repositories.pipeline_log_repo import (
+from backend.execution.observability.repositories.pipeline_log_repo import (
     PipelineLogRepository,
 )
-from infrastructure.postgres.scripts.observability.repositories.optimization_result_repo import (
+from backend.repositories.optimization_result_repo import (
     OptimizationResultRepository,
 )
 from uuid import uuid4
 
-from infrastructure.postgres.scripts.models.enums import (
+from backend.models.enums import (
     ClassifierRoute,
     LogLevel,
     PipelineStatus,
@@ -20,16 +20,16 @@ from infrastructure.postgres.scripts.models.enums import (
     RemediationType,
     ValidationStatus,
 )
-from infrastructure.postgres.scripts.observability.models.optimization_run import (
+from backend.optimization.models.optimization_run import (
     OptimizationRun,
 )
-from infrastructure.postgres.scripts.observability.models.pipeline_log import (
+from backend.execution.observability.models.pipeline_log import (
     PipelineLog,
 )
-from infrastructure.postgres.scripts.observability.models.optimization_result import (
+from backend.optimization.models.optimization_result import (
     OptimizationResult,
 )
-from infrastructure.postgres.scripts.observability.services.observability_service import (
+from backend.execution.observability.services.observability_service import (
     ObservabilityService,
 )
 from dataclasses import asdict

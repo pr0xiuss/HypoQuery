@@ -1,6 +1,6 @@
 from psycopg import Connection
 
-from infrastructure.postgres.scripts.observability.models.pipeline_log import (
+from backend.execution.observability.models.pipeline_log import (
     PipelineLog,
 )
 from infrastructure.postgres.scripts.observability.repositories.base_repo import (

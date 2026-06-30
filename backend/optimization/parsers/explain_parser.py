@@ -1,4 +1,4 @@
-from infrastructure.postgres.scripts.observability.models.execution_plan import (
+from backend.optimization.models.execution_plan import (
     ExecutionPlan,
 )
 

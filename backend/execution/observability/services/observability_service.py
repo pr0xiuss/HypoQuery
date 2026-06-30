@@ -1,15 +1,15 @@
 from psycopg import Connection
 
-from infrastructure.postgres.scripts.observability.collectors.explain_collector import (
+from backend.optimization.collectors.explain_collector import (
     ExplainCollector,
 )
 from infrastructure.postgres.scripts.observability.collectors.metrics_collector import (
     MetricsCollector,
 )
-from infrastructure.postgres.scripts.observability.parsers.explain_parser import (
+from backend.optimization.parsers.explain_parser import (
     ExplainParser,
 )
-from infrastructure.postgres.scripts.observability.analyzers.plan_analyzer import (
+from backend.optimization.analyzers.plan_analyzer import (
     PlanAnalyzer,
 )
 

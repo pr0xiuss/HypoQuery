@@ -1,12 +1,14 @@
 from psycopg import Connection
-
+from backend.ingestion.models.query import Query
 
 class ExplainCollector:
 
     def __init__(self, connection: Connection):
         self.connection = connection
 
-    def collect(self, sql: str) -> dict:
+    def collect(self, query: Query) -> dict:
+
+        sql = query.sql
 
         explain_query = f"""
         EXPLAIN (

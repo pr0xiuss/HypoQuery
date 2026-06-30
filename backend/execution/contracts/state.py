@@ -1,6 +1,6 @@
 from dataclasses import dataclass, field
 from typing import Any
-
+from .fingerprint import QueryFingerprint
 
 @dataclass(slots=True)
 class PipelineState:
@@ -9,6 +9,10 @@ class PipelineState:
 
     Nodes progressively enrich this object as the pipeline executes.
     """
+    
+    normalized_sql: str | None = None
+
+    fingerprint: QueryFingerprint | None = None
 
     execution_plan: Any | None = None
 
