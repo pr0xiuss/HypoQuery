@@ -1,8 +1,8 @@
 from dataclasses import dataclass, field
 
-from .context import PipelineContext
-from .job import PipelineJob
-from .state import PipelineState
+from backend.execution.contracts.context import PipelineContext
+from backend.execution.contracts.job import PipelineJob
+from backend.execution.contracts.state import PipelineState
 
 
 @dataclass(slots=True)

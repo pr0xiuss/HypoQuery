@@ -2,8 +2,8 @@ import time
 
 from psycopg import Connection
 
-from infrastructure.postgres.scripts.models.query import Query
-from infrastructure.postgres.scripts.models.query_result import QueryResult
+from backend.ingestion.models.query import Query
+from backend.ingestion.models.query_result import QueryResult
 
 
 class QueryExecutor:

@@ -1,7 +1,7 @@
 from dataclasses import dataclass, field
 from typing import Any
 
-from .enums import NodeStatus
+from backend.execution.contracts.enums import NodeStatus
 
 
 @dataclass(slots=True)

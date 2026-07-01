@@ -1,6 +1,6 @@
 from dataclasses import dataclass, field
 from datetime import UTC, datetime
-from uuid import uuid4
+from uuid import uuid4, UUID
 
 from .enums import JobPriority
 
@@ -14,6 +14,6 @@ class PipelineJob:
     source: str
     pipeline_version: str
     priority: JobPriority = JobPriority.NORMAL
-    job_id: str = field(default_factory=lambda: str(uuid4()))
-    trace_id: str = field(default_factory=lambda: str(uuid4()))
+    job_id: UUID = field(default_factory=uuid4)
+    trace_id: UUID = field(default_factory=uuid4)
     created_at: datetime = field(default_factory=lambda: datetime.now(UTC))
