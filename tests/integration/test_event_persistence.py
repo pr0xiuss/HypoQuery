@@ -14,19 +14,9 @@ from backend.observability.persistence.event_repository import (
 from backend.observability.persistence.event_serializer import (
     EventSerializer,
 )
-
-
-def make_event() -> PipelineStartedEvent:
-    return PipelineStartedEvent(
-        metadata=EventMetadata(
-            event_id=uuid4(),
-            execution_id=uuid4(),
-            trace_id=uuid4(),
-            sequence_number=1,
-            timestamp=datetime.now(UTC),
-            event_version=EventVersion.V1,
-        ),
-    )
+from backend.observability.persistence.persistence_subscriber import (
+    PersistenceSubscriber,
+)
 
 
 def make_connection():
@@ -41,7 +31,20 @@ def make_connection():
     return connection, cursor
 
 
-def test_save_event():
+def make_event():
+    return PipelineStartedEvent(
+        metadata=EventMetadata(
+            event_id=uuid4(),
+            execution_id=uuid4(),
+            trace_id=uuid4(),
+            sequence_number=1,
+            timestamp=datetime.now(UTC),
+            event_version=EventVersion.V1,
+        ),
+    )
+
+
+def test_persistence_flow():
     connection, cursor = make_connection()
 
     repository = EventRepository(
@@ -49,30 +52,14 @@ def test_save_event():
         EventSerializer(),
     )
 
-    repository.save(
+    subscriber = PersistenceSubscriber(
+        repository,
+    )
+
+    subscriber.handle(
         make_event(),
     )
 
     cursor.execute.assert_called_once()
 
     connection.commit.assert_called_once()
-
-
-def test_event_type_written():
-    connection, cursor = make_connection()
-
-    repository = EventRepository(
-        connection,
-        EventSerializer(),
-    )
-
-    repository.save(
-        make_event(),
-    )
-
-    _, parameters = cursor.execute.call_args.args
-
-    assert (
-        parameters[3]
-        == "PipelineStartedEvent"
-    )

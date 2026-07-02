@@ -1,4 +1,4 @@
-from infrastructure.postgres.scripts.workload.query_catalog import (
+from backend.ingestion.query_catalog import (
     QueryCatalog,
 )
 
