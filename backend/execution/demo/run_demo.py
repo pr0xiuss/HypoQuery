@@ -3,9 +3,11 @@ from uuid import uuid4
 from backend.execution.bus.in_process_event_bus import InProcessEventBus
 from backend.execution.bus.subscriber_registry import SubscriberRegistry
 from backend.execution.contracts.context import PipelineContext
+
 from backend.execution.contracts.execution import PipelineExecution
 from backend.execution.contracts.fingerprint import QueryFingerprint
 from backend.execution.contracts.job import PipelineJob
+
 from backend.execution.events.execution_event_factory import (
     ExecutionEventFactory,
 )
@@ -15,6 +17,7 @@ from backend.execution.events.execution_event_metadata_provider import (
 from backend.execution.lifecycle.execution_lifecycle import (
     ExecutionLifecycle,
 )
+
 from backend.execution.pipeline.builder import PipelineBuilder
 from backend.execution.pipeline.definition import (
     NodeDefinition,
@@ -22,11 +25,17 @@ from backend.execution.pipeline.definition import (
 )
 from backend.execution.pipeline.executor import PipelineExecutor
 from backend.execution.pipeline.registry import NodeRegistry
+
 from backend.execution.publisher.event_publisher import EventPublisher
+
 from backend.execution.runtime.execution_runtime import ExecutionRuntime
 from backend.execution.runtime.node_runtime import NodeRuntime
 from backend.execution.runtime.runtime_context import RuntimeContext
 from backend.execution.runtime.system_clock import SystemClock
+
+from backend.execution.bootstrap.subscriber_registration import (
+    register_execution_subscribers,
+)
 
 from backend.execution.demo.end_node import EndNode
 from backend.execution.demo.middle_node import MiddleNode
@@ -34,6 +43,7 @@ from backend.execution.demo.start_node import StartNode
 
 
 def main() -> None:
+
     registry = NodeRegistry()
 
     registry.register(StartNode())
@@ -99,6 +109,10 @@ def main() -> None:
     )
 
     subscriber_registry = SubscriberRegistry()
+
+    register_execution_subscribers(
+        subscriber_registry,
+    )
 
     event_bus = InProcessEventBus(
         subscriber_registry,

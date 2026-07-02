@@ -5,6 +5,7 @@ from backend.shared.db import get_connection
 from backend.execution.bus.in_process_event_bus import InProcessEventBus
 from backend.execution.bus.subscriber_registry import SubscriberRegistry
 from backend.execution.contracts.enums import PipelineStatus
+
 from backend.execution.events.execution_event_factory import (
     ExecutionEventFactory,
 )
@@ -21,6 +22,9 @@ from backend.execution.runtime.execution_runtime import ExecutionRuntime
 from backend.execution.runtime.node_runtime import NodeRuntime
 from backend.execution.runtime.runtime_context import RuntimeContext
 from backend.execution.runtime.system_clock import SystemClock
+from backend.execution.bootstrap.subscriber_registration import (
+    register_execution_subscribers,
+)
 from backend.execution.workers.dispatcher import Dispatcher
 from backend.execution.workers.worker import Worker
 from backend.execution.workers.worker_pool import WorkerPool
@@ -61,6 +65,10 @@ def main() -> None:
         )
 
         subscriber_registry = SubscriberRegistry()
+
+        register_execution_subscribers(
+            subscriber_registry,
+        )
 
         event_bus = InProcessEventBus(
             subscriber_registry,
