@@ -29,3 +29,12 @@ class PipelineFailedEvent(PipelineEvent):
 
     error: str
     duration_ms: Optional[float] = None
+
+
+@dataclass(frozen=True, slots=True)
+class PipelineCancelledEvent(PipelineEvent):
+    """
+    Published when pipeline execution is cancelled.
+    """
+
+    reason: str | None = None

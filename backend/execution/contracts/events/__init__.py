@@ -7,6 +7,7 @@ from .base import (
 )
 
 from .pipeline import (
+    PipelineCancelledEvent,
     PipelineCompletedEvent,
     PipelineFailedEvent,
     PipelineStartedEvent,
@@ -37,6 +38,7 @@ __all__ = [
     "PipelineStartedEvent",
     "PipelineCompletedEvent",
     "PipelineFailedEvent",
+    "PipelineCancelledEvent"
     "NodeStartedEvent",
     "NodeCompletedEvent",
     "NodeFailedEvent",

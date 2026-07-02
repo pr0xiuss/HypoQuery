@@ -1,14 +1,33 @@
+from uuid import uuid4
 from backend.execution.contracts.job import PipelineJob
+from backend.execution.contracts.context import PipelineContext
 from backend.execution.queue.job_record import QueueEntry
 from backend.execution.queue.memory_queue import InMemoryQueue
-
+from backend.execution.contracts.execution import PipelineExecution
 
 def make_entry(source: str) -> QueueEntry:
-    return QueueEntry(
+    execution_id = uuid4()
+    trace_id = uuid4()
+
+    execution = PipelineExecution(
         job=PipelineJob(
             source=source,
             pipeline_version="1.0",
-        )
+            job_id=execution_id,
+            trace_id=trace_id,
+        ),
+        context=PipelineContext(
+            execution_id=execution_id,
+            trace_id=trace_id,
+            pipeline_name="test",
+            pipeline_version="1.0",
+            database="postgres",
+            schema="public",
+        ),
+    )
+
+    return QueueEntry(
+        execution=execution,
     )
 
 
