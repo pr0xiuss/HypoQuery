@@ -1,8 +1,8 @@
 from psycopg import Connection
 
-from infrastructure.postgres.scripts.models.query_result import QueryResult
-from infrastructure.postgres.scripts.workload.query_catalog import QueryCatalog
-from infrastructure.postgres.scripts.workload.executor import QueryExecutor
+from backend.ingestion.models.query_result import QueryResult
+from backend.ingestion.query_catalog import QueryCatalog
+from backend.ingestion.executor import QueryExecutor
 
 
 class WorkloadRunner:

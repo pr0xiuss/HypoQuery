@@ -1,15 +1,22 @@
 from dataclasses import dataclass, field
 from typing import Any
-from .fingerprint import QueryFingerprint
+
+from backend.execution.contracts.fingerprint import QueryFingerprint
+from backend.execution.lifecycle.enums import ExecutionStatus
+
 
 @dataclass(slots=True)
 class PipelineState:
     """
     Mutable execution state.
 
-    Nodes progressively enrich this object as the pipeline executes.
+    This object represents the current runtime state of a pipeline execution.
+    Pipeline nodes progressively enrich it while the ExecutionLifecycle
+    manages valid lifecycle transitions.
     """
-    
+
+    status: ExecutionStatus = ExecutionStatus.CREATED
+
     normalized_sql: str | None = None
 
     fingerprint: QueryFingerprint | None = None

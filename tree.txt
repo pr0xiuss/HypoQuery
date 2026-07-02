@@ -1,0 +1,330 @@
+.
+├── backend
+│   ├── api
+│   │   └── __init__.py
+│   ├── config
+│   │   └── __init__.py
+│   ├── execution
+│   │   ├── contracts
+│   │   │   ├── context.py
+│   │   │   ├── enums.py
+│   │   │   ├── exceptions.py
+│   │   │   ├── execution.py
+│   │   │   ├── fingerprint.py
+│   │   │   ├── __init__.py
+│   │   │   ├── job.py
+│   │   │   ├── node_result.py
+│   │   │   ├── result.py
+│   │   │   └── state.py
+│   │   ├── demo
+│   │   │   ├── end_node.py
+│   │   │   ├── __init__.py
+│   │   │   ├── middle_node.py
+│   │   │   ├── run_demo.py
+│   │   │   └── start_node.py
+│   │   ├── __init__.py
+│   │   ├── observability
+│   │   │   ├── __init__.py
+│   │   │   ├── models
+│   │   │   │   ├── __init__.py
+│   │   │   │   └── pipeline_log.py
+│   │   │   ├── repositories
+│   │   │   │   ├── __init__.py
+│   │   │   │   └── pipeline_log_repo.py
+│   │   │   └── services
+│   │   │       ├── __init__.py
+│   │   │       └── observability_service.py
+│   │   ├── pipeline
+│   │   │   ├── base_node.py
+│   │   │   ├── builder.py
+│   │   │   ├── definition.py
+│   │   │   ├── executor.py
+│   │   │   ├── __init__.py
+│   │   │   ├── pipeline.py
+│   │   │   ├── pipeline_registry.py
+│   │   │   └── registry.py
+│   │   ├── policies
+│   │   │   └── __init__.py
+│   │   ├── queue
+│   │   │   ├── base_queue.py
+│   │   │   ├── exceptions.py
+│   │   │   ├── __init__.py
+│   │   │   ├── job_record.py
+│   │   │   └── memory_queue.py
+│   │   └── workers
+│   │       ├── base_worker.py
+│   │       ├── dispatcher.py
+│   │       ├── __init__.py
+│   │       ├── worker_pool.py
+│   │       └── worker.py
+│   ├── ingestion
+│   │   ├── collectors
+│   │   │   ├── base_collector.py
+│   │   │   ├── benchmark_collector.py
+│   │   │   └── __init__.py
+│   │   ├── executor.py
+│   │   ├── generators
+│   │   │   └── __init__.py
+│   │   ├── __init__.py
+│   │   ├── metadata_parser.py
+│   │   ├── models
+│   │   │   ├── __init__.py
+│   │   │   ├── query.py
+│   │   │   └── query_result.py
+│   │   ├── queries
+│   │   │   ├── aggregations
+│   │   │   │   ├── AGG001.sql
+│   │   │   │   ├── AGG002.sql
+│   │   │   │   ├── AGG003.sql
+│   │   │   │   ├── AGG004.sql
+│   │   │   │   ├── AGG005.sql
+│   │   │   │   └── __init__.py
+│   │   │   ├── indexing
+│   │   │   │   ├── IDX001.sql
+│   │   │   │   ├── IDX002.sql
+│   │   │   │   ├── IDX003.sql
+│   │   │   │   ├── IDX004.sql
+│   │   │   │   ├── IDX005.sql
+│   │   │   │   └── __init__.py
+│   │   │   ├── __init__.py
+│   │   │   ├── joins
+│   │   │   │   ├── __init__.py
+│   │   │   │   ├── JOIN001.sql
+│   │   │   │   ├── JOIN002.sql
+│   │   │   │   ├── JOIN003.sql
+│   │   │   │   ├── JOIN004.sql
+│   │   │   │   └── JOIN005.sql
+│   │   │   ├── jsonb
+│   │   │   │   ├── __init__.py
+│   │   │   │   ├── JSON001.sql
+│   │   │   │   ├── JSON002.sql
+│   │   │   │   ├── JSON003.sql
+│   │   │   │   ├── JSON004.sql
+│   │   │   │   └── JSON005.sql
+│   │   │   ├── sequential_scan
+│   │   │   │   ├── __init__.py
+│   │   │   │   ├── Q001.sql
+│   │   │   │   ├── Q002.sql
+│   │   │   │   ├── Q003.sql
+│   │   │   │   ├── Q004.sql
+│   │   │   │   └── Q005.sql
+│   │   │   ├── sorting
+│   │   │   │   ├── __init__.py
+│   │   │   │   ├── SORT001.sql
+│   │   │   │   ├── SORT002.sql
+│   │   │   │   ├── SORT003.sql
+│   │   │   │   ├── SORT004.sql
+│   │   │   │   └── SORT005.sql
+│   │   │   └── subqueries
+│   │   │       ├── __init__.py
+│   │   │       ├── SUB001.sql
+│   │   │       ├── SUB002.sql
+│   │   │       ├── SUB003.sql
+│   │   │       ├── SUB004.sql
+│   │   │       └── SUB005.sql
+│   │   ├── query_catalog.py
+│   │   ├── run_benchmark.py
+│   │   ├── run_ingestion.py
+│   │   ├── runner.py
+│   │   ├── seeders
+│   │   │   └── __init__.py
+│   │   ├── services
+│   │   │   ├── ingestion_service.py
+│   │   │   └── __init__.py
+│   │   └── workload.py
+│   ├── __init__.py
+│   ├── models
+│   │   ├── customer.py
+│   │   ├── enums.py
+│   │   ├── __init__.py
+│   │   ├── inventory.py
+│   │   ├── order.py
+│   │   ├── product_event.py
+│   │   ├── product.py
+│   │   └── review.py
+│   ├── optimization
+│   │   ├── analyzers
+│   │   │   ├── __init__.py
+│   │   │   └── plan_analyzer.py
+│   │   ├── collectors
+│   │   │   ├── explain_collector.py
+│   │   │   └── __init__.py
+│   │   ├── __init__.py
+│   │   ├── models
+│   │   │   ├── execution_plan.py
+│   │   │   ├── execution_report.py
+│   │   │   ├── __init__.py
+│   │   │   ├── optimization_finding.py
+│   │   │   ├── optimization_result.py
+│   │   │   └── optimization_run.py
+│   │   ├── nodes
+│   │   │   ├── explain_collect_node.py
+│   │   │   ├── explain_parse_node.py
+│   │   │   ├── fingerprint_node.py
+│   │   │   ├── __init__.py
+│   │   │   ├── normalize_node.py
+│   │   │   ├── persist_result_node.py
+│   │   │   └── plan_analyze_node.py
+│   │   ├── parsers
+│   │   │   ├── explain_parser.py
+│   │   │   └── __init__.py
+│   │   ├── pipeline
+│   │   │   ├── __init__.py
+│   │   │   └── optimization_pipeline_builder.py
+│   │   ├── rules
+│   │   │   ├── base_rule.py
+│   │   │   ├── bitmap_scan_rule.py
+│   │   │   ├── hash_aggregate_rule.py
+│   │   │   ├── hash_join_rule.py
+│   │   │   ├── index_only_scan_rule.py
+│   │   │   ├── index_scan_rule.py
+│   │   │   ├── __init__.py
+│   │   │   ├── merge_join_rule.py
+│   │   │   ├── nested_loop_rule.py
+│   │   │   ├── seq_scan_rule.py
+│   │   │   ├── shared_buffer_rule.py
+│   │   │   ├── sort_rule.py
+│   │   │   └── temp_write_rule.py
+│   │   └── services
+│   │       ├── __init__.py
+│   │       └── optimization_pipeline_service.py
+│   ├── repositories
+│   │   ├── base_repo.py
+│   │   ├── customer_repo.py
+│   │   ├── __init__.py
+│   │   ├── inventory_repo.py
+│   │   ├── optimization_result_repo.py
+│   │   ├── optimization_run_repo.py
+│   │   ├── order_repo.py
+│   │   ├── product_event_repo.py
+│   │   ├── product_repo.py
+│   │   └── review_repo.py
+│   ├── retrieval
+│   │   └── __init__.py
+│   ├── shared
+│   │   ├── constants.py
+│   │   ├── container.py
+│   │   ├── db.py
+│   │   ├── exceptions.py
+│   │   ├── __init__.py
+│   │   ├── logger.py
+│   │   ├── settings_factory.py
+│   │   └── settings.py
+│   └── validation
+│       └── __init__.py
+├── docker-compose.yml
+├── docs
+│   ├── architecture.md
+│   ├── phase-1.md
+│   └── phase-2.md
+├── .env
+├── .gitignore
+├── infrastructure
+│   ├── __init__.py
+│   ├── mysql
+│   └── postgres
+│       ├── config
+│       │   └── postgresql.conf
+│       ├── docker
+│       │   └── docker-compose.yml
+│       ├── init
+│       │   ├── 01_extensions.sql
+│       │   ├── 02_schema.sql
+│       │   ├── 04_indexes.sql
+│       │   └── 05_bad_queries.sql
+│       ├── __init__.py
+│       ├── pgbench
+│       │   ├── run_pgbench.sh
+│       │   └── workload.sql
+│       └── scripts
+│           ├── __init__.py
+│           ├── interfaces
+│           │   ├── __init__.py
+│           │   └── seeder.py
+│           ├── models
+│           │   └── __init__.py
+│           ├── observability
+│           │   ├── analyzers
+│           │   ├── collectors
+│           │   │   ├── __init__.py
+│           │   │   └── metrics_collector.py
+│           │   ├── __init__.py
+│           │   ├── models
+│           │   │   └── __init__.py
+│           │   ├── parsers
+│           │   ├── repositories
+│           │   │   └── base_repo.py
+│           │   └── services
+│           │       └── __init__.py
+│           ├── repositories
+│           │   └── __init__.py
+│           ├── run_workload.py
+│           ├── seeders
+│           │   ├── base_seeder.py
+│           │   ├── customer_seeder.py
+│           │   ├── __init__.py
+│           │   ├── inventory_seeder.py
+│           │   ├── order_seeder.py
+│           │   ├── product_event_seeder.py
+│           │   ├── product_seeder.py
+│           │   └── review_seeder.py
+│           ├── seed.py
+│           ├── services
+│           │   ├── customer_data_generator.py
+│           │   ├── __init__.py
+│           │   ├── inventory_data_generator.py
+│           │   ├── order_data_generator.py
+│           │   ├── product_data_generator.py
+│           │   ├── product_event_data_generator.py
+│           │   └── review_data_generator.py
+│           └── test_explain.py
+├── .python-version
+├── README.md
+├── requirements.txt
+├── scripts
+├── tests
+│   ├── conftest.py
+│   ├── execution
+│   │   ├── __init__.py
+│   │   ├── test_dispatcher.py
+│   │   ├── test_memory_queue.py
+│   │   ├── test_node_registry.py
+│   │   ├── test_pipeline_builder.py
+│   │   ├── test_pipeline_executor.py
+│   │   ├── test_worker_pool.py
+│   │   └── test_worker.py
+│   ├── observability
+│   │   ├── analyzers
+│   │   │   ├── rules
+│   │   │   │   ├── test_bitmap_scan_rule.py
+│   │   │   │   ├── test_hash_aggregate__rule.py
+│   │   │   │   ├── test_hash_join_rule.py
+│   │   │   │   ├── test_index_only_scan_rule.py
+│   │   │   │   ├── test_index_scan_rule.py
+│   │   │   │   ├── test_merge_join_rule.py
+│   │   │   │   ├── test_nested_loop_rule.py
+│   │   │   │   ├── test_seq_scan_rule.py
+│   │   │   │   ├── test_shared_buffer_rule.py
+│   │   │   │   ├── test_sort_rule.py
+│   │   │   │   └── test_temp_write_rule.py
+│   │   │   └── test_plan_analyzer.py
+│   │   ├── integration
+│   │   │   ├── test_explain_pipeline.py
+│   │   │   └── test_full_pipeline.py
+│   │   ├── parsers
+│   │   │   └── test_explain_parser.py
+│   │   └── services
+│   │       ├── test_observability_service.py
+│   │       └── test_optimization_pipeline.py
+│   ├── optimization
+│   │   └── integration
+│   │       ├── __init__.py
+│   │       ├── test_pipeline_execution.py
+│   │       ├── test_pipeline_findings.py
+│   │       └── test_pipeline_state.py
+│   └── workload
+│       ├── test_metadata_parser.py
+│       └── test_query_catalog.py
+└── tree.txt
+
+76 directories, 252 files

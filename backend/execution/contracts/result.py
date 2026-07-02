@@ -1,8 +1,8 @@
 from dataclasses import dataclass
 from datetime import datetime
 
-from .enums import PipelineStatus
-from .execution import PipelineExecution
+from backend.execution.contracts.enums import PipelineStatus
+from backend.execution.contracts.execution import PipelineExecution
 
 
 @dataclass(slots=True)

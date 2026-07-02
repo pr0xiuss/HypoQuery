@@ -1,6 +1,6 @@
 from psycopg import Connection
 
-from infrastructure.postgres.scripts.workload.runner import WorkloadRunner
+from backend.ingestion.runner import WorkloadRunner
 
 
 class Workload:

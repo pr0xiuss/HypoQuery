@@ -1,29 +1,25 @@
-from backend.execution.contracts.context import PipelineContext
-from backend.execution.contracts.execution import PipelineExecution
-from backend.execution.contracts.fingerprint import QueryFingerprint
-from backend.execution.contracts.job import PipelineJob
 from backend.execution.contracts.enums import PipelineStatus
-
-from backend.execution.demo.start_node import StartNode
-from backend.execution.demo.middle_node import MiddleNode
-from backend.execution.demo.end_node import EndNode
-
 from backend.execution.pipeline.builder import PipelineBuilder
 from backend.execution.pipeline.definition import (
     NodeDefinition,
     PipelineDefinition,
 )
-from backend.execution.pipeline.executor import PipelineExecutor
 from backend.execution.pipeline.registry import NodeRegistry
-
 from backend.execution.queue.job_record import QueueEntry
 from backend.execution.queue.memory_queue import InMemoryQueue
-
 from backend.execution.workers.worker import Worker
+
+from backend.execution.demo.end_node import EndNode
+from backend.execution.demo.middle_node import MiddleNode
+from backend.execution.demo.start_node import StartNode
+
+from tests.execution.test_pipeline_executor import (
+    build_execution,
+    build_executor,
+)
 
 
 def build_pipeline():
-
     registry = NodeRegistry()
 
     registry.register(StartNode())
@@ -49,41 +45,22 @@ def build_pipeline():
     return PipelineBuilder(registry).build(definition)
 
 
-def build_execution():
-
-    return PipelineExecution(
-        job=PipelineJob(
-            source="demo",
-            pipeline_version="1.0",
-        ),
-        context=PipelineContext(
-            fingerprint=QueryFingerprint(
-                normalized_sql="SELECT 1",
-                hash="demo",
-            ),
-            database="demo",
-            schema="public",
-        ),
-    )
-
-
 def test_worker_process():
-
     queue = InMemoryQueue()
 
     queue.enqueue(
         QueueEntry(
-            execution=build_execution()
+            execution=build_execution(),
         )
     )
 
     worker = Worker(
-        queue,
-        PipelineExecutor(),
+        queue=queue,
+        executor=build_executor(),
     )
 
     result = worker.process(
-        build_pipeline()
+        build_pipeline(),
     )
 
     assert result is not None
@@ -91,12 +68,11 @@ def test_worker_process():
 
 
 def test_worker_empty_queue():
-
     worker = Worker(
-        InMemoryQueue(),
-        PipelineExecutor(),
+        queue=InMemoryQueue(),
+        executor=build_executor(),
     )
 
     assert worker.process(
-        build_pipeline()
+        build_pipeline(),
     ) is None
