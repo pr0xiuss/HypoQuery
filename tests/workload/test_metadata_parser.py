@@ -1,11 +1,11 @@
 import pytest
 
-from infrastructure.postgres.scripts.models.enums import (
+from backend.models.enums import (
     Difficulty,
     ExpectedIssue,
     QueryCategory,
 )
-from infrastructure.postgres.scripts.workload.metadata_parser import (
+from backend.ingestion.metadata_parser import (
     MetadataParser,
 )
 

@@ -25,15 +25,15 @@ def test_pipeline_subscribers_registered():
 
     assert len(
         registry.subscribers_for(PipelineStartedEvent)
-    ) == 3
+    ) == 4
 
     assert len(
         registry.subscribers_for(PipelineCompletedEvent)
-    ) == 3
+    ) == 4
 
     assert len(
         registry.subscribers_for(PipelineFailedEvent)
-    ) == 3
+    ) == 4
 
 
 def test_node_subscribers_registered():
@@ -43,15 +43,15 @@ def test_node_subscribers_registered():
 
     assert len(
         registry.subscribers_for(NodeStartedEvent)
-    ) == 3
+    ) == 4
 
     assert len(
         registry.subscribers_for(NodeCompletedEvent)
-    ) == 3
+    ) == 4
 
     assert len(
         registry.subscribers_for(NodeFailedEvent)
-    ) == 3
+    ) == 4
 
 
 def test_queue_subscribers_registered():
@@ -61,7 +61,7 @@ def test_queue_subscribers_registered():
 
     assert len(
         registry.subscribers_for(QueueEnqueuedEvent)
-    ) == 2
+    ) == 3
 
     assert len(
         registry.subscribers_for(QueueDequeuedEvent)
@@ -75,7 +75,7 @@ def test_worker_subscribers_registered():
 
     assert len(
         registry.subscribers_for(WorkerAssignedEvent)
-    ) == 2
+    ) == 3
 
     assert len(
         registry.subscribers_for(WorkerReleasedEvent)
