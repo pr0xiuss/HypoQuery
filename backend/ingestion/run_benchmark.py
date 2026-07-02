@@ -40,7 +40,18 @@ from backend.ingestion.services.ingestion_service import (
 from backend.optimization.pipeline.optimization_pipeline_builder import (
     OptimizationPipelineBuilder,
 )
-
+from backend.observability.persistence.event_repository import (
+    EventRepository,
+)
+from backend.observability.persistence.event_serializer import (
+    EventSerializer,
+)
+from backend.observability.persistence.persistence_subscriber import (
+    PersistenceSubscriber,
+)
+from backend.execution.bootstrap.event_registration import (
+    subscribe_to_execution_events,
+)
 
 def main() -> None:
     connection = get_connection()
@@ -69,6 +80,22 @@ def main() -> None:
         register_execution_subscribers(
             subscriber_registry,
         )
+
+        serializer = EventSerializer()
+
+        repository = EventRepository(
+            connection,
+            serializer,
+        )
+
+        persistence_subscriber = PersistenceSubscriber(
+            repository,
+        )
+
+        subscribe_to_execution_events(
+            subscriber_registry,
+            persistence_subscriber,
+        )    
 
         event_bus = InProcessEventBus(
             subscriber_registry,

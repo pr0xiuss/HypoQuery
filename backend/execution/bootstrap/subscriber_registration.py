@@ -32,10 +32,11 @@ from backend.execution.projections.projection_builder import (
 from backend.execution.projections.projection_subscriber import (
     ProjectionSubscriber,
 )
+from .event_registration import (
+    subscribe_to_execution_events,
+)
 
-def register_execution_subscribers(
-    registry: SubscriberRegistry,
-) -> None:
+def register_execution_subscribers(registry: SubscriberRegistry,) -> None:
     """
     Register the default execution subscribers.
     """
@@ -55,44 +56,8 @@ def register_execution_subscribers(
     )
 
     # Logging
-    registry.subscribe(
-        PipelineStartedEvent,
-        logging_subscriber,
-    )
-    registry.subscribe(
-        PipelineCompletedEvent,
-        logging_subscriber,
-    )
-    registry.subscribe(
-        PipelineFailedEvent,
-        logging_subscriber,
-    )
-    registry.subscribe(
-        NodeStartedEvent,
-        logging_subscriber,
-    )
-    registry.subscribe(
-        NodeCompletedEvent,
-        logging_subscriber,
-    )
-    registry.subscribe(
-        NodeFailedEvent,
-        logging_subscriber,
-    )
-    registry.subscribe(
-        QueueEnqueuedEvent,
-        logging_subscriber,
-    )
-    registry.subscribe(
-        QueueDequeuedEvent,
-        logging_subscriber,
-    )
-    registry.subscribe(
-        WorkerAssignedEvent,
-        logging_subscriber,
-    )
-    registry.subscribe(
-        WorkerReleasedEvent,
+    subscribe_to_execution_events(
+        registry,
         logging_subscriber,
     )
 
@@ -123,46 +88,12 @@ def register_execution_subscribers(
     )
 
     # Tracing
-    registry.subscribe(
-        PipelineStartedEvent,
+    subscribe_to_execution_events(
+        registry,
         tracing_subscriber,
     )
-    registry.subscribe(
-        PipelineCompletedEvent,
-        tracing_subscriber,
-    )
-    registry.subscribe(
-        PipelineFailedEvent,
-        tracing_subscriber,
-    )
-    registry.subscribe(
-        NodeStartedEvent,
-        tracing_subscriber,
-    )
-    registry.subscribe(
-        NodeCompletedEvent,
-        tracing_subscriber,
-    )
-    registry.subscribe(
-        NodeFailedEvent,
-        tracing_subscriber,
-    )
-    registry.subscribe(
-        QueueEnqueuedEvent,
-        tracing_subscriber,
-    )
-    registry.subscribe(
-        QueueDequeuedEvent,
-        tracing_subscriber,
-    )
-    registry.subscribe(
-        WorkerAssignedEvent,
-        tracing_subscriber,
-    )
-    registry.subscribe(
-        WorkerReleasedEvent,
-        tracing_subscriber,
-    )
+
+
 
     registry.subscribe(
         PipelineStartedEvent,
