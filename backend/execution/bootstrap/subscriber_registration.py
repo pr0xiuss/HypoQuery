@@ -23,6 +23,15 @@ from backend.execution.subscribers.tracing_subscriber import (
     TracingSubscriber,
 )
 
+from backend.execution.projections.execution_projection_store import (
+    ExecutionProjectionStore,
+)
+from backend.execution.projections.projection_builder import (
+    ProjectionBuilder,
+)
+from backend.execution.projections.projection_subscriber import (
+    ProjectionSubscriber,
+)
 
 def register_execution_subscribers(
     registry: SubscriberRegistry,
@@ -34,6 +43,16 @@ def register_execution_subscribers(
     logging_subscriber = LoggingSubscriber()
     metrics_subscriber = MetricsSubscriber()
     tracing_subscriber = TracingSubscriber()
+
+    projection_store = ExecutionProjectionStore()
+
+    projection_builder = ProjectionBuilder(
+        projection_store,
+    )
+
+    projection_subscriber = ProjectionSubscriber(
+        projection_builder,
+    )
 
     # Logging
     registry.subscribe(
@@ -143,4 +162,44 @@ def register_execution_subscribers(
     registry.subscribe(
         WorkerReleasedEvent,
         tracing_subscriber,
+    )
+
+    registry.subscribe(
+        PipelineStartedEvent,
+        projection_subscriber,
+    )
+
+    registry.subscribe(
+        PipelineCompletedEvent,
+        projection_subscriber,
+    )
+
+    registry.subscribe(
+        PipelineFailedEvent,
+        projection_subscriber,
+    )
+
+    registry.subscribe(
+        NodeStartedEvent,
+        projection_subscriber,
+    )
+
+    registry.subscribe(
+        NodeCompletedEvent,
+        projection_subscriber,
+    )
+
+    registry.subscribe(
+        NodeFailedEvent,
+        projection_subscriber,
+    )
+
+    registry.subscribe(
+        QueueEnqueuedEvent,
+        projection_subscriber,
+    )
+
+    registry.subscribe(
+        WorkerAssignedEvent,
+        projection_subscriber,
     )
