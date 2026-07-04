@@ -29,6 +29,12 @@ from backend.optimization.nodes.plan_analyze_node import (
     PlanAnalyzeNode,
 )
 from backend.optimization.parsers.explain_parser import ExplainParser
+from backend.optimization.nodes.recommendation_node import (
+    RecommendationNode,
+)
+from backend.optimization.recommendation.composition import (
+    build_recommendation_engine,
+)
 
 
 class OptimizationPipelineBuilder:
@@ -57,6 +63,8 @@ class OptimizationPipelineBuilder:
 
         analysis_engine = build_analysis_engine()
 
+        recommendation_engine = build_recommendation_engine()
+
         registry.register(
             NormalizeNode(),
         )
@@ -80,6 +88,12 @@ class OptimizationPipelineBuilder:
         registry.register(
             PlanAnalyzeNode(
                 analysis_engine,
+            )
+        )
+
+        registry.register(
+            RecommendationNode(
+                recommendation_engine,
             )
         )
 

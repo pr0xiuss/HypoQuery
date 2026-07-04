@@ -3,7 +3,7 @@ from typing import Any
 from backend.optimization.analysis.models.analysis_result import AnalysisResult
 from backend.execution.contracts.fingerprint import QueryFingerprint
 from backend.execution.lifecycle.enums import ExecutionStatus
-
+from backend.optimization.recommendation.models.recommendation_result import RecommendationResult
 
 @dataclass(slots=True)
 class PipelineState:
@@ -24,6 +24,8 @@ class PipelineState:
     execution_plan: Any | None = None
 
     analysis_result: AnalysisResult | None = None
+
+    recommendation_result: RecommendationResult | None = None
 
     artifacts: dict[str, Any] = field(default_factory=dict)
 
