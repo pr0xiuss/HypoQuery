@@ -222,6 +222,7 @@ backend
 │   │   │   ├── rule_based_analyzer.py
 │   │   │   └── workload_analyzer.py
 │   │   ├── bootstrap.py
+│   │   ├── composition.py
 │   │   ├── context.py
 │   │   ├── engine.py
 │   │   ├── __init__.py
@@ -234,13 +235,10 @@ backend
 │   │   │   ├── location.py
 │   │   │   ├── metadata.py
 │   │   │   └── severity.py
-│   │   ├── nodes
-│   │   │   ├── analysis_node.py
-│   │   │   └── __init__.py
 │   │   ├── registry
 │   │   │   ├── analyzer_registry.py
-│   │   │   └── __init__.py
-│   │   ├── result.py
+│   │   │   ├── __init__.py
+│   │   │   └── rule_registry.py
 │   │   ├── rules
 │   │   │   ├── base_rule.py
 │   │   │   ├── configuration
@@ -262,7 +260,6 @@ backend
 │   │   │   ├── health
 │   │   │   │   └── __init__.py
 │   │   │   ├── __init__.py
-│   │   │   ├── rule_registry.py
 │   │   │   └── workload
 │   │   │       └── __init__.py
 │   │   └── traversal
@@ -296,20 +293,6 @@ backend
 │   ├── pipeline
 │   │   ├── __init__.py
 │   │   └── optimization_pipeline_builder.py
-│   ├── rules
-│   │   ├── base_rule.py
-│   │   ├── bitmap_scan_rule.py
-│   │   ├── hash_aggregate_rule.py
-│   │   ├── hash_join_rule.py
-│   │   ├── index_only_scan_rule.py
-│   │   ├── index_scan_rule.py
-│   │   ├── __init__.py
-│   │   ├── merge_join_rule.py
-│   │   ├── nested_loop_rule.py
-│   │   ├── seq_scan_rule.py
-│   │   ├── shared_buffer_rule.py
-│   │   ├── sort_rule.py
-│   │   └── temp_write_rule.py
 │   └── services
 │       ├── __init__.py
 │       └── optimization_pipeline_service.py
@@ -344,4 +327,4 @@ backend
 └── validation
     └── __init__.py
 
-68 directories, 277 files
+66 directories, 262 files

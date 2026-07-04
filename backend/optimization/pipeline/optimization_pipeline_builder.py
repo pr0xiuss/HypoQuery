@@ -12,11 +12,6 @@ from backend.optimization.analysis.composition import build_analysis_engine
 from backend.execution.pipeline.pipeline import Pipeline
 from backend.execution.pipeline.registry import NodeRegistry
 
-from backend.execution.observability.services.observability_service import (
-    ObservabilityService,
-)
-
-from backend.optimization.analyzers.plan_analyzer import PlanAnalyzer
 from backend.optimization.collectors.explain_collector import ExplainCollector
 from backend.optimization.nodes.explain_collect_node import (
     ExplainCollectNode,
@@ -29,9 +24,6 @@ from backend.optimization.nodes.fingerprint_node import (
 )
 from backend.optimization.nodes.normalize_node import (
     NormalizeNode,
-)
-from backend.optimization.nodes.persist_result_node import (
-    PersistResultNode,
 )
 from backend.optimization.nodes.plan_analyze_node import (
     PlanAnalyzeNode,
@@ -65,10 +57,6 @@ class OptimizationPipelineBuilder:
 
         analysis_engine = build_analysis_engine()
 
-        observability = ObservabilityService(
-            self._connection,
-        )
-
         registry.register(
             NormalizeNode(),
         )
@@ -95,12 +83,6 @@ class OptimizationPipelineBuilder:
             )
         )
 
-        registry.register(
-            PersistResultNode(
-                observability,
-            )
-        )
-
         definition = PipelineDefinition(
             pipeline_id="optimization",
             version="1.0",
@@ -112,14 +94,12 @@ class OptimizationPipelineBuilder:
                 NodeDefinition("explain_collect"),
                 NodeDefinition("explain_parse"),
                 NodeDefinition("plan_analyze"),
-                NodeDefinition("persist_result"),
             ),
             edges={
                 "normalize": ("fingerprint",),
                 "fingerprint": ("explain_collect",),
                 "explain_collect": ("explain_parse",),
                 "explain_parse": ("plan_analyze",),
-                "plan_analyze": ("persist_result",),
             },
         )
 
