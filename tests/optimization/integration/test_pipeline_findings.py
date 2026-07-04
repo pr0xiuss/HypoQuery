@@ -7,6 +7,9 @@ from tests.execution.test_pipeline_executor import (
 from backend.optimization.pipeline.optimization_pipeline_builder import (
     OptimizationPipelineBuilder,
 )
+from backend.optimization.analysis.models.finding_collection import (
+    FindingCollection,
+)
 from uuid import uuid4
 from backend.ingestion.models.query import Query
 
@@ -29,7 +32,7 @@ def test_pipeline_findings(db_connection):
         sql="""
         SELECT *
         FROM customers
-        WHERE id = 1;
+        WHERE customer_id = 1;
         """,
     )
     execution_id = uuid4()
@@ -60,9 +63,9 @@ def test_pipeline_findings(db_connection):
         pipeline,
         execution,
     )
-    assert execution.state.findings is not None
+    assert execution.state.analysis_result is not None
     assert isinstance(
-        execution.state.findings,
-        list,
+        execution.state.analysis_result.findings,
+        FindingCollection,
     )
     connection.close()

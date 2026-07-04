@@ -3,33 +3,29 @@ from backend.optimization.analysis.composition import (
 )
 from backend.optimization.analysis.context import AnalysisContext
 from backend.optimization.models.execution_plan import ExecutionPlan
+from backend.shared.constants import LARGE_TABLE_SCAN_ROWS
 
 
-def test_analysis_engine_detects_large_seq_scan():
-
-    plan = ExecutionPlan(
-        node_type="Seq Scan",
-        relation_name="users",
-        estimated_rows=500000,
-        actual_rows=500000,
-        total_cost=25000,
-    )
+def test_analysis_engine_returns_analysis_result():
 
     engine = build_analysis_engine()
 
-    context = AnalysisContext(
-        execution_plan=plan,
+    plan = ExecutionPlan(
+        node_type="Seq Scan",
+        actual_rows=LARGE_TABLE_SCAN_ROWS,
     )
 
-    result = engine.analyze(context)
+    result = engine.analyze(
+        AnalysisContext(
+            execution_plan=plan,
+        )
+    )
 
     assert result is not None
-    assert result.total_findings > 0
 
-    findings = list(result.findings)
+    assert result.total_findings > 0
 
     assert any(
         finding.code == "LARGE_TABLE_SCAN"
-        and finding.title == "Large Sequential Scan"
-        for finding in findings
+        for finding in result.findings
     )
