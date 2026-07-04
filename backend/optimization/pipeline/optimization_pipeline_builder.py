@@ -7,6 +7,8 @@ from backend.execution.pipeline.definition import (
     NodeDefinition,
     PipelineDefinition,
 )
+from backend.optimization.analysis.composition import build_analysis_engine
+
 from backend.execution.pipeline.pipeline import Pipeline
 from backend.execution.pipeline.registry import NodeRegistry
 
@@ -61,7 +63,7 @@ class OptimizationPipelineBuilder:
 
         explain_parser = ExplainParser()
 
-        analyzer = PlanAnalyzer()
+        analysis_engine = build_analysis_engine()
 
         observability = ObservabilityService(
             self._connection,
@@ -89,7 +91,7 @@ class OptimizationPipelineBuilder:
 
         registry.register(
             PlanAnalyzeNode(
-                analyzer,
+                analysis_engine,
             )
         )
 

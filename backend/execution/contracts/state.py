@@ -1,6 +1,6 @@
 from dataclasses import dataclass, field
 from typing import Any
-
+from backend.optimization.analysis.models.analysis_result import AnalysisResult
 from backend.execution.contracts.fingerprint import QueryFingerprint
 from backend.execution.lifecycle.enums import ExecutionStatus
 
@@ -23,7 +23,7 @@ class PipelineState:
 
     execution_plan: Any | None = None
 
-    findings: list[Any] = field(default_factory=list)
+    analysis_result: AnalysisResult | None = None
 
     artifacts: dict[str, Any] = field(default_factory=dict)
 
