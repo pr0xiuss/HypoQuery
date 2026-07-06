@@ -5,6 +5,10 @@ from backend.execution.contracts.fingerprint import QueryFingerprint
 from backend.execution.lifecycle.enums import ExecutionStatus
 from backend.optimization.recommendation.models.recommendation_result import RecommendationResult
 from backend.optimization.validation.models.validation_result import ValidationResult
+from backend.optimization.ranking.models.ranking_result import RankingResult
+from backend.optimization.ranking.grouping.models.strategy_result import StrategyResult
+
+
 @dataclass(slots=True)
 class PipelineState:
     """
@@ -28,6 +32,10 @@ class PipelineState:
     recommendation_result: RecommendationResult | None = None
 
     validation_result: ValidationResult | None = None
+
+    ranking_result: RankingResult | None = None
+
+    strategy_result: StrategyResult | None = None
 
     artifacts: dict[str, Any] = field(default_factory=dict)
 
