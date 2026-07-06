@@ -4,7 +4,7 @@ from backend.optimization.analysis.models.analysis_result import AnalysisResult
 from backend.execution.contracts.fingerprint import QueryFingerprint
 from backend.execution.lifecycle.enums import ExecutionStatus
 from backend.optimization.recommendation.models.recommendation_result import RecommendationResult
-
+from backend.optimization.validation.models.validation_result import ValidationResult
 @dataclass(slots=True)
 class PipelineState:
     """
@@ -26,6 +26,8 @@ class PipelineState:
     analysis_result: AnalysisResult | None = None
 
     recommendation_result: RecommendationResult | None = None
+
+    validation_result: ValidationResult | None = None
 
     artifacts: dict[str, Any] = field(default_factory=dict)
 

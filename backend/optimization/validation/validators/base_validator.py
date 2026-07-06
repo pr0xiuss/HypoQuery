@@ -25,7 +25,7 @@ class RecommendationValidator(ABC):
 
     @property
     @abstractmethod
-    def supported_keys(
+    def supported_codes(
         self,
     ) -> set[str]:
         """

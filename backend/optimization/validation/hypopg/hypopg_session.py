@@ -40,3 +40,19 @@ class HypoPGSession:
     ) -> bool:
 
         return self._client.extension_available()
+    
+    def __enter__(
+        self,
+    ) -> "HypoPGSession":
+
+        return self
+
+
+    def __exit__(
+        self,
+        exc_type,
+        exc,
+        traceback,
+    ) -> None:
+
+        self.cleanup()

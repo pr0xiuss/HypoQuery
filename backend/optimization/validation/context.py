@@ -21,8 +21,6 @@ class ValidationContext:
     Immutable input supplied to the Validation bounded context.
     """
 
-    connection: Connection
-
     execution_plan: ExecutionPlan
 
     recommendation_result: RecommendationResult

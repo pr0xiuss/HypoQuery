@@ -13,28 +13,17 @@ from backend.execution.pipeline.pipeline import Pipeline
 from backend.execution.pipeline.registry import NodeRegistry
 
 from backend.optimization.collectors.explain_collector import ExplainCollector
-from backend.optimization.nodes.explain_collect_node import (
-    ExplainCollectNode,
-)
-from backend.optimization.nodes.explain_parse_node import (
-    ExplainParseNode,
-)
-from backend.optimization.nodes.fingerprint_node import (
-    FingerprintNode,
-)
-from backend.optimization.nodes.normalize_node import (
-    NormalizeNode,
-)
-from backend.optimization.nodes.plan_analyze_node import (
-    PlanAnalyzeNode,
-)
+from backend.optimization.nodes.explain_collect_node import ExplainCollectNode
+from backend.optimization.nodes.explain_parse_node import ExplainParseNode
+from backend.optimization.nodes.fingerprint_node import FingerprintNode
+from backend.optimization.nodes.normalize_node import NormalizeNode
+from backend.optimization.nodes.plan_analyze_node import PlanAnalyzeNode
 from backend.optimization.parsers.explain_parser import ExplainParser
-from backend.optimization.nodes.recommendation_node import (
-    RecommendationNode,
-)
-from backend.optimization.recommendation.composition import (
-    build_recommendation_engine,
-)
+from backend.optimization.nodes.recommendation_node import RecommendationNode
+from backend.optimization.recommendation.composition import build_recommendation_engine
+from backend.optimization.nodes.validation_node import ValidationNode
+
+from backend.optimization.validation.composition import build_validation_engine
 
 
 class OptimizationPipelineBuilder:
@@ -44,11 +33,7 @@ class OptimizationPipelineBuilder:
     Phase 1 becomes a reusable execution pipeline.
     """
 
-    def __init__(
-        self,
-        connection: Connection,
-    ) -> None:
-
+    def __init__(self, connection: Connection,) -> None:
         self._connection = connection
 
     def build(self) -> Pipeline:
@@ -64,6 +49,8 @@ class OptimizationPipelineBuilder:
         analysis_engine = build_analysis_engine()
 
         recommendation_engine = build_recommendation_engine()
+
+        validation_engine = build_validation_engine(self._connection,)
 
         registry.register(
             NormalizeNode(),
@@ -97,6 +84,12 @@ class OptimizationPipelineBuilder:
             )
         )
 
+        registry.register(
+            ValidationNode(
+                validation_engine,
+            )
+        )
+
         definition = PipelineDefinition(
             pipeline_id="optimization",
             version="1.0",
@@ -108,12 +101,16 @@ class OptimizationPipelineBuilder:
                 NodeDefinition("explain_collect"),
                 NodeDefinition("explain_parse"),
                 NodeDefinition("plan_analyze"),
+                NodeDefinition("recommendation"),
+                NodeDefinition("validation"),
             ),
             edges={
                 "normalize": ("fingerprint",),
                 "fingerprint": ("explain_collect",),
                 "explain_collect": ("explain_parse",),
                 "explain_parse": ("plan_analyze",),
+                "plan_analyze": ("recommendation",),
+                "recommendation": ("validation",),
             },
         )
 
