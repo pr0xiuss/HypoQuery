@@ -3,16 +3,13 @@ from __future__ import annotations
 from backend.optimization.analysis.context import AnalysisContext
 from backend.optimization.analysis.models.categories import FindingCategory
 from backend.optimization.analysis.models.finding import Finding
-from backend.optimization.analysis.models.finding_collection import (
-    FindingCollection,
-)
+from backend.optimization.analysis.models.finding_collection import FindingCollection
 from backend.optimization.analysis.models.location import FindingLocation
 from backend.optimization.analysis.models.metadata import FindingMetadata
 from backend.optimization.analysis.models.severity import FindingSeverity
 from backend.optimization.analysis.rules.base_rule import AnalysisRule
-from backend.optimization.analysis.traversal.execution_plan_traverser import (
-    ExecutionPlanTraverser,
-)
+from backend.optimization.analysis.traversal.execution_plan_traverser import ExecutionPlanTraverser
+from backend.optimization.analysis.parsers.predicate_parser import PredicateParser
 from backend.shared.constants import LARGE_TABLE_SCAN_ROWS
 
 
@@ -23,20 +20,17 @@ class SeqScanRule(AnalysisRule):
     Small sequential scans are normal and intentionally ignored.
     """
 
-    def __init__(
-        self,
-        traverser: ExecutionPlanTraverser,
-    ) -> None:
+    def __init__(self, traverser: ExecutionPlanTraverser, predicate_parser: PredicateParser,) -> None:
+
         self._traverser = traverser
+        self._predicate_parser = predicate_parser
+
 
     @property
     def name(self) -> str:
         return "large_table_scan"
 
-    def analyze(
-        self,
-        context: AnalysisContext,
-    ) -> FindingCollection:
+    def analyze(self, context: AnalysisContext,) -> FindingCollection:
 
         findings = FindingCollection()
 
@@ -47,6 +41,8 @@ class SeqScanRule(AnalysisRule):
 
             if node.actual_rows < LARGE_TABLE_SCAN_ROWS:
                 continue
+
+            filter_columns = (self._predicate_parser.extract_columns(node.filter_condition))
 
             findings.add(
                 Finding(
@@ -69,6 +65,8 @@ class SeqScanRule(AnalysisRule):
                             "startup_cost": node.startup_cost,
                             "total_cost": node.total_cost,
                             "shared_read_blocks": node.shared_read_blocks,
+                            "filter_condition": node.filter_condition,
+                            "filter_columns": filter_columns,
                         }
                     ),
                 )

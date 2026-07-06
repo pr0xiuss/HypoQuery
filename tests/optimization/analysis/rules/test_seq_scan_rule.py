@@ -1,10 +1,7 @@
 from backend.optimization.analysis.context import AnalysisContext
-from backend.optimization.analysis.rules.execution.seq_scan_rule import (
-    SeqScanRule,
-)
-from backend.optimization.analysis.traversal.execution_plan_traverser import (
-    ExecutionPlanTraverser,
-)
+from backend.optimization.analysis.rules.execution.seq_scan_rule import SeqScanRule
+from backend.optimization.analysis.traversal.execution_plan_traverser import ExecutionPlanTraverser
+from backend.optimization.analysis.parsers.predicate_parser import PredicateParser
 from backend.optimization.models.execution_plan import ExecutionPlan
 from backend.shared.constants import LARGE_TABLE_SCAN_ROWS
 
@@ -20,6 +17,7 @@ def test_detects_large_seq_scan():
 
     rule = SeqScanRule(
         ExecutionPlanTraverser(),
+        PredicateParser()
     )
 
     findings = rule.analyze(
@@ -46,6 +44,7 @@ def test_ignores_small_seq_scan():
 
     rule = SeqScanRule(
         ExecutionPlanTraverser(),
+        PredicateParser()
     )
 
     findings = rule.analyze(

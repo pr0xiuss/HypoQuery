@@ -22,6 +22,14 @@ class ExecutionPlan:
 
     filter_condition: str | None = None
 
+    index_condition: str | None = None
+
+    recheck_condition: str | None = None
+
+    merge_condition: str | None = None
+
+    join_filter: str | None = None
+
     estimated_rows: int = 0
 
     actual_rows: int = 0

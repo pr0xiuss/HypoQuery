@@ -1,14 +1,26 @@
+from __future__ import annotations
+
 from psycopg import Connection
+
 from backend.ingestion.models.query import Query
 
+
 class ExplainCollector:
+    """
+    Executes EXPLAIN ANALYZE and returns the PostgreSQL JSON plan.
+    """
 
-    def __init__(self, connection: Connection):
-        self.connection = connection
+    def __init__(self, connection: Connection,) -> None:
 
-    def collect(self, query: Query) -> dict:
+        self._connection = connection
 
-        sql = query.sql
+    def collect(self, query: Query | str,) -> dict:
+
+        sql = (
+            query.sql
+            if isinstance(query, Query)
+            else query
+        )
 
         explain_query = f"""
         EXPLAIN (
@@ -20,14 +32,12 @@ class ExplainCollector:
         {sql}
         """
 
-        with self.connection.cursor() as cursor:
+        with self._connection.cursor() as cursor:
 
-            cursor.execute(explain_query)
+            cursor.execute(
+                explain_query,
+            )
 
             result = cursor.fetchone()[0]
-
-        # print(
-        #     json.dumps(result[0], indent=4,)
-        # )
 
         return result[0]
