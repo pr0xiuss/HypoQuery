@@ -23,7 +23,8 @@ from backend.optimization.ranking.composition import build_ranking_engine
 from backend.optimization.validation.composition import build_validation_engine
 from backend.optimization.ranking.grouping.composition import build_strategy_engine
 from backend.optimization.ranking.grouping.node import StrategyNode
-
+from backend.optimization.reporting.composition import build_reporting_engine
+from backend.optimization.reporting.node import ReportingNode
 
 class OptimizationPipelineBuilder:
     """
@@ -54,6 +55,8 @@ class OptimizationPipelineBuilder:
         ranking_engine = build_ranking_engine()
 
         strategy_engine = build_strategy_engine()
+
+        reporting_engine = build_reporting_engine()
 
         registry.register(
             NormalizeNode(),
@@ -105,6 +108,12 @@ class OptimizationPipelineBuilder:
             )
         )
 
+        registry.register(
+            ReportingNode(
+                reporting_engine,
+            )
+        )
+
         definition = PipelineDefinition(
             pipeline_id="optimization",
             version="1.0",
@@ -120,6 +129,7 @@ class OptimizationPipelineBuilder:
                 NodeDefinition("validation"),
                 NodeDefinition("ranking"),
                 NodeDefinition("strategy"),
+                NodeDefinition("reporting"),
 
             ),
             edges={
@@ -131,6 +141,7 @@ class OptimizationPipelineBuilder:
                 "recommendation": ("validation",),
                 "validation": ("ranking",),
                 "ranking": ("strategy",),
+                "strategy": ("reporting",),
             },
         )
 
