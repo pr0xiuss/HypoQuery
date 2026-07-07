@@ -8,6 +8,8 @@ from backend.optimization.validation.models.validation_result import ValidationR
 from backend.optimization.ranking.models.ranking_result import RankingResult
 from backend.optimization.ranking.grouping.models.strategy_result import StrategyResult
 from backend.optimization.reporting.models.optimization_report import OptimizationReport
+from backend.optimization.history.models.history_result import HistoryResult
+
 
 @dataclass(slots=True)
 class PipelineState:
@@ -38,6 +40,8 @@ class PipelineState:
     strategy_result: StrategyResult | None = None
 
     report: OptimizationReport | None = None
+
+    history_result: HistoryResult | None = None
 
     artifacts: dict[str, Any] = field(default_factory=dict)
 

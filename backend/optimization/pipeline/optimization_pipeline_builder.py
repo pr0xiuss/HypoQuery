@@ -25,6 +25,9 @@ from backend.optimization.ranking.grouping.composition import build_strategy_eng
 from backend.optimization.ranking.grouping.node import StrategyNode
 from backend.optimization.reporting.composition import build_reporting_engine
 from backend.optimization.reporting.node import ReportingNode
+from backend.optimization.history.composition import build_history_engine
+from backend.optimization.history.node import HistoryNode
+
 
 class OptimizationPipelineBuilder:
     """
@@ -114,6 +117,12 @@ class OptimizationPipelineBuilder:
             )
         )
 
+        registry.register(
+            HistoryNode(
+                build_history_engine(),
+            ),
+        )
+
         definition = PipelineDefinition(
             pipeline_id="optimization",
             version="1.0",
@@ -130,6 +139,7 @@ class OptimizationPipelineBuilder:
                 NodeDefinition("ranking"),
                 NodeDefinition("strategy"),
                 NodeDefinition("reporting"),
+                NodeDefinition("history"),
 
             ),
             edges={
@@ -142,6 +152,7 @@ class OptimizationPipelineBuilder:
                 "validation": ("ranking",),
                 "ranking": ("strategy",),
                 "strategy": ("reporting",),
+                "reporting": ("history",),
             },
         )
 
