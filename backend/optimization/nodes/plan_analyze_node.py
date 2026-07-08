@@ -3,20 +3,20 @@ from __future__ import annotations
 from backend.execution.contracts.execution import PipelineExecution
 from backend.execution.contracts.node_result import NodeResult
 from backend.execution.pipeline.base_node import PipelineNode
-from backend.optimization.analyzers.plan_analyzer import PlanAnalyzer
+from backend.optimization.analysis.context import AnalysisContext
+from backend.optimization.analysis.engine import AnalysisEngine
 
 
 class PlanAnalyzeNode(PipelineNode):
     """
-    Runs deterministic optimization rules.
+    Integrates the Analysis bounded context into the execution pipeline.
     """
 
     def __init__(
         self,
-        analyzer: PlanAnalyzer,
+        engine: AnalysisEngine,
     ) -> None:
-
-        self._analyzer = analyzer
+        self._engine = engine
 
     @property
     def name(self) -> str:
@@ -32,8 +32,14 @@ class PlanAnalyzeNode(PipelineNode):
                 "Execution plan missing."
             )
 
-        execution.state.findings = self._analyzer.analyze(
-            execution.state.execution_plan
+        context = AnalysisContext(
+            execution_plan=execution.state.execution_plan,
         )
 
-        return NodeResult.success()
+        execution.state.analysis_result = self._engine.analyze(
+            context
+        )
+
+        return NodeResult.success(
+            "Execution plan analyzed successfully."
+        )

@@ -1,40 +1,32 @@
 from __future__ import annotations
-
 from psycopg import Connection
-
 from backend.execution.pipeline.builder import PipelineBuilder
 from backend.execution.pipeline.definition import (
     NodeDefinition,
     PipelineDefinition,
 )
+from backend.optimization.analysis.composition import build_analysis_engine
 from backend.execution.pipeline.pipeline import Pipeline
 from backend.execution.pipeline.registry import NodeRegistry
-
-from backend.execution.observability.services.observability_service import (
-    ObservabilityService,
-)
-
-from backend.optimization.analyzers.plan_analyzer import PlanAnalyzer
 from backend.optimization.collectors.explain_collector import ExplainCollector
-from backend.optimization.nodes.explain_collect_node import (
-    ExplainCollectNode,
-)
-from backend.optimization.nodes.explain_parse_node import (
-    ExplainParseNode,
-)
-from backend.optimization.nodes.fingerprint_node import (
-    FingerprintNode,
-)
-from backend.optimization.nodes.normalize_node import (
-    NormalizeNode,
-)
-from backend.optimization.nodes.persist_result_node import (
-    PersistResultNode,
-)
-from backend.optimization.nodes.plan_analyze_node import (
-    PlanAnalyzeNode,
-)
+from backend.optimization.nodes.explain_collect_node import ExplainCollectNode
+from backend.optimization.nodes.explain_parse_node import ExplainParseNode
+from backend.optimization.nodes.fingerprint_node import FingerprintNode
+from backend.optimization.nodes.normalize_node import NormalizeNode
+from backend.optimization.nodes.plan_analyze_node import PlanAnalyzeNode
 from backend.optimization.parsers.explain_parser import ExplainParser
+from backend.optimization.nodes.recommendation_node import RecommendationNode
+from backend.optimization.recommendation.composition import build_recommendation_engine
+from backend.optimization.nodes.validation_node import ValidationNode
+from backend.optimization.nodes.ranking_node import RankingNode
+from backend.optimization.ranking.composition import build_ranking_engine
+from backend.optimization.validation.composition import build_validation_engine
+from backend.optimization.ranking.grouping.composition import build_strategy_engine
+from backend.optimization.ranking.grouping.node import StrategyNode
+from backend.optimization.reporting.composition import build_reporting_engine
+from backend.optimization.reporting.node import ReportingNode
+from backend.optimization.history.composition import build_history_engine
+from backend.optimization.history.node import HistoryNode
 
 
 class OptimizationPipelineBuilder:
@@ -44,11 +36,7 @@ class OptimizationPipelineBuilder:
     Phase 1 becomes a reusable execution pipeline.
     """
 
-    def __init__(
-        self,
-        connection: Connection,
-    ) -> None:
-
+    def __init__(self, connection: Connection,) -> None:
         self._connection = connection
 
     def build(self) -> Pipeline:
@@ -61,11 +49,17 @@ class OptimizationPipelineBuilder:
 
         explain_parser = ExplainParser()
 
-        analyzer = PlanAnalyzer()
+        analysis_engine = build_analysis_engine()
 
-        observability = ObservabilityService(
-            self._connection,
-        )
+        recommendation_engine = build_recommendation_engine()
+
+        validation_engine = build_validation_engine(self._connection,)
+
+        ranking_engine = build_ranking_engine()
+
+        strategy_engine = build_strategy_engine()
+
+        reporting_engine = build_reporting_engine()
 
         registry.register(
             NormalizeNode(),
@@ -89,14 +83,44 @@ class OptimizationPipelineBuilder:
 
         registry.register(
             PlanAnalyzeNode(
-                analyzer,
+                analysis_engine,
             )
         )
 
         registry.register(
-            PersistResultNode(
-                observability,
+            RecommendationNode(
+                recommendation_engine,
             )
+        )
+
+        registry.register(
+            ValidationNode(
+                validation_engine,
+            )
+        )
+
+        registry.register(
+            RankingNode(
+                ranking_engine,
+            )
+        )
+
+        registry.register(
+            StrategyNode(
+                strategy_engine,
+            )
+        )
+
+        registry.register(
+            ReportingNode(
+                reporting_engine,
+            )
+        )
+
+        registry.register(
+            HistoryNode(
+                build_history_engine(),
+            ),
         )
 
         definition = PipelineDefinition(
@@ -110,14 +134,25 @@ class OptimizationPipelineBuilder:
                 NodeDefinition("explain_collect"),
                 NodeDefinition("explain_parse"),
                 NodeDefinition("plan_analyze"),
-                NodeDefinition("persist_result"),
+                NodeDefinition("recommendation"),
+                NodeDefinition("validation"),
+                NodeDefinition("ranking"),
+                NodeDefinition("strategy"),
+                NodeDefinition("reporting"),
+                NodeDefinition("history"),
+
             ),
             edges={
                 "normalize": ("fingerprint",),
                 "fingerprint": ("explain_collect",),
                 "explain_collect": ("explain_parse",),
                 "explain_parse": ("plan_analyze",),
-                "plan_analyze": ("persist_result",),
+                "plan_analyze": ("recommendation",),
+                "recommendation": ("validation",),
+                "validation": ("ranking",),
+                "ranking": ("strategy",),
+                "strategy": ("reporting",),
+                "reporting": ("history",),
             },
         )
 

@@ -1,0 +1,330 @@
+backend
+├── api
+│   └── __init__.py
+├── config
+│   └── __init__.py
+├── execution
+│   ├── bootstrap
+│   │   ├── event_registration.py
+│   │   ├── __init__.py
+│   │   └── subscriber_registration.py
+│   ├── bus
+│   │   ├── event_bus.py
+│   │   ├── __init__.py
+│   │   ├── in_process_event_bus.py
+│   │   └── subscriber_registry.py
+│   ├── contracts
+│   │   ├── context.py
+│   │   ├── enums.py
+│   │   ├── events
+│   │   │   ├── base.py
+│   │   │   ├── enums.py
+│   │   │   ├── __init__.py
+│   │   │   ├── node.py
+│   │   │   ├── pipeline.py
+│   │   │   ├── queue.py
+│   │   │   └── worker.py
+│   │   ├── exceptions.py
+│   │   ├── execution.py
+│   │   ├── fingerprint.py
+│   │   ├── __init__.py
+│   │   ├── job.py
+│   │   ├── lifecycle.py
+│   │   ├── node_result.py
+│   │   ├── publisher.py
+│   │   ├── result.py
+│   │   ├── state.py
+│   │   └── subscriber.py
+│   ├── demo
+│   │   ├── end_node.py
+│   │   ├── __init__.py
+│   │   ├── middle_node.py
+│   │   ├── run_demo.py
+│   │   └── start_node.py
+│   ├── events
+│   │   ├── execution_event_factory.py
+│   │   ├── execution_event_metadata_provider.py
+│   │   ├── __init__.py
+│   │   ├── metadata_factory.py
+│   │   ├── metadata.py
+│   │   └── version.py
+│   ├── __init__.py
+│   ├── lifecycle
+│   │   ├── base.py
+│   │   ├── enums.py
+│   │   ├── exceptions.py
+│   │   ├── execution_lifecycle.py
+│   │   ├── __init__.py
+│   │   └── transitions.py
+│   ├── observability
+│   │   ├── __init__.py
+│   │   ├── models
+│   │   │   ├── __init__.py
+│   │   │   └── pipeline_log.py
+│   │   ├── repositories
+│   │   │   ├── __init__.py
+│   │   │   └── pipeline_log_repo.py
+│   │   └── services
+│   │       ├── __init__.py
+│   │       └── observability_service.py
+│   ├── pipeline
+│   │   ├── base_node.py
+│   │   ├── builder.py
+│   │   ├── definition.py
+│   │   ├── executor.py
+│   │   ├── __init__.py
+│   │   ├── pipeline.py
+│   │   ├── pipeline_registry.py
+│   │   └── registry.py
+│   ├── policies
+│   │   └── __init__.py
+│   ├── projections
+│   │   ├── execution_projection.py
+│   │   ├── execution_projection_store.py
+│   │   ├── __init__.py
+│   │   ├── projection_builder.py
+│   │   └── projection_subscriber.py
+│   ├── publisher
+│   │   ├── event_publisher.py
+│   │   └── __init__.py
+│   ├── queue
+│   │   ├── base_queue.py
+│   │   ├── exceptions.py
+│   │   ├── __init__.py
+│   │   ├── job_record.py
+│   │   └── memory_queue.py
+│   ├── runtime
+│   │   ├── clock.py
+│   │   ├── execution_runtime.py
+│   │   ├── __init__.py
+│   │   ├── node_runtime.py
+│   │   ├── runtime_context.py
+│   │   ├── runtime_result.py
+│   │   └── system_clock.py
+│   ├── subscribers
+│   │   ├── __init__.py
+│   │   ├── logging_subscriber.py
+│   │   ├── metrics_subscriber.py
+│   │   ├── record_subscriber.py
+│   │   └── tracing_subscriber.py
+│   └── workers
+│       ├── base_worker.py
+│       ├── dispatcher.py
+│       ├── __init__.py
+│       ├── worker_pool.py
+│       └── worker.py
+├── ingestion
+│   ├── collectors
+│   │   ├── base_collector.py
+│   │   ├── benchmark_collector.py
+│   │   └── __init__.py
+│   ├── executor.py
+│   ├── generators
+│   │   └── __init__.py
+│   ├── __init__.py
+│   ├── metadata_parser.py
+│   ├── models
+│   │   ├── __init__.py
+│   │   ├── query.py
+│   │   └── query_result.py
+│   ├── queries
+│   │   ├── aggregations
+│   │   │   ├── AGG001.sql
+│   │   │   ├── AGG002.sql
+│   │   │   ├── AGG003.sql
+│   │   │   ├── AGG004.sql
+│   │   │   ├── AGG005.sql
+│   │   │   └── __init__.py
+│   │   ├── indexing
+│   │   │   ├── IDX001.sql
+│   │   │   ├── IDX002.sql
+│   │   │   ├── IDX003.sql
+│   │   │   ├── IDX004.sql
+│   │   │   ├── IDX005.sql
+│   │   │   └── __init__.py
+│   │   ├── __init__.py
+│   │   ├── joins
+│   │   │   ├── __init__.py
+│   │   │   ├── JOIN001.sql
+│   │   │   ├── JOIN002.sql
+│   │   │   ├── JOIN003.sql
+│   │   │   ├── JOIN004.sql
+│   │   │   └── JOIN005.sql
+│   │   ├── jsonb
+│   │   │   ├── __init__.py
+│   │   │   ├── JSON001.sql
+│   │   │   ├── JSON002.sql
+│   │   │   ├── JSON003.sql
+│   │   │   ├── JSON004.sql
+│   │   │   └── JSON005.sql
+│   │   ├── sequential_scan
+│   │   │   ├── __init__.py
+│   │   │   ├── Q001.sql
+│   │   │   ├── Q002.sql
+│   │   │   ├── Q003.sql
+│   │   │   ├── Q004.sql
+│   │   │   └── Q005.sql
+│   │   ├── sorting
+│   │   │   ├── __init__.py
+│   │   │   ├── SORT001.sql
+│   │   │   ├── SORT002.sql
+│   │   │   ├── SORT003.sql
+│   │   │   ├── SORT004.sql
+│   │   │   └── SORT005.sql
+│   │   └── subqueries
+│   │       ├── __init__.py
+│   │       ├── SUB001.sql
+│   │       ├── SUB002.sql
+│   │       ├── SUB003.sql
+│   │       ├── SUB004.sql
+│   │       └── SUB005.sql
+│   ├── query_catalog.py
+│   ├── run_benchmark.py
+│   ├── run_ingestion.py
+│   ├── runner.py
+│   ├── seeders
+│   │   └── __init__.py
+│   ├── selection
+│   │   ├── analysis_candidate.py
+│   │   ├── candidate_generator.py
+│   │   ├── candidate_score.py
+│   │   ├── __init__.py
+│   │   ├── scoring_policy.py
+│   │   └── selection_engine.py
+│   ├── services
+│   │   ├── ingestion_service.py
+│   │   └── __init__.py
+│   └── workload.py
+├── __init__.py
+├── models
+│   ├── customer.py
+│   ├── enums.py
+│   ├── __init__.py
+│   ├── inventory.py
+│   ├── order.py
+│   ├── product_event.py
+│   ├── product.py
+│   └── review.py
+├── observability
+│   └── persistence
+│       ├── event_repository.py
+│       ├── event_serializer.py
+│       ├── __init__.py
+│       └── persistence_subscriber.py
+├── optimization
+│   ├── analysis
+│   │   ├── analyzers
+│   │   │   ├── base_analyzer.py
+│   │   │   ├── configuration_analyzer.py
+│   │   │   ├── execution_analyzer.py
+│   │   │   ├── health_analyzer.py
+│   │   │   ├── __init__.py
+│   │   │   ├── rule_based_analyzer.py
+│   │   │   └── workload_analyzer.py
+│   │   ├── bootstrap.py
+│   │   ├── composition.py
+│   │   ├── context.py
+│   │   ├── engine.py
+│   │   ├── __init__.py
+│   │   ├── models
+│   │   │   ├── analysis_result.py
+│   │   │   ├── categories.py
+│   │   │   ├── finding_collection.py
+│   │   │   ├── finding.py
+│   │   │   ├── __init__.py
+│   │   │   ├── location.py
+│   │   │   ├── metadata.py
+│   │   │   └── severity.py
+│   │   ├── registry
+│   │   │   ├── analyzer_registry.py
+│   │   │   ├── __init__.py
+│   │   │   └── rule_registry.py
+│   │   ├── rules
+│   │   │   ├── base_rule.py
+│   │   │   ├── configuration
+│   │   │   │   └── __init__.py
+│   │   │   ├── execution
+│   │   │   │   ├── bitmap_scan_rule.py
+│   │   │   │   ├── cardinality_mismatch_rule.py
+│   │   │   │   ├── deep_execution_plan_rule.py
+│   │   │   │   ├── hash_aggregate_rule.py
+│   │   │   │   ├── hash_join_rule.py
+│   │   │   │   ├── high_cost_node_rule.py
+│   │   │   │   ├── __init__.py
+│   │   │   │   ├── merge_join_rule.py
+│   │   │   │   ├── nested_loop_rule.py
+│   │   │   │   ├── seq_scan_rule.py
+│   │   │   │   ├── shared_buffer_rule.py
+│   │   │   │   ├── sort_rule.py
+│   │   │   │   └── temp_write_rule.py
+│   │   │   ├── health
+│   │   │   │   └── __init__.py
+│   │   │   ├── __init__.py
+│   │   │   └── workload
+│   │   │       └── __init__.py
+│   │   └── traversal
+│   │       ├── execution_plan_traverser.py
+│   │       └── __init__.py
+│   ├── analyzers
+│   │   ├── __init__.py
+│   │   └── plan_analyzer.py
+│   ├── collectors
+│   │   ├── explain_collector.py
+│   │   └── __init__.py
+│   ├── __init__.py
+│   ├── models
+│   │   ├── execution_plan.py
+│   │   ├── execution_report.py
+│   │   ├── __init__.py
+│   │   ├── optimization_finding.py
+│   │   ├── optimization_result.py
+│   │   └── optimization_run.py
+│   ├── nodes
+│   │   ├── explain_collect_node.py
+│   │   ├── explain_parse_node.py
+│   │   ├── fingerprint_node.py
+│   │   ├── __init__.py
+│   │   ├── normalize_node.py
+│   │   ├── persist_result_node.py
+│   │   └── plan_analyze_node.py
+│   ├── parsers
+│   │   ├── explain_parser.py
+│   │   └── __init__.py
+│   ├── pipeline
+│   │   ├── __init__.py
+│   │   └── optimization_pipeline_builder.py
+│   └── services
+│       ├── __init__.py
+│       └── optimization_pipeline_service.py
+├── ranking
+│   └── __init__.py
+├── recommendation
+│   └── __init__.py
+├── reporting
+│   └── __init__.py
+├── repositories
+│   ├── base_repo.py
+│   ├── customer_repo.py
+│   ├── __init__.py
+│   ├── inventory_repo.py
+│   ├── optimization_result_repo.py
+│   ├── optimization_run_repo.py
+│   ├── order_repo.py
+│   ├── product_event_repo.py
+│   ├── product_repo.py
+│   └── review_repo.py
+├── retrieval
+│   └── __init__.py
+├── shared
+│   ├── constants.py
+│   ├── container.py
+│   ├── db.py
+│   ├── exceptions.py
+│   ├── __init__.py
+│   ├── logger.py
+│   ├── settings_factory.py
+│   └── settings.py
+└── validation
+    └── __init__.py
+
+66 directories, 262 files
