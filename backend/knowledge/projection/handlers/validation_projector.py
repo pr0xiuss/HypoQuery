@@ -46,14 +46,17 @@ class ValidationProjector(Projector):
                 validation,
             )
 
-            graph.nodes[
-                node.key
-            ] = node
+            graph.add_node(
+                node,
+            )
 
-            for relationship in self._relationship_builder.build(
-                validation=validation,
-                graph=graph,
-            ):
-                graph.relationships[
-                    relationship.key
-                ] = relationship
+            relationships = self._relationship_builder.build(
+                validation,
+                graph,
+            )
+
+            for relationship in relationships:
+
+                graph.add_relationship(
+                    relationship,
+                )

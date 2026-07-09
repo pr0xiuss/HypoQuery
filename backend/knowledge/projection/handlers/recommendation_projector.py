@@ -47,14 +47,17 @@ class RecommendationProjector(Projector):
                 recommendation,
             )
 
-            graph.nodes[
-                node.key
-            ] = node
+            graph.add_node(
+                node,
+            )
 
-            for relationship in self._relationship_builder.build(
-                recommendation=recommendation,
-                graph=graph,
-            ):
-                graph.relationships[
-                    relationship.key
-                ] = relationship
+            relationships = self._relationship_builder.build(
+                recommendation,
+                graph,
+            )
+
+            for relationship in relationships:
+
+                graph.connect(
+                    relationship,
+                )

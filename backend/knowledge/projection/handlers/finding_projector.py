@@ -6,9 +6,6 @@ from backend.knowledge.models.knowledge_graph import (
 from backend.knowledge.projection.builders.finding_node_builder import (
     FindingNodeBuilder,
 )
-from backend.knowledge.projection.builders.finding_relationship_builder import (
-    FindingRelationshipBuilder,
-)
 from backend.knowledge.projection.context import (
     ProjectionContext,
 )
@@ -26,13 +23,9 @@ class FindingProjector(Projector):
     def name(self) -> str:
         return "finding_projector"
 
-    def __init__(
-        self,
-        node_builder: FindingNodeBuilder,
-        relationship_builder: FindingRelationshipBuilder,
-    ) -> None:
+    def __init__(self, node_builder: FindingNodeBuilder,) -> None:
+        
         self._node_builder = node_builder
-        self._relationship_builder = relationship_builder
 
     def project(
         self,
@@ -46,12 +39,6 @@ class FindingProjector(Projector):
                 finding,
             )
 
-            graph.nodes[node.key] = node
-
-            for relationship in self._relationship_builder.build(
-                finding=finding,
-                graph=graph,
-            ):
-                graph.relationships[
-                    relationship.key
-                ] = relationship
+            graph.add_node(
+                node,
+            )

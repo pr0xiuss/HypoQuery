@@ -5,9 +5,6 @@ from dataclasses import dataclass, field
 from backend.knowledge.projection.builders.finding_node_builder import (
     FindingNodeBuilder,
 )
-from backend.knowledge.projection.builders.finding_relationship_builder import (
-    FindingRelationshipBuilder,
-)
 from backend.knowledge.projection.builders.graph_snapshot_builder import (
     GraphSnapshotBuilder,
 )
@@ -68,7 +65,6 @@ class ProjectionComposition:
         self.projection_registry.register(
             FindingProjector(
                 node_builder=FindingNodeBuilder(),
-                relationship_builder=FindingRelationshipBuilder(),
             )
         )
 

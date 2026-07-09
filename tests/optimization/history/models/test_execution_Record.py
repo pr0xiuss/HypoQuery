@@ -12,9 +12,6 @@ from backend.optimization.history.models.execution_summary import (
 from backend.optimization.history.models.optimization_snapshot import (
     OptimizationSnapshot,
 )
-from backend.optimization.reporting.models.optimization_report import (
-    OptimizationReport,
-)
 from backend.optimization.reporting.models.report_summary import (
     ReportSummary,
 )
@@ -36,9 +33,7 @@ def test_execution_record():
     summary = ExecutionSummary()
 
     snapshot = OptimizationSnapshot(
-        report=OptimizationReport(
-            summary=ReportSummary(),
-        )
+        summary=ReportSummary(),
     )
 
     record = ExecutionRecord(

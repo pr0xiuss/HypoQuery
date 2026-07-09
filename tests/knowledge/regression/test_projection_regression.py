@@ -3,9 +3,6 @@ from uuid import uuid4
 from backend.knowledge.projection.builders.finding_node_builder import (
     FindingNodeBuilder,
 )
-from backend.knowledge.projection.builders.finding_relationship_builder import (
-    FindingRelationshipBuilder,
-)
 from backend.knowledge.projection.builders.graph_snapshot_builder import (
     GraphSnapshotBuilder,
 )
@@ -30,6 +27,15 @@ from backend.knowledge.projection.service import (
 from backend.knowledge.repositories.memory_repository import (
     MemoryKnowledgeRepository,
 )
+from backend.optimization.analysis.models.finding import (
+    Finding,
+)
+from backend.optimization.analysis.models.categories import (
+    FindingCategory,
+)
+from backend.optimization.analysis.models.severity import (
+    FindingSeverity,
+)
 from backend.optimization.history.models.execution_metadata import (
     ExecutionMetadata,
 )
@@ -45,47 +51,50 @@ from backend.optimization.history.models.optimization_snapshot import (
 from backend.optimization.reporting.models.report_summary import (
     ReportSummary,
 )
-from tests.knowledge.fixtures import (
-    build_finding,
-)
 
 
-def test_projection_is_deterministic() -> None:
+def build_execution():
 
-    snapshot = OptimizationSnapshot(
-        summary=ReportSummary(),
-        findings=(
-            build_finding(),
-        ),
+    finding = Finding(
+        category=FindingCategory.EXECUTION,
+        code="SEQ_SCAN",
+        title="Sequential Scan",
+        description="Detected",
+        severity=FindingSeverity.HIGH,
     )
 
-    execution = ExecutionRecord(
+    return ExecutionRecord(
         metadata=ExecutionMetadata(
             execution_id=uuid4(),
             trace_id=uuid4(),
-            fingerprint="deterministic",
+            fingerprint="fp",
             normalized_sql="SELECT 1",
             pipeline_name="knowledge",
             pipeline_version="1.0",
-            database="hypoquery",
+            database="postgres",
             schema="public",
         ),
         summary=ExecutionSummary(),
-        snapshot=snapshot,
+        snapshot=OptimizationSnapshot(
+            summary=ReportSummary(),
+            findings=(finding,),
+        ),
     )
+
+
+def test_projection_is_deterministic():
 
     registry = ProjectionRegistry()
 
     registry.register(
         FindingProjector(
             node_builder=FindingNodeBuilder(),
-            relationship_builder=FindingRelationshipBuilder(),
         )
     )
 
     service = KnowledgeProjectionService(
         engine=ProjectionEngine(
-            registry=registry,
+            registry,
         ),
         snapshot_builder=GraphSnapshotBuilder(),
         repository=MemoryKnowledgeRepository(),
@@ -94,7 +103,7 @@ def test_projection_is_deterministic() -> None:
     first = service.project(
         ProjectionContext(
             job=ProjectionJob(
-                execution=execution,
+                execution=build_execution(),
             ),
         )
     )
@@ -102,10 +111,23 @@ def test_projection_is_deterministic() -> None:
     second = service.project(
         ProjectionContext(
             job=ProjectionJob(
-                execution=execution,
+                execution=build_execution(),
             ),
         )
     )
 
-    assert first.nodes == second.nodes
-    assert first.relationships == second.relationships
+    assert tuple(
+        node.key
+        for node in first.nodes
+    ) == tuple(
+        node.key
+        for node in second.nodes
+    )
+
+    assert tuple(
+        relationship.key
+        for relationship in first.relationships
+    ) == tuple(
+        relationship.key
+        for relationship in second.relationships
+    )

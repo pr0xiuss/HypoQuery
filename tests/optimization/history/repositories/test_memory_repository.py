@@ -49,9 +49,7 @@ def create_record():
             highest_strategy_score=90,
         ),
         snapshot=OptimizationSnapshot(
-            report=OptimizationReport(
-                summary=ReportSummary(),
-            )
+            summary=ReportSummary(),
         ),
     )
 

@@ -28,29 +28,19 @@ class KnowledgeNodeType(str, Enum):
 
 class KnowledgeRelationshipType(str, Enum):
     """
-    Controlled semantic relationships between knowledge entities.
-
-    These relationships define the ontology of the Knowledge Graph.
+    Semantic relationships within the optimization ontology.
     """
 
-    GENERATED = "generated"
+    LEADS_TO = "leads_to"
 
-    OBSERVED = "observed"
-
-    BASED_ON = "based_on"
-
-    VALIDATES = "validates"
+    VALIDATED_BY = "validated_by"
 
     CONTAINS = "contains"
 
     TARGETS = "targets"
 
-    CREATES = "creates"
-
     REFERENCES = "references"
 
     RELATED_TO = "related_to"
-
-    SIMILAR_TO = "similar_to"
 
     PREVIOUSLY_OBSERVED = "previously_observed"

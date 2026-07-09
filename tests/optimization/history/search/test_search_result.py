@@ -43,9 +43,7 @@ def test_search_result():
         metadata=metadata,
         summary=ExecutionSummary(),
         snapshot=OptimizationSnapshot(
-            report=OptimizationReport(
-                summary=ReportSummary(),
-            ),
+            summary=ReportSummary(),
         ),
     )
 

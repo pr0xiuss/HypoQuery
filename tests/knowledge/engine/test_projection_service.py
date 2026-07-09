@@ -3,9 +3,6 @@ from uuid import uuid4
 from backend.knowledge.projection.builders.finding_node_builder import (
     FindingNodeBuilder,
 )
-from backend.knowledge.projection.builders.finding_relationship_builder import (
-    FindingRelationshipBuilder,
-)
 from backend.knowledge.projection.builders.graph_snapshot_builder import (
     GraphSnapshotBuilder,
 )
@@ -30,6 +27,15 @@ from backend.knowledge.projection.service import (
 from backend.knowledge.repositories.memory_repository import (
     MemoryKnowledgeRepository,
 )
+from backend.optimization.analysis.models.finding import (
+    Finding,
+)
+from backend.optimization.analysis.models.categories import (
+    FindingCategory,
+)
+from backend.optimization.analysis.models.severity import (
+    FindingSeverity,
+)
 from backend.optimization.history.models.execution_metadata import (
     ExecutionMetadata,
 )
@@ -45,39 +51,36 @@ from backend.optimization.history.models.optimization_snapshot import (
 from backend.optimization.reporting.models.report_summary import (
     ReportSummary,
 )
-from tests.knowledge.fixtures import (
-    build_finding,
-)
 
 
-def test_projection_service_projects_snapshot() -> None:
+def test_projection_service():
+
+    finding = Finding(
+        category=FindingCategory.EXECUTION,
+        code="SEQ_SCAN",
+        title="Sequential Scan",
+        description="Detected",
+        severity=FindingSeverity.HIGH,
+    )
 
     snapshot = OptimizationSnapshot(
         summary=ReportSummary(),
-        findings=(
-            build_finding(),
-        ),
+        findings=(finding,),
     )
 
     execution = ExecutionRecord(
         metadata=ExecutionMetadata(
             execution_id=uuid4(),
             trace_id=uuid4(),
-            fingerprint="test",
+            fingerprint="fp",
             normalized_sql="SELECT 1",
             pipeline_name="knowledge",
             pipeline_version="1.0",
-            database="hypoquery",
+            database="postgres",
             schema="public",
         ),
         summary=ExecutionSummary(),
         snapshot=snapshot,
-    )
-
-    context = ProjectionContext(
-        job=ProjectionJob(
-            execution=execution,
-        ),
     )
 
     registry = ProjectionRegistry()
@@ -85,24 +88,25 @@ def test_projection_service_projects_snapshot() -> None:
     registry.register(
         FindingProjector(
             node_builder=FindingNodeBuilder(),
-            relationship_builder=FindingRelationshipBuilder(),
         )
     )
 
-    engine = ProjectionEngine(
-        registry=registry,
-    )
-
-    repository = MemoryKnowledgeRepository()
-
     service = KnowledgeProjectionService(
-        engine=engine,
+        engine=ProjectionEngine(
+            registry,
+        ),
         snapshot_builder=GraphSnapshotBuilder(),
-        repository=repository,
+        repository=MemoryKnowledgeRepository(),
     )
 
-    graph_snapshot = service.project(
-        context=context,
+    snapshot = service.project(
+        ProjectionContext(
+            job=ProjectionJob(
+                execution=execution,
+            ),
+        )
     )
 
-    assert len(graph_snapshot.nodes) == 1
+    assert len(snapshot.nodes) == 1
+
+    assert len(snapshot.relationships) == 0

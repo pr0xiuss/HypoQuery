@@ -46,14 +46,17 @@ class StrategyProjector(Projector):
                 strategy,
             )
 
-            graph.nodes[
-                node.key
-            ] = node
+            graph.add_node(
+                node,
+            )
 
-            for relationship in self._relationship_builder.build(
-                strategy=strategy,
-                graph=graph,
-            ):
-                graph.relationships[
-                    relationship.key
-                ] = relationship
+            relationships = self._relationship_builder.build(
+                strategy,
+                graph,
+            )
+
+            for relationship in relationships:
+
+                graph.connect(
+                    relationship,
+                )

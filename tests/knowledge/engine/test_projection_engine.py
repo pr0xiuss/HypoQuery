@@ -3,9 +3,6 @@ from uuid import uuid4
 from backend.knowledge.projection.builders.finding_node_builder import (
     FindingNodeBuilder,
 )
-from backend.knowledge.projection.builders.finding_relationship_builder import (
-    FindingRelationshipBuilder,
-)
 from backend.knowledge.projection.context import (
     ProjectionContext,
 )
@@ -20,6 +17,15 @@ from backend.knowledge.projection.job import (
 )
 from backend.knowledge.projection.registry.projection_registry import (
     ProjectionRegistry,
+)
+from backend.optimization.analysis.models.finding import (
+    Finding,
+)
+from backend.optimization.analysis.models.categories import (
+    FindingCategory,
+)
+from backend.optimization.analysis.models.severity import (
+    FindingSeverity,
 )
 from backend.optimization.history.models.execution_metadata import (
     ExecutionMetadata,
@@ -36,29 +42,32 @@ from backend.optimization.history.models.optimization_snapshot import (
 from backend.optimization.reporting.models.report_summary import (
     ReportSummary,
 )
-from tests.knowledge.fixtures import (
-    build_finding,
-)
 
 
-def test_projection_engine_projects_graph() -> None:
+def test_projection_engine():
+
+    finding = Finding(
+        category=FindingCategory.EXECUTION,
+        code="SEQ_SCAN",
+        title="Sequential Scan",
+        description="Detected",
+        severity=FindingSeverity.HIGH,
+    )
 
     snapshot = OptimizationSnapshot(
         summary=ReportSummary(),
-        findings=(
-            build_finding(),
-        ),
+        findings=(finding,),
     )
 
     execution = ExecutionRecord(
         metadata=ExecutionMetadata(
             execution_id=uuid4(),
             trace_id=uuid4(),
-            fingerprint="test",
+            fingerprint="fp",
             normalized_sql="SELECT 1",
             pipeline_name="knowledge",
             pipeline_version="1.0",
-            database="hypoquery",
+            database="postgres",
             schema="public",
         ),
         summary=ExecutionSummary(),
@@ -76,16 +85,17 @@ def test_projection_engine_projects_graph() -> None:
     registry.register(
         FindingProjector(
             node_builder=FindingNodeBuilder(),
-            relationship_builder=FindingRelationshipBuilder(),
         )
     )
 
     engine = ProjectionEngine(
-        registry=registry,
+        registry,
     )
 
     graph = engine.project(
-        context=context,
+        context,
     )
 
-    assert len(graph.nodes) == 1
+    assert graph.node_count() == 1
+
+    assert graph.relationship_count() == 0

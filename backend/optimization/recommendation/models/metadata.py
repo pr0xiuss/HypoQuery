@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import Any
 
 
 @dataclass(slots=True)
@@ -9,8 +8,14 @@ class RecommendationMetadata:
     """
     Additional structured information associated with a recommendation.
 
-    This metadata is intended for downstream consumers such as
-    validators, reporters, or AI explanations.
+    Stores deterministic provenance required by downstream
+    bounded contexts.
     """
 
-    attributes: dict[str, Any] = field(default_factory=dict)
+    originating_findings: list[str] = field(
+        default_factory=list,
+    )
+
+    attributes: dict[str, object] = field(
+        default_factory=dict,
+    )
