@@ -1,7 +1,10 @@
 from __future__ import annotations
-
 from dataclasses import dataclass, field
+import os
+from dotenv import load_dotenv
 
+
+load_dotenv()
 @dataclass(frozen=True)
 class SeedConfig:
     customers: int = 1000
@@ -14,17 +17,92 @@ class SeedConfig:
 
 CONFIG = SeedConfig()
 
+def _require_env(
+    name: str,
+) -> str:
+
+    value = os.getenv(
+        name,
+    )
+
+    if not value:
+        raise RuntimeError(
+            f"Missing required environment variable: {name}",
+        )
+
+    return value
+
 @dataclass(frozen=True, slots=True)
 class DatabaseSettings:
     """
     Database configuration.
     """
 
-    host: str = "localhost"
-    port: int = 5432
-    database: str = "hypoquery"
-    user: str = "postgres"
-    password: str = "postgres"
+    host: str = field(
+        default_factory=lambda: _require_env(
+            "POSTGRES_HOST",
+        )
+    )
+
+    port: int = field(
+        default_factory=lambda: int(
+            _require_env(
+                "POSTGRES_PORT",
+            )
+        )
+    )
+
+    database: str = field(
+        default_factory=lambda: _require_env(
+            "POSTGRES_DB",
+        )
+    )
+
+    user: str = field(
+        default_factory=lambda: _require_env(
+            "POSTGRES_USER",
+        )
+    )
+
+    password: str = field(
+        default_factory=lambda: _require_env(
+            "POSTGRES_PASSWORD",
+        )
+    )
+
+@dataclass(frozen=True, slots=True)
+class AssistantSettings:
+    """
+    Gemini configuration.
+    """
+
+    api_key: str = field(
+        default_factory=lambda: _require_env(
+            "GEMINI_API_KEY",
+        )
+    )
+
+    model: str = field(
+        default_factory=lambda: _require_env(
+            "GEMINI_MODEL",
+        )
+    )
+
+    temperature: float = field(
+        default_factory=lambda: float(
+            _require_env(
+                "GEMINI_TEMPERATURE",
+            )
+        )
+    )
+
+    max_tokens: int = field(
+        default_factory=lambda: int(
+            _require_env(
+                "GEMINI_MAX_TOKENS",
+            )
+        )
+    )
 
 
 @dataclass(frozen=True, slots=True)
@@ -77,6 +155,10 @@ class Settings:
         default_factory=DatabaseSettings
     )
 
+    assistant: AssistantSettings = field(
+        default_factory=AssistantSettings,
+    )
+
     queue: QueueSettings = field(
         default_factory=QueueSettings
     )
@@ -92,3 +174,5 @@ class Settings:
     observability: ObservabilitySettings = field(
         default_factory=ObservabilitySettings
     )
+
+settings = Settings()
