@@ -9,7 +9,15 @@ from backend.knowledge.models.optimization_context import (
 from backend.knowledge.registry.context_registry import (
     ContextRegistry,
 )
-
+from backend.knowledge.explanation import (
+    ExplanationContext,
+)
+from backend.knowledge.models.explanation import (
+    Explanation,
+)
+from backend.knowledge.registry.explanation_registry import (
+    ExplanationRegistry,
+)
 
 class ContextEngine:
     """
@@ -39,3 +47,33 @@ class ContextEngine:
             )
 
         return optimization_context
+    
+    
+class ExplanationEngine:
+    """
+    Executes every registered Explainer and assembles
+    a complete Explanation.
+    """
+
+    def __init__(
+        self,
+        registry: ExplanationRegistry,
+    ) -> None:
+
+        self._registry = registry
+
+    def explain(
+        self,
+        context: ExplanationContext,
+    ) -> Explanation:
+
+        explanation = Explanation()
+
+        for explainer in self._registry.all():
+
+            explainer.explain(
+                context=context,
+                explanation=explanation,
+            )
+
+        return explanation
