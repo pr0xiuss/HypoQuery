@@ -38,3 +38,15 @@ class ProviderRegistry:
         return self._providers[
             name
         ]
+
+    def providers(
+        self,
+    ) -> tuple[LanguageModel, ...]:
+        """
+        Return all registered language
+        model providers.
+        """
+
+        return tuple(
+            self._providers.values()
+        )

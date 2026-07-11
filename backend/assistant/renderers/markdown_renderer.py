@@ -6,9 +6,10 @@ from backend.assistant.models.ai_response import (
 from backend.assistant.models.rendered_response import (
     RenderedResponse,
 )
+from backend.assistant.renderers.base_renderer import Renderer
 
 
-class MarkdownRenderer:
+class MarkdownRenderer(Renderer):
     """
     Renders AI responses as Markdown.
     """
