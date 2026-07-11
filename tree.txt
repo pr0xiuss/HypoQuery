@@ -1,330 +1,743 @@
-backend
-├── api
-│   └── __init__.py
-├── config
-│   └── __init__.py
-├── execution
-│   ├── bootstrap
-│   │   ├── event_registration.py
-│   │   ├── __init__.py
-│   │   └── subscriber_registration.py
-│   ├── bus
-│   │   ├── event_bus.py
-│   │   ├── __init__.py
-│   │   ├── in_process_event_bus.py
-│   │   └── subscriber_registry.py
-│   ├── contracts
-│   │   ├── context.py
-│   │   ├── enums.py
-│   │   ├── events
-│   │   │   ├── base.py
-│   │   │   ├── enums.py
-│   │   │   ├── __init__.py
-│   │   │   ├── node.py
-│   │   │   ├── pipeline.py
-│   │   │   ├── queue.py
-│   │   │   └── worker.py
-│   │   ├── exceptions.py
-│   │   ├── execution.py
-│   │   ├── fingerprint.py
-│   │   ├── __init__.py
-│   │   ├── job.py
-│   │   ├── lifecycle.py
-│   │   ├── node_result.py
-│   │   ├── publisher.py
-│   │   ├── result.py
-│   │   ├── state.py
-│   │   └── subscriber.py
-│   ├── demo
-│   │   ├── end_node.py
-│   │   ├── __init__.py
-│   │   ├── middle_node.py
-│   │   ├── run_demo.py
-│   │   └── start_node.py
-│   ├── events
-│   │   ├── execution_event_factory.py
-│   │   ├── execution_event_metadata_provider.py
-│   │   ├── __init__.py
-│   │   ├── metadata_factory.py
-│   │   ├── metadata.py
-│   │   └── version.py
-│   ├── __init__.py
-│   ├── lifecycle
-│   │   ├── base.py
-│   │   ├── enums.py
-│   │   ├── exceptions.py
-│   │   ├── execution_lifecycle.py
-│   │   ├── __init__.py
-│   │   └── transitions.py
-│   ├── observability
-│   │   ├── __init__.py
-│   │   ├── models
-│   │   │   ├── __init__.py
-│   │   │   └── pipeline_log.py
-│   │   ├── repositories
-│   │   │   ├── __init__.py
-│   │   │   └── pipeline_log_repo.py
-│   │   └── services
-│   │       ├── __init__.py
-│   │       └── observability_service.py
-│   ├── pipeline
-│   │   ├── base_node.py
-│   │   ├── builder.py
-│   │   ├── definition.py
-│   │   ├── executor.py
-│   │   ├── __init__.py
-│   │   ├── pipeline.py
-│   │   ├── pipeline_registry.py
-│   │   └── registry.py
-│   ├── policies
-│   │   └── __init__.py
-│   ├── projections
-│   │   ├── execution_projection.py
-│   │   ├── execution_projection_store.py
-│   │   ├── __init__.py
-│   │   ├── projection_builder.py
-│   │   └── projection_subscriber.py
-│   ├── publisher
-│   │   ├── event_publisher.py
-│   │   └── __init__.py
-│   ├── queue
-│   │   ├── base_queue.py
-│   │   ├── exceptions.py
-│   │   ├── __init__.py
-│   │   ├── job_record.py
-│   │   └── memory_queue.py
-│   ├── runtime
-│   │   ├── clock.py
-│   │   ├── execution_runtime.py
-│   │   ├── __init__.py
-│   │   ├── node_runtime.py
-│   │   ├── runtime_context.py
-│   │   ├── runtime_result.py
-│   │   └── system_clock.py
-│   ├── subscribers
-│   │   ├── __init__.py
-│   │   ├── logging_subscriber.py
-│   │   ├── metrics_subscriber.py
-│   │   ├── record_subscriber.py
-│   │   └── tracing_subscriber.py
-│   └── workers
-│       ├── base_worker.py
-│       ├── dispatcher.py
-│       ├── __init__.py
-│       ├── worker_pool.py
-│       └── worker.py
-├── ingestion
-│   ├── collectors
-│   │   ├── base_collector.py
-│   │   ├── benchmark_collector.py
-│   │   └── __init__.py
-│   ├── executor.py
-│   ├── generators
-│   │   └── __init__.py
-│   ├── __init__.py
-│   ├── metadata_parser.py
-│   ├── models
-│   │   ├── __init__.py
-│   │   ├── query.py
-│   │   └── query_result.py
-│   ├── queries
-│   │   ├── aggregations
-│   │   │   ├── AGG001.sql
-│   │   │   ├── AGG002.sql
-│   │   │   ├── AGG003.sql
-│   │   │   ├── AGG004.sql
-│   │   │   ├── AGG005.sql
-│   │   │   └── __init__.py
-│   │   ├── indexing
-│   │   │   ├── IDX001.sql
-│   │   │   ├── IDX002.sql
-│   │   │   ├── IDX003.sql
-│   │   │   ├── IDX004.sql
-│   │   │   ├── IDX005.sql
-│   │   │   └── __init__.py
-│   │   ├── __init__.py
-│   │   ├── joins
-│   │   │   ├── __init__.py
-│   │   │   ├── JOIN001.sql
-│   │   │   ├── JOIN002.sql
-│   │   │   ├── JOIN003.sql
-│   │   │   ├── JOIN004.sql
-│   │   │   └── JOIN005.sql
-│   │   ├── jsonb
-│   │   │   ├── __init__.py
-│   │   │   ├── JSON001.sql
-│   │   │   ├── JSON002.sql
-│   │   │   ├── JSON003.sql
-│   │   │   ├── JSON004.sql
-│   │   │   └── JSON005.sql
-│   │   ├── sequential_scan
-│   │   │   ├── __init__.py
-│   │   │   ├── Q001.sql
-│   │   │   ├── Q002.sql
-│   │   │   ├── Q003.sql
-│   │   │   ├── Q004.sql
-│   │   │   └── Q005.sql
-│   │   ├── sorting
-│   │   │   ├── __init__.py
-│   │   │   ├── SORT001.sql
-│   │   │   ├── SORT002.sql
-│   │   │   ├── SORT003.sql
-│   │   │   ├── SORT004.sql
-│   │   │   └── SORT005.sql
-│   │   └── subqueries
-│   │       ├── __init__.py
-│   │       ├── SUB001.sql
-│   │       ├── SUB002.sql
-│   │       ├── SUB003.sql
-│   │       ├── SUB004.sql
-│   │       └── SUB005.sql
-│   ├── query_catalog.py
-│   ├── run_benchmark.py
-│   ├── run_ingestion.py
-│   ├── runner.py
-│   ├── seeders
-│   │   └── __init__.py
-│   ├── selection
-│   │   ├── analysis_candidate.py
-│   │   ├── candidate_generator.py
-│   │   ├── candidate_score.py
-│   │   ├── __init__.py
-│   │   ├── scoring_policy.py
-│   │   └── selection_engine.py
-│   ├── services
-│   │   ├── ingestion_service.py
-│   │   └── __init__.py
-│   └── workload.py
-├── __init__.py
-├── models
-│   ├── customer.py
-│   ├── enums.py
-│   ├── __init__.py
-│   ├── inventory.py
-│   ├── order.py
-│   ├── product_event.py
-│   ├── product.py
-│   └── review.py
-├── observability
-│   └── persistence
-│       ├── event_repository.py
-│       ├── event_serializer.py
-│       ├── __init__.py
-│       └── persistence_subscriber.py
-├── optimization
-│   ├── analysis
-│   │   ├── analyzers
-│   │   │   ├── base_analyzer.py
-│   │   │   ├── configuration_analyzer.py
-│   │   │   ├── execution_analyzer.py
-│   │   │   ├── health_analyzer.py
-│   │   │   ├── __init__.py
-│   │   │   ├── rule_based_analyzer.py
-│   │   │   └── workload_analyzer.py
-│   │   ├── bootstrap.py
-│   │   ├── composition.py
-│   │   ├── context.py
-│   │   ├── engine.py
-│   │   ├── __init__.py
-│   │   ├── models
-│   │   │   ├── analysis_result.py
-│   │   │   ├── categories.py
-│   │   │   ├── finding_collection.py
-│   │   │   ├── finding.py
-│   │   │   ├── __init__.py
-│   │   │   ├── location.py
-│   │   │   ├── metadata.py
-│   │   │   └── severity.py
-│   │   ├── registry
-│   │   │   ├── analyzer_registry.py
-│   │   │   ├── __init__.py
-│   │   │   └── rule_registry.py
-│   │   ├── rules
-│   │   │   ├── base_rule.py
-│   │   │   ├── configuration
-│   │   │   │   └── __init__.py
-│   │   │   ├── execution
-│   │   │   │   ├── bitmap_scan_rule.py
-│   │   │   │   ├── cardinality_mismatch_rule.py
-│   │   │   │   ├── deep_execution_plan_rule.py
-│   │   │   │   ├── hash_aggregate_rule.py
-│   │   │   │   ├── hash_join_rule.py
-│   │   │   │   ├── high_cost_node_rule.py
-│   │   │   │   ├── __init__.py
-│   │   │   │   ├── merge_join_rule.py
-│   │   │   │   ├── nested_loop_rule.py
-│   │   │   │   ├── seq_scan_rule.py
-│   │   │   │   ├── shared_buffer_rule.py
-│   │   │   │   ├── sort_rule.py
-│   │   │   │   └── temp_write_rule.py
-│   │   │   ├── health
-│   │   │   │   └── __init__.py
-│   │   │   ├── __init__.py
-│   │   │   └── workload
-│   │   │       └── __init__.py
-│   │   └── traversal
-│   │       ├── execution_plan_traverser.py
-│   │       └── __init__.py
-│   ├── analyzers
-│   │   ├── __init__.py
-│   │   └── plan_analyzer.py
-│   ├── collectors
-│   │   ├── explain_collector.py
-│   │   └── __init__.py
-│   ├── __init__.py
-│   ├── models
-│   │   ├── execution_plan.py
-│   │   ├── execution_report.py
-│   │   ├── __init__.py
-│   │   ├── optimization_finding.py
-│   │   ├── optimization_result.py
-│   │   └── optimization_run.py
-│   ├── nodes
-│   │   ├── explain_collect_node.py
-│   │   ├── explain_parse_node.py
-│   │   ├── fingerprint_node.py
-│   │   ├── __init__.py
-│   │   ├── normalize_node.py
-│   │   ├── persist_result_node.py
-│   │   └── plan_analyze_node.py
-│   ├── parsers
-│   │   ├── explain_parser.py
-│   │   └── __init__.py
-│   ├── pipeline
-│   │   ├── __init__.py
-│   │   └── optimization_pipeline_builder.py
-│   └── services
-│       ├── __init__.py
-│       └── optimization_pipeline_service.py
-├── ranking
-│   └── __init__.py
-├── recommendation
-│   └── __init__.py
-├── reporting
-│   └── __init__.py
-├── repositories
-│   ├── base_repo.py
-│   ├── customer_repo.py
-│   ├── __init__.py
-│   ├── inventory_repo.py
-│   ├── optimization_result_repo.py
-│   ├── optimization_run_repo.py
-│   ├── order_repo.py
-│   ├── product_event_repo.py
-│   ├── product_repo.py
-│   └── review_repo.py
-├── retrieval
-│   └── __init__.py
-├── shared
-│   ├── constants.py
-│   ├── container.py
-│   ├── db.py
-│   ├── exceptions.py
-│   ├── __init__.py
-│   ├── logger.py
-│   ├── settings_factory.py
-│   └── settings.py
-└── validation
-    └── __init__.py
+.
+(0tqq (Bbackend
+(0x   tqq (Bapi
+(0x   x   mqq (B__init__.py
+(0x   tqq (Bconfig
+(0x   x   mqq (B__init__.py
+(0x   tqq (Bexecution
+(0x   x   tqq (Bbootstrap
+(0x   x   x   tqq (Bevent_registration.py
+(0x   x   x   tqq (B__init__.py
+(0x   x   x   mqq (Bsubscriber_registration.py
+(0x   x   tqq (Bbus
+(0x   x   x   tqq (Bevent_bus.py
+(0x   x   x   tqq (B__init__.py
+(0x   x   x   tqq (Bin_process_event_bus.py
+(0x   x   x   mqq (Bsubscriber_registry.py
+(0x   x   tqq (Bcontracts
+(0x   x   x   tqq (Bevents
+(0x   x   x   x   tqq (Bbase.py
+(0x   x   x   x   tqq (Benums.py
+(0x   x   x   x   tqq (B__init__.py
+(0x   x   x   x   tqq (Bnode.py
+(0x   x   x   x   tqq (Bpipeline.py
+(0x   x   x   x   tqq (Bqueue.py
+(0x   x   x   x   mqq (Bworker.py
+(0x   x   x   tqq (Bcontext.py
+(0x   x   x   tqq (Benums.py
+(0x   x   x   tqq (Bexceptions.py
+(0x   x   x   tqq (Bexecution.py
+(0x   x   x   tqq (Bfingerprint.py
+(0x   x   x   tqq (B__init__.py
+(0x   x   x   tqq (Bjob.py
+(0x   x   x   tqq (Blifecycle.py
+(0x   x   x   tqq (Bnode_result.py
+(0x   x   x   tqq (Bpublisher.py
+(0x   x   x   tqq (Bresult.py
+(0x   x   x   tqq (Bstate.py
+(0x   x   x   mqq (Bsubscriber.py
+(0x   x   tqq (Bdemo
+(0x   x   x   tqq (Bend_node.py
+(0x   x   x   tqq (B__init__.py
+(0x   x   x   tqq (Bmiddle_node.py
+(0x   x   x   tqq (Brun_demo.py
+(0x   x   x   mqq (Bstart_node.py
+(0x   x   tqq (Bevents
+(0x   x   x   tqq (Bexecution_event_factory.py
+(0x   x   x   tqq (Bexecution_event_metadata_provider.py
+(0x   x   x   tqq (B__init__.py
+(0x   x   x   tqq (Bmetadata_factory.py
+(0x   x   x   tqq (Bmetadata.py
+(0x   x   x   mqq (Bversion.py
+(0x   x   tqq (Blifecycle
+(0x   x   x   tqq (Bbase.py
+(0x   x   x   tqq (Benums.py
+(0x   x   x   tqq (Bexceptions.py
+(0x   x   x   tqq (Bexecution_lifecycle.py
+(0x   x   x   tqq (B__init__.py
+(0x   x   x   mqq (Btransitions.py
+(0x   x   tqq (Bobservability
+(0x   x   x   tqq (Bmodels
+(0x   x   x   x   tqq (B__init__.py
+(0x   x   x   x   mqq (Bpipeline_log.py
+(0x   x   x   tqq (Brepositories
+(0x   x   x   x   tqq (B__init__.py
+(0x   x   x   x   mqq (Bpipeline_log_repo.py
+(0x   x   x   mqq (B__init__.py
+(0x   x   tqq (Bpipeline
+(0x   x   x   tqq (Bbase_node.py
+(0x   x   x   tqq (Bbuilder.py
+(0x   x   x   tqq (Bdefinition.py
+(0x   x   x   tqq (Bexecutor.py
+(0x   x   x   tqq (B__init__.py
+(0x   x   x   tqq (Bpipeline.py
+(0x   x   x   tqq (Bpipeline_registry.py
+(0x   x   x   mqq (Bregistry.py
+(0x   x   tqq (Bpolicies
+(0x   x   x   mqq (B__init__.py
+(0x   x   tqq (Bprojections
+(0x   x   x   tqq (Bexecution_projection.py
+(0x   x   x   tqq (Bexecution_projection_store.py
+(0x   x   x   tqq (B__init__.py
+(0x   x   x   tqq (Bprojection_builder.py
+(0x   x   x   mqq (Bprojection_subscriber.py
+(0x   x   tqq (Bpublisher
+(0x   x   x   tqq (Bevent_publisher.py
+(0x   x   x   mqq (B__init__.py
+(0x   x   tqq (Bqueue
+(0x   x   x   tqq (Bbase_queue.py
+(0x   x   x   tqq (Bexceptions.py
+(0x   x   x   tqq (B__init__.py
+(0x   x   x   tqq (Bjob_record.py
+(0x   x   x   mqq (Bmemory_queue.py
+(0x   x   tqq (Bruntime
+(0x   x   x   tqq (Bclock.py
+(0x   x   x   tqq (Bexecution_runtime.py
+(0x   x   x   tqq (B__init__.py
+(0x   x   x   tqq (Bnode_runtime.py
+(0x   x   x   tqq (Bruntime_context.py
+(0x   x   x   tqq (Bruntime_result.py
+(0x   x   x   mqq (Bsystem_clock.py
+(0x   x   tqq (Bsubscribers
+(0x   x   x   tqq (B__init__.py
+(0x   x   x   tqq (Blogging_subscriber.py
+(0x   x   x   tqq (Bmetrics_subscriber.py
+(0x   x   x   tqq (Brecord_subscriber.py
+(0x   x   x   mqq (Btracing_subscriber.py
+(0x   x   tqq (Bworkers
+(0x   x   x   tqq (Bbase_worker.py
+(0x   x   x   tqq (Bdispatcher.py
+(0x   x   x   tqq (B__init__.py
+(0x   x   x   tqq (Bworker_pool.py
+(0x   x   x   mqq (Bworker.py
+(0x   x   mqq (B__init__.py
+(0x   tqq (Bingestion
+(0x   x   tqq (Bcollectors
+(0x   x   x   tqq (Bbase_collector.py
+(0x   x   x   tqq (Bbenchmark_collector.py
+(0x   x   x   mqq (B__init__.py
+(0x   x   tqq (Bgenerators
+(0x   x   x   mqq (B__init__.py
+(0x   x   tqq (Bmodels
+(0x   x   x   tqq (B__init__.py
+(0x   x   x   tqq (Bquery.py
+(0x   x   x   mqq (Bquery_result.py
+(0x   x   tqq (Bqueries
+(0x   x   x   tqq (Baggregations
+(0x   x   x   x   tqq (BAGG001.sql
+(0x   x   x   x   tqq (BAGG002.sql
+(0x   x   x   x   tqq (BAGG003.sql
+(0x   x   x   x   tqq (BAGG004.sql
+(0x   x   x   x   tqq (BAGG005.sql
+(0x   x   x   x   mqq (B__init__.py
+(0x   x   x   tqq (Bindexing
+(0x   x   x   x   tqq (BIDX001.sql
+(0x   x   x   x   tqq (BIDX002.sql
+(0x   x   x   x   tqq (BIDX003.sql
+(0x   x   x   x   tqq (BIDX004.sql
+(0x   x   x   x   tqq (BIDX005.sql
+(0x   x   x   x   mqq (B__init__.py
+(0x   x   x   tqq (Bjoins
+(0x   x   x   x   tqq (B__init__.py
+(0x   x   x   x   tqq (BJOIN001.sql
+(0x   x   x   x   tqq (BJOIN002.sql
+(0x   x   x   x   tqq (BJOIN003.sql
+(0x   x   x   x   tqq (BJOIN004.sql
+(0x   x   x   x   mqq (BJOIN005.sql
+(0x   x   x   tqq (Bjsonb
+(0x   x   x   x   tqq (B__init__.py
+(0x   x   x   x   tqq (BJSON001.sql
+(0x   x   x   x   tqq (BJSON002.sql
+(0x   x   x   x   tqq (BJSON003.sql
+(0x   x   x   x   tqq (BJSON004.sql
+(0x   x   x   x   mqq (BJSON005.sql
+(0x   x   x   tqq (Bsequential_scan
+(0x   x   x   x   tqq (B__init__.py
+(0x   x   x   x   tqq (BQ001.sql
+(0x   x   x   x   tqq (BQ002.sql
+(0x   x   x   x   tqq (BQ003.sql
+(0x   x   x   x   tqq (BQ004.sql
+(0x   x   x   x   mqq (BQ005.sql
+(0x   x   x   tqq (Bsorting
+(0x   x   x   x   tqq (B__init__.py
+(0x   x   x   x   tqq (BSORT001.sql
+(0x   x   x   x   tqq (BSORT002.sql
+(0x   x   x   x   tqq (BSORT003.sql
+(0x   x   x   x   tqq (BSORT004.sql
+(0x   x   x   x   mqq (BSORT005.sql
+(0x   x   x   tqq (Bsubqueries
+(0x   x   x   x   tqq (B__init__.py
+(0x   x   x   x   tqq (BSUB001.sql
+(0x   x   x   x   tqq (BSUB002.sql
+(0x   x   x   x   tqq (BSUB003.sql
+(0x   x   x   x   tqq (BSUB004.sql
+(0x   x   x   x   mqq (BSUB005.sql
+(0x   x   x   mqq (B__init__.py
+(0x   x   tqq (Bseeders
+(0x   x   x   mqq (B__init__.py
+(0x   x   tqq (Bselection
+(0x   x   x   tqq (Banalysis_candidate.py
+(0x   x   x   tqq (Bcandidate_generator.py
+(0x   x   x   tqq (Bcandidate_score.py
+(0x   x   x   tqq (B__init__.py
+(0x   x   x   tqq (Bscoring_policy.py
+(0x   x   x   mqq (Bselection_engine.py
+(0x   x   tqq (Bservices
+(0x   x   x   tqq (Bingestion_service.py
+(0x   x   x   mqq (B__init__.py
+(0x   x   tqq (Bexecutor.py
+(0x   x   tqq (B__init__.py
+(0x   x   tqq (Bmetadata_parser.py
+(0x   x   tqq (Bquery_catalog.py
+(0x   x   tqq (Brun_benchmark.py
+(0x   x   tqq (Brun_ingestion.py
+(0x   x   tqq (Brunner.py
+(0x   x   mqq (Bworkload.py
+(0x   tqq (Bmodels
+(0x   x   tqq (Bcustomer.py
+(0x   x   tqq (Benums.py
+(0x   x   tqq (B__init__.py
+(0x   x   tqq (Binventory.py
+(0x   x   tqq (Border.py
+(0x   x   tqq (Bproduct_event.py
+(0x   x   tqq (Bproduct.py
+(0x   x   mqq (Breview.py
+(0x   tqq (Bobservability
+(0x   x   mqq (Bpersistence
+(0x   x       tqq (Bevent_repository.py
+(0x   x       tqq (Bevent_serializer.py
+(0x   x       tqq (B__init__.py
+(0x   x       mqq (Bpersistence_subscriber.py
+(0x   tqq (Boptimization
+(0x   x   tqq (Banalysis
+(0x   x   x   tqq (Banalyzers
+(0x   x   x   x   tqq (Bbase_analyzer.py
+(0x   x   x   x   tqq (Bconfiguration_analyzer.py
+(0x   x   x   x   tqq (Bexecution_analyzer.py
+(0x   x   x   x   tqq (Bhealth_analyzer.py
+(0x   x   x   x   tqq (B__init__.py
+(0x   x   x   x   tqq (Brule_based_analyzer.py
+(0x   x   x   x   mqq (Bworkload_analyzer.py
+(0x   x   x   tqq (Bmodels
+(0x   x   x   x   tqq (Banalysis_result.py
+(0x   x   x   x   tqq (Bcategories.py
+(0x   x   x   x   tqq (Bfinding_collection.py
+(0x   x   x   x   tqq (Bfinding.py
+(0x   x   x   x   tqq (B__init__.py
+(0x   x   x   x   tqq (Blocation.py
+(0x   x   x   x   tqq (Bmetadata.py
+(0x   x   x   x   mqq (Bseverity.py
+(0x   x   x   tqq (Bparsers
+(0x   x   x   x   tqq (B__init__.py
+(0x   x   x   x   mqq (Bpredicate_parser.py
+(0x   x   x   tqq (Bregistry
+(0x   x   x   x   tqq (Banalyzer_registry.py
+(0x   x   x   x   tqq (B__init__.py
+(0x   x   x   x   mqq (Brule_registry.py
+(0x   x   x   tqq (Brules
+(0x   x   x   x   tqq (Bconfiguration
+(0x   x   x   x   x   mqq (B__init__.py
+(0x   x   x   x   tqq (Bexecution
+(0x   x   x   x   x   tqq (Bbitmap_scan_rule.py
+(0x   x   x   x   x   tqq (Bcardinality_mismatch_rule.py
+(0x   x   x   x   x   tqq (Bdeep_execution_plan_rule.py
+(0x   x   x   x   x   tqq (Bhash_aggregate_rule.py
+(0x   x   x   x   x   tqq (Bhash_join_rule.py
+(0x   x   x   x   x   tqq (Bhigh_cost_node_rule.py
+(0x   x   x   x   x   tqq (B__init__.py
+(0x   x   x   x   x   tqq (Bmerge_join_rule.py
+(0x   x   x   x   x   tqq (Bnested_loop_rule.py
+(0x   x   x   x   x   tqq (Bseq_scan_rule.py
+(0x   x   x   x   x   tqq (Bshared_buffer_rule.py
+(0x   x   x   x   x   tqq (Bsort_rule.py
+(0x   x   x   x   x   mqq (Btemp_write_rule.py
+(0x   x   x   x   tqq (Bhealth
+(0x   x   x   x   x   mqq (B__init__.py
+(0x   x   x   x   tqq (Bworkload
+(0x   x   x   x   x   mqq (B__init__.py
+(0x   x   x   x   tqq (Bbase_rule.py
+(0x   x   x   x   mqq (B__init__.py
+(0x   x   x   tqq (Btraversal
+(0x   x   x   x   tqq (Bexecution_plan_traverser.py
+(0x   x   x   x   mqq (B__init__.py
+(0x   x   x   tqq (Bbootstrap.py
+(0x   x   x   tqq (Bcomposition.py
+(0x   x   x   tqq (Bcontext.py
+(0x   x   x   tqq (Bengine.py
+(0x   x   x   mqq (B__init__.py
+(0x   x   tqq (Bcollectors
+(0x   x   x   tqq (Bexplain_collector.py
+(0x   x   x   mqq (B__init__.py
+(0x   x   tqq (Bhistory
+(0x   x   x   tqq (Bbuilders
+(0x   x   x   x   tqq (Bexecution_record_builder.py
+(0x   x   x   x   tqq (Bsnapshot_builder.py
+(0x   x   x   x   mqq (Bsummary_builder.py
+(0x   x   x   tqq (Bcomparison
+(0x   x   x   x   tqq (Bcomparison_engine.py
+(0x   x   x   x   mqq (Bcomparison_result.py
+(0x   x   x   tqq (Bmodels
+(0x   x   x   x   tqq (Bexecution_metadata.py
+(0x   x   x   x   tqq (Bexecution_record.py
+(0x   x   x   x   tqq (Bexecution_summary.py
+(0x   x   x   x   tqq (Bhistory_result.py
+(0x   x   x   x   mqq (Boptimization_snapshot.py
+(0x   x   x   tqq (Brepositories
+(0x   x   x   x   tqq (Bexecution_record_repository.py
+(0x   x   x   x   tqq (Bmemory_repository.py
+(0x   x   x   x   mqq (Bpostgres_repository.py
+(0x   x   x   tqq (Bsearch
+(0x   x   x   x   tqq (Bsearch_criteria.py
+(0x   x   x   x   tqq (Bsearch_engine.py
+(0x   x   x   x   mqq (Bsearch_result.py
+(0x   x   x   tqq (Bcomposition.py
+(0x   x   x   tqq (Bcontext.py
+(0x   x   x   tqq (Bengine.py
+(0x   x   x   tqq (B__init__.py
+(0x   x   x   mqq (Bnode.py
+(0x   x   tqq (Bmodels
+(0x   x   x   tqq (Bexecution_plan.py
+(0x   x   x   tqq (Bexecution_report.py
+(0x   x   x   tqq (B__init__.py
+(0x   x   x   tqq (Boptimization_finding.py
+(0x   x   x   tqq (Boptimization_result.py
+(0x   x   x   mqq (Boptimization_run.py
+(0x   x   tqq (Bnodes
+(0x   x   x   tqq (Bexplain_collect_node.py
+(0x   x   x   tqq (Bexplain_parse_node.py
+(0x   x   x   tqq (Bfingerprint_node.py
+(0x   x   x   tqq (B__init__.py
+(0x   x   x   tqq (Bnormalize_node.py
+(0x   x   x   tqq (Bplan_analyze_node.py
+(0x   x   x   tqq (Branking_node.py
+(0x   x   x   tqq (Brecommendation_node.py
+(0x   x   x   mqq (Bvalidation_node.py
+(0x   x   tqq (Bparsers
+(0x   x   x   tqq (Bexplain_parser.py
+(0x   x   x   mqq (B__init__.py
+(0x   x   tqq (Bpipeline
+(0x   x   x   tqq (B__init__.py
+(0x   x   x   mqq (Boptimization_pipeline_builder.py
+(0x   x   tqq (Branking
+(0x   x   x   tqq (Bgrouping
+(0x   x   x   x   tqq (Bgroupers
+(0x   x   x   x   x   mqq (Bdefault_grouper.py
+(0x   x   x   x   tqq (Bmodels
+(0x   x   x   x   x   tqq (Bstrategy.py
+(0x   x   x   x   x   tqq (Bstrategy_result.py
+(0x   x   x   x   x   mqq (Bstrategy_type.py
+(0x   x   x   x   tqq (Bbase_grouper.py
+(0x   x   x   x   tqq (Bcomposition.py
+(0x   x   x   x   tqq (Bcontext.py
+(0x   x   x   x   tqq (Bengine.py
+(0x   x   x   x   tqq (Bnode.py
+(0x   x   x   x   mqq (Bregistry.py
+(0x   x   x   tqq (Bmodels
+(0x   x   x   x   tqq (Branking_dimension.py
+(0x   x   x   x   tqq (Branking.py
+(0x   x   x   x   tqq (Branking_result.py
+(0x   x   x   x   mqq (Bscore.py
+(0x   x   x   tqq (Bregistry
+(0x   x   x   x   tqq (B__init__.py
+(0x   x   x   x   mqq (Bscorer_registry.py
+(0x   x   x   tqq (Bscorers
+(0x   x   x   x   tqq (Bbase_scorer.py
+(0x   x   x   x   tqq (Bconfidence_scorer.py
+(0x   x   x   x   tqq (Bimpact_scorer.py
+(0x   x   x   x   tqq (Brisk_scorer.py
+(0x   x   x   x   mqq (Bvalidation_scorer.py
+(0x   x   x   tqq (Bcomposition.py
+(0x   x   x   tqq (Bcontext.py
+(0x   x   x   tqq (Bengine.py
+(0x   x   x   tqq (Bnode.py
+(0x   x   x   tqq (Bpolicy.py
+(0x   x   x   mqq (Bregistry.py
+(0x   x   tqq (Brecommendation
+(0x   x   x   tqq (Bhelpers
+(0x   x   x   x   mqq (Bfinding_lookup.py
+(0x   x   x   tqq (Bmodels
+(0x   x   x   x   tqq (Bcategory.py
+(0x   x   x   x   tqq (Blocation.py
+(0x   x   x   x   tqq (Bmetadata.py
+(0x   x   x   x   tqq (Bpriority.py
+(0x   x   x   x   tqq (Brecommendation_collection.py
+(0x   x   x   x   tqq (Brecommendation_key.py
+(0x   x   x   x   tqq (Brecommendation.py
+(0x   x   x   x   mqq (Brecommendation_result.py
+(0x   x   x   tqq (Bregistry
+(0x   x   x   x   mqq (Brule_registry.py
+(0x   x   x   tqq (Brules
+(0x   x   x   x   tqq (Bbase_rule.py
+(0x   x   x   x   tqq (Bcreate_index_rule.py
+(0x   x   x   x   tqq (Bincrease_work_mem_rule.py
+(0x   x   x   x   mqq (Bupdate_statistics_rule.py
+(0x   x   x   tqq (Bcomposition.py
+(0x   x   x   tqq (Bcontext.py
+(0x   x   x   mqq (Bengine.py
+(0x   x   tqq (Breporting
+(0x   x   x   tqq (Bbuilders
+(0x   x   x   x   tqq (Boptimization_report_builder.py
+(0x   x   x   x   tqq (Brecommendation_report_builder.py
+(0x   x   x   x   tqq (Bstrategy_report_builder.py
+(0x   x   x   x   mqq (Bvalidation_report_builder.py
+(0x   x   x   tqq (Bformatters
+(0x   x   x   x   tqq (Benum_formatter.py
+(0x   x   x   x   tqq (Breport_formatter.py
+(0x   x   x   x   mqq (Bvalue_formatter.py
+(0x   x   x   tqq (Bmodels
+(0x   x   x   x   tqq (Boptimization_report.py
+(0x   x   x   x   tqq (Brecommendation_report.py
+(0x   x   x   x   tqq (Breport_summary.py
+(0x   x   x   x   tqq (Bstrategy_report.py
+(0x   x   x   x   mqq (Bvalidation_report.py
+(0x   x   x   tqq (Brenderers
+(0x   x   x   x   tqq (Bbase_renderer.py
+(0x   x   x   x   tqq (Bconsole_renderer.py
+(0x   x   x   x   tqq (Bjson_renderer.py
+(0x   x   x   x   mqq (Bmarkdown_renderer.py
+(0x   x   x   tqq (Bcomposition.py
+(0x   x   x   tqq (Bcontext.py
+(0x   x   x   tqq (Bengine.py
+(0x   x   x   tqq (Bnode.py
+(0x   x   x   tqq (Bregistry.py
+(0x   x   x   mqq (Brendering_service.py
+(0x   x   tqq (Bservices
+(0x   x   x   tqq (B__init__.py
+(0x   x   x   mqq (Boptimization_pipeline_service.py
+(0x   x   tqq (Bvalidation
+(0x   x   x   tqq (Bbuilders
+(0x   x   x   x   tqq (Bindex_statement_builder.py
+(0x   x   x   x   mqq (B__init__.py
+(0x   x   x   tqq (Bcomparison
+(0x   x   x   x   tqq (B__init__.py
+(0x   x   x   x   mqq (Bplan_comparator.py
+(0x   x   x   tqq (Bhypopg
+(0x   x   x   x   tqq (Bhypopg_client.py
+(0x   x   x   x   tqq (Bhypopg_session.py
+(0x   x   x   x   tqq (Bhypothetical_index.py
+(0x   x   x   x   mqq (B__init__.py
+(0x   x   x   tqq (Bmodels
+(0x   x   x   x   tqq (Bimprovement_metrics.py
+(0x   x   x   x   tqq (Bvalidation_collection.py
+(0x   x   x   x   tqq (Bvalidation_metadata.py
+(0x   x   x   x   tqq (Bvalidation.py
+(0x   x   x   x   tqq (Bvalidation_result.py
+(0x   x   x   x   tqq (Bvalidation_status.py
+(0x   x   x   x   mqq (Bvalidation_type.py
+(0x   x   x   tqq (Bregistry
+(0x   x   x   x   tqq (B__init__.py
+(0x   x   x   x   mqq (Bvalidator_registry.py
+(0x   x   x   tqq (Bvalidators
+(0x   x   x   x   tqq (Bbase_validator.py
+(0x   x   x   x   tqq (Bhypothetical_index_validator.py
+(0x   x   x   x   mqq (B__init__.py
+(0x   x   x   tqq (Bcomposition.py
+(0x   x   x   tqq (Bcontext.py
+(0x   x   x   tqq (Bengine.py
+(0x   x   x   mqq (B__init__.py
+(0x   x   mqq (B__init__.py
+(0x   tqq (Bpresentation
+(0x   x   mqq (B__init__.py
+(0x   tqq (Branking
+(0x   x   mqq (B__init__.py
+(0x   tqq (Brepositories
+(0x   x   tqq (Bbase_repo.py
+(0x   x   tqq (Bcustomer_repo.py
+(0x   x   tqq (B__init__.py
+(0x   x   tqq (Binventory_repo.py
+(0x   x   tqq (Boptimization_result_repo.py
+(0x   x   tqq (Boptimization_run_repo.py
+(0x   x   tqq (Border_repo.py
+(0x   x   tqq (Bproduct_event_repo.py
+(0x   x   tqq (Bproduct_repo.py
+(0x   x   mqq (Breview_repo.py
+(0x   tqq (Bretrieval
+(0x   x   mqq (B__init__.py
+(0x   tqq (Bshared
+(0x   x   tqq (Bconstants.py
+(0x   x   tqq (Bcontainer.py
+(0x   x   tqq (Bdb.py
+(0x   x   tqq (Bexceptions.py
+(0x   x   tqq (B__init__.py
+(0x   x   tqq (Blogger.py
+(0x   x   tqq (Bsettings_factory.py
+(0x   x   mqq (Bsettings.py
+(0x   tqq (Bvalidation
+(0x   x   mqq (B__init__.py
+(0x   mqq (B__init__.py
+(0tqq (Bdocs
+(0x   tqq (Barchitecture.md
+(0x   tqq (Bphase-1.md
+(0x   tqq (Bphase-2.md
+(0x   tqq (Bphase-3.md
+(0x   mqq (Bphase-4.md
+(0tqq (Binfrastructure
+(0x   tqq (Bpostgres
+(0x   x   tqq (Bconfig
+(0x   x   x   mqq (Bpostgresql.conf
+(0x   x   tqq (Bdocker
+(0x   x   x   mqq (Bdocker-compose.yml
+(0x   x   tqq (Binit
+(0x   x   x   tqq (B01_extensions.sql
+(0x   x   x   tqq (B02_schema.sql
+(0x   x   x   tqq (B04_indexes.sql
+(0x   x   x   tqq (B05_bad_queries.sql
+(0x   x   x   tqq (B06_history_schema.sql
+(0x   x   x   mqq (B07_history_indexes.sql
+(0x   x   tqq (Bpgbench
+(0x   x   x   tqq (Brun_pgbench.sh
+(0x   x   x   mqq (Bworkload.sql
+(0x   x   tqq (Bscripts
+(0x   x   x   tqq (Binterfaces
+(0x   x   x   x   tqq (B__init__.py
+(0x   x   x   x   mqq (Bseeder.py
+(0x   x   x   tqq (Bmodels
+(0x   x   x   x   mqq (B__init__.py
+(0x   x   x   tqq (Bobservability
+(0x   x   x   x   tqq (Bcollectors
+(0x   x   x   x   x   tqq (B__init__.py
+(0x   x   x   x   x   mqq (Bmetrics_collector.py
+(0x   x   x   x   tqq (Bmodels
+(0x   x   x   x   x   mqq (B__init__.py
+(0x   x   x   x   tqq (Brepositories
+(0x   x   x   x   x   mqq (Bbase_repo.py
+(0x   x   x   x   tqq (Bservices
+(0x   x   x   x   x   mqq (B__init__.py
+(0x   x   x   x   mqq (B__init__.py
+(0x   x   x   tqq (Brepositories
+(0x   x   x   x   mqq (B__init__.py
+(0x   x   x   tqq (Bseeders
+(0x   x   x   x   tqq (Bbase_seeder.py
+(0x   x   x   x   tqq (Bcustomer_seeder.py
+(0x   x   x   x   tqq (B__init__.py
+(0x   x   x   x   tqq (Binventory_seeder.py
+(0x   x   x   x   tqq (Border_seeder.py
+(0x   x   x   x   tqq (Bproduct_event_seeder.py
+(0x   x   x   x   tqq (Bproduct_seeder.py
+(0x   x   x   x   mqq (Breview_seeder.py
+(0x   x   x   tqq (Bservices
+(0x   x   x   x   tqq (Bcustomer_data_generator.py
+(0x   x   x   x   tqq (B__init__.py
+(0x   x   x   x   tqq (Binventory_data_generator.py
+(0x   x   x   x   tqq (Border_data_generator.py
+(0x   x   x   x   tqq (Bproduct_data_generator.py
+(0x   x   x   x   tqq (Bproduct_event_data_generator.py
+(0x   x   x   x   mqq (Breview_data_generator.py
+(0x   x   x   tqq (B__init__.py
+(0x   x   x   tqq (Brun_workload.py
+(0x   x   x   tqq (Bseed.py
+(0x   x   x   mqq (Btest_explain.py
+(0x   x   mqq (B__init__.py
+(0x   mqq (B__init__.py
+(0tqq (Btests
+(0x   tqq (Bexecution
+(0x   x   tqq (Bbus
+(0x   x   x   tqq (Btest_event_bus.py
+(0x   x   x   tqq (Btest_in_process_event_bus.py
+(0x   x   x   mqq (Btest_subscriber_registry.py
+(0x   x   tqq (Bevents
+(0x   x   x   tqq (B__init__.py
+(0x   x   x   tqq (Btest_event_metadata.py
+(0x   x   x   tqq (Btest_execution_event_factory.py
+(0x   x   x   mqq (Btest_execution_event_metadata_provider.py
+(0x   x   tqq (Blifecycle
+(0x   x   x   tqq (B__init__.py
+(0x   x   x   tqq (Btest_execution_lifecycle.py
+(0x   x   x   tqq (Btest_execution_status.py
+(0x   x   x   mqq (Btest_transitions.py
+(0x   x   tqq (Bprojections
+(0x   x   x   tqq (Btest_execution_projection_store.py
+(0x   x   x   tqq (Btest_projection_builder.py
+(0x   x   x   mqq (Btest_projection_subscriber.py
+(0x   x   tqq (Bpublisher
+(0x   x   x   mqq (Btest_event_publisher.py
+(0x   x   tqq (Bsubscribers
+(0x   x   x   tqq (Btest_logging_subscriber.py
+(0x   x   x   tqq (Btest_metrics_subscriber.py
+(0x   x   x   tqq (Btest_subscriber_registration.py
+(0x   x   x   mqq (Btest_tracing_subscriber.py
+(0x   x   tqq (B__init__.py
+(0x   x   tqq (Btest_dispatcher.py
+(0x   x   tqq (Btest_memory_queue.py
+(0x   x   tqq (Btest_node_registry.py
+(0x   x   tqq (Btest_pipeline_builder.py
+(0x   x   tqq (Btest_pipeline_executor.py
+(0x   x   tqq (Btest_worker_pool.py
+(0x   x   mqq (Btest_worker.py
+(0x   tqq (Bingestion
+(0x   x   mqq (Bselection
+(0x   x       tqq (Btest_candidate_generator.py
+(0x   x       tqq (Btest_candidate_score.py
+(0x   x       tqq (Btest_scoring_policy.py
+(0x   x       mqq (Btest_selection_engine.py
+(0x   tqq (Bintegration
+(0x   x   tqq (Btest_candidate_selection.py
+(0x   x   tqq (Btest_event_persistence.py
+(0x   x   tqq (Btest_execution_flow.py
+(0x   x   mqq (Btest_projection_flow.py
+(0x   tqq (Boptimization
+(0x   x   tqq (Banalysis
+(0x   x   x   tqq (Bmodels
+(0x   x   x   x   tqq (Btest_analysis_result.py
+(0x   x   x   x   tqq (Btest_finding_collection.py
+(0x   x   x   x   mqq (Btest_finding.py
+(0x   x   x   tqq (Bparsers
+(0x   x   x   x   mqq (Btest_predicate_parser.py
+(0x   x   x   tqq (Brules
+(0x   x   x   x   tqq (Btest_cardinality_mismatch_rule.py
+(0x   x   x   x   tqq (Btest_deep_execution_plan_rule.py
+(0x   x   x   x   tqq (Btest_hash_aggregate_rule.py
+(0x   x   x   x   tqq (Btest_high_cost_node_rule.py
+(0x   x   x   x   tqq (Btest_nested_loop_rule.py
+(0x   x   x   x   tqq (Btest_seq_scan_rule.py
+(0x   x   x   x   tqq (Btest_shared_buffer_rule.py
+(0x   x   x   x   tqq (Btest_sort_rule.py
+(0x   x   x   x   mqq (Btest_temp_write_rule.py
+(0x   x   x   tqq (Btest_analysis_engine.py
+(0x   x   x   tqq (Btest_analyzer_registry.py
+(0x   x   x   tqq (Btest_execution_analyzer.py
+(0x   x   x   tqq (Btest_execution_plan_traverser.py
+(0x   x   x   mqq (Btest_rule_registry.py
+(0x   x   tqq (Bhistory
+(0x   x   x   tqq (Bbuilders
+(0x   x   x   x   tqq (Btest_execution_record_builder.py
+(0x   x   x   x   tqq (Btest_snapshot_builder.py
+(0x   x   x   x   mqq (Btest_summary_builder.py
+(0x   x   x   tqq (Bcomparison
+(0x   x   x   x   tqq (Btest_comparison_engine.py
+(0x   x   x   x   mqq (Btest_comparison_result.py
+(0x   x   x   tqq (Bengine
+(0x   x   x   x   mqq (Btest_history_engine.py
+(0x   x   x   tqq (Bintegration
+(0x   x   x   x   mqq (Btest_history_pipeline.py
+(0x   x   x   tqq (Bmodels
+(0x   x   x   x   tqq (Btest_execution_metadata.py
+(0x   x   x   x   tqq (Btest_execution_Record.py
+(0x   x   x   x   tqq (Btest_execution_summary.py
+(0x   x   x   x   tqq (Btest_history_result.py
+(0x   x   x   x   mqq (Btest_optimization_snapshot.py
+(0x   x   x   tqq (Bnodes
+(0x   x   x   x   mqq (Btest_history_node.py
+(0x   x   x   tqq (Brepositories
+(0x   x   x   x   tqq (Btest_execution_record_repository.py
+(0x   x   x   x   tqq (Btest_memory_repository.py
+(0x   x   x   x   mqq (Btest_postgres_repository.py
+(0x   x   x   mqq (Bsearch
+(0x   x   x       tqq (Btest_search_criteria.py
+(0x   x   x       tqq (Btest_search_engine.py
+(0x   x   x       mqq (Btest_search_result.py
+(0x   x   tqq (Bintegration
+(0x   x   x   tqq (B__init__.py
+(0x   x   x   tqq (Btest_pipeline_execution.py
+(0x   x   x   tqq (Btest_pipeline_findings.py
+(0x   x   x   mqq (Btest_pipeline_state.py
+(0x   x   tqq (Bnodes
+(0x   x   x   mqq (Btest_plan_analyze_node.py
+(0x   x   tqq (Bphase4
+(0x   x   x   tqq (Btest_artifact_flow.py
+(0x   x   x   tqq (Btest_end_to_end.py
+(0x   x   x   tqq (Btest_phase4_regression.py
+(0x   x   x   mqq (Btest_pipeline_contract.py
+(0x   x   tqq (Branking
+(0x   x   x   tqq (Bengine
+(0x   x   x   x   tqq (Btest_ranking_engine.py
+(0x   x   x   x   mqq (Btest_strategy_engine.py
+(0x   x   x   tqq (Bgroupers
+(0x   x   x   x   mqq (Btest_default_strategy_grouper.py
+(0x   x   x   tqq (Bintegration
+(0x   x   x   x   mqq (Btest_ranking_pipeline.py
+(0x   x   x   tqq (Bmodels
+(0x   x   x   x   tqq (Btest_ranking.py
+(0x   x   x   x   tqq (Btest_ranking_result.py
+(0x   x   x   x   tqq (Btest_score.py
+(0x   x   x   x   tqq (Btest_strategy.py
+(0x   x   x   x   mqq (Btest_strategy_result.py
+(0x   x   x   tqq (Bnodes
+(0x   x   x   x   tqq (Btest_ranking_node.py
+(0x   x   x   x   mqq (Btest_strategy_node.py
+(0x   x   x   tqq (Bpolicy
+(0x   x   x   x   mqq (Btest_ranking_policy.py
+(0x   x   x   tqq (Bregistry
+(0x   x   x   x   tqq (Btest_scorer_registry.py
+(0x   x   x   x   mqq (Btest_strategy_registry.py
+(0x   x   x   mqq (Bscorers
+(0x   x   x       tqq (Btest_confidence_scorer.py
+(0x   x   x       tqq (Btest_impact_scorer.py
+(0x   x   x       tqq (Btest_risk_scorer.py
+(0x   x   x       mqq (Btest_validation_scorer.py
+(0x   x   tqq (Brecommendation
+(0x   x   x   tqq (Bengine
+(0x   x   x   x   mqq (Btest_recommendation_engine.py
+(0x   x   x   tqq (Bhelpers
+(0x   x   x   x   mqq (Btest_finding_lookup.py
+(0x   x   x   tqq (Bintegration
+(0x   x   x   x   mqq (Btest_recommendation_pipeline.py
+(0x   x   x   tqq (Bmodels
+(0x   x   x   x   tqq (Btest_recommendation_collection.py
+(0x   x   x   x   tqq (Btest_recommendation.py
+(0x   x   x   x   mqq (Btest_recommendation_result.py
+(0x   x   x   tqq (Bnodes
+(0x   x   x   x   mqq (Btest_recommendation_node.py
+(0x   x   x   tqq (Bregistry
+(0x   x   x   x   mqq (Btest_recommendation_rule_registry.py
+(0x   x   x   mqq (Brules
+(0x   x   x       tqq (Btest_create_index_rule.py
+(0x   x   x       tqq (Btest_increase_work_mem_rule.py
+(0x   x   x       mqq (Btest_update_statistics_rule.py
+(0x   x   tqq (Breporting
+(0x   x   x   tqq (Bbuilders
+(0x   x   x   x   tqq (Btest_optimization_report_builder.py
+(0x   x   x   x   tqq (Btest_recommendation_report_builder.py
+(0x   x   x   x   tqq (Btest_strategy_report_builder.py
+(0x   x   x   x   mqq (Btest_validation_report_builder.py
+(0x   x   x   tqq (Bengine
+(0x   x   x   x   mqq (Btest_reporting_engine.py
+(0x   x   x   tqq (Bformatters
+(0x   x   x   x   tqq (Btest_enum_formatter.py
+(0x   x   x   x   tqq (Btest_report_formatter.py
+(0x   x   x   x   mqq (Btest_value_formatter.py
+(0x   x   x   tqq (Bintegration
+(0x   x   x   x   mqq (Btest_reporting_pipeline.py
+(0x   x   x   tqq (Bmodels
+(0x   x   x   x   tqq (Btest_optimization_report.py
+(0x   x   x   x   tqq (Btest_recommendation_report.py
+(0x   x   x   x   tqq (Btest_report_summary.py
+(0x   x   x   x   tqq (Btest_strategy_report.py
+(0x   x   x   x   mqq (Btest_validation_report.py
+(0x   x   x   tqq (Bnodes
+(0x   x   x   x   mqq (Btest_reporting_node.py
+(0x   x   x   tqq (Bregistry
+(0x   x   x   x   mqq (Btest_renderer_registry.py
+(0x   x   x   tqq (Brenderers
+(0x   x   x   x   tqq (Btest_console_renderer.py
+(0x   x   x   x   tqq (Btest_json_renderer.py
+(0x   x   x   x   mqq (Btest_markdown_renderer.py
+(0x   x   x   mqq (Bservice
+(0x   x   x       mqq (Btest_rendering_service.py
+(0x   x   mqq (Bvalidation
+(0x   x       tqq (Bbuilders
+(0x   x       x   mqq (Btest_index_statement_builder.py
+(0x   x       tqq (Bcomparison
+(0x   x       x   mqq (Btest_plan_comparator.py
+(0x   x       tqq (Bengine
+(0x   x       x   mqq (Btest_validation_engine.py
+(0x   x       tqq (Bhypopg
+(0x   x       x   mqq (Btest_hypopg_session.py
+(0x   x       tqq (Bintegration
+(0x   x       x   mqq (Btest_validation_pipeline.py
+(0x   x       tqq (Bnodes
+(0x   x       x   mqq (Btest_validation_node.py
+(0x   x       tqq (Bregistry
+(0x   x       x   mqq (Btest_validator_registry.py
+(0x   x       mqq (Bvalidators
+(0x   x           mqq (Btest_hypothetical_index_validator.py
+(0x   tqq (Bworkload
+(0x   x   tqq (Btest_metadata_parser.py
+(0x   x   mqq (Btest_query_catalog.py
+(0x   mqq (Bconftest.py
+(0tqq (Bdocker-compose.yml
+(0tqq (BREADME.md
+(0tqq (Brequirements.txt
+(0mqq (Btree.txt
 
-66 directories, 262 files
+178 directories, 563 files

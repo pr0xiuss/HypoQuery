@@ -11,12 +11,14 @@ from backend.optimization.reporting.models.report_summary import (
 
 def test_optimization_snapshot():
 
-    report = OptimizationReport(
-        summary=ReportSummary(),
-    )
+    summary = ReportSummary()
 
     snapshot = OptimizationSnapshot(
-        report=report,
+        summary=summary,
     )
 
-    assert snapshot.report == report
+    assert snapshot.summary == summary
+    assert snapshot.findings == ()
+    assert snapshot.recommendations == ()
+    assert snapshot.validations == ()
+    assert snapshot.strategies == ()

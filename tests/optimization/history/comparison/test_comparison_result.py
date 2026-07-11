@@ -38,9 +38,7 @@ def create_record():
         ),
         summary=ExecutionSummary(),
         snapshot=OptimizationSnapshot(
-            report=OptimizationReport(
-                summary=ReportSummary(),
-            ),
+            summary=ReportSummary(),
         ),
     )
 

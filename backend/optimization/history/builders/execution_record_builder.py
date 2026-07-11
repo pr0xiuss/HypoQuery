@@ -54,12 +54,14 @@ class ExecutionRecordBuilder:
             schema=context.schema,
         )
 
+        execution.state.report = report
+
         return ExecutionRecord(
             metadata=metadata,
             summary=self._summary_builder.build(
                 report,
             ),
             snapshot=self._snapshot_builder.build(
-                report,
+                execution,
             ),
         )

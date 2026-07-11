@@ -40,9 +40,7 @@ def test_history_result():
         metadata=metadata,
         summary=ExecutionSummary(),
         snapshot=OptimizationSnapshot(
-            report=OptimizationReport(
-                summary=ReportSummary(),
-            )
+            summary=ReportSummary(),
         ),
     )
 

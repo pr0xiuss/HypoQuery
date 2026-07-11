@@ -96,6 +96,26 @@ def test_build():
     )
 
     assert (
-        record.snapshot.report
-        == report
+        record.snapshot.summary
+        == report.summary
+    )
+
+    assert (
+        record.snapshot.findings
+        == ()
+    )
+
+    assert (
+        record.snapshot.recommendations
+        == ()
+    )
+
+    assert (
+        record.snapshot.validations
+        == ()
+    )
+
+    assert (
+        record.snapshot.strategies
+        == ()
     )
