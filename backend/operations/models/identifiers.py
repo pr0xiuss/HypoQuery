@@ -67,3 +67,37 @@ class OutcomeId:
         return str(
             self.value,
         )
+    
+@dataclass(
+    frozen=True,
+    slots=True,
+)
+class MonitoringId:
+    """
+    Strongly typed identifier for a
+    Monitoring aggregate.
+    """
+
+    value: UUID
+
+    def __str__(self) -> str:
+        return str(
+            self.value,
+        )
+    
+@dataclass(
+    frozen=True,
+    slots=True,
+)
+class PolicyId:
+    """
+    Strongly typed identifier for a
+    Policy aggregate.
+    """
+
+    value: UUID
+
+    def __str__(self) -> str:
+        return str(
+            self.value,
+        )

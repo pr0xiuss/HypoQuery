@@ -18,6 +18,18 @@ from backend.operations.models.identifiers import (
 from backend.operations.outcome.models.assessment import (
     OutcomeAssessment,
 )
+from backend.operations.models.identifiers import (
+    MonitoringId,
+)
+from backend.operations.monitoring.models.health import (
+    OptimizationHealth,
+)
+from backend.operations.models.identifiers import (
+    PolicyId,
+)
+from backend.operations.policy.models.decision import (
+    PolicyDecision,
+)
 
 
 @dataclass(
@@ -63,3 +75,31 @@ class OutcomeSnapshot:
     outcome_id: OutcomeId
 
     assessment: OutcomeAssessment
+
+@dataclass(
+    frozen=True,
+    slots=True,
+)
+class MonitoringSnapshot:
+    """
+    Published snapshot representing the
+    current monitoring state.
+    """
+
+    monitoring_id: MonitoringId
+
+    health: OptimizationHealth
+
+@dataclass(
+    frozen=True,
+    slots=True,
+)
+class PolicySnapshot:
+    """
+    Published snapshot representing
+    the result of policy evaluation.
+    """
+
+    policy_id: PolicyId
+
+    decision: PolicyDecision

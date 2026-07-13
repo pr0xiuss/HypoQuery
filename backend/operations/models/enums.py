@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from enum import Enum
+from enum import Enum, StrEnum, auto
 
 
 class CasePriority(str, Enum):
@@ -41,3 +41,39 @@ class CaseIntent(str, Enum):
     COST_REDUCTION = "cost_reduction"
     STORAGE_OPTIMIZATION = "storage_optimization"
     OPERATIONAL_HYGIENE = "operational_hygiene"
+
+class OptimizationHealthStatus(
+    StrEnum,
+):
+    """
+    Health status of an optimization
+    during continuous monitoring.
+    """
+
+    HEALTHY = auto()
+
+    DEGRADING = auto()
+
+    AT_RISK = auto()
+
+    CRITICAL = auto()
+
+    OBSOLETE = auto()
+
+class PolicyDecisionType(
+    StrEnum,
+):
+    """
+    Possible decisions produced by
+    policy evaluation.
+    """
+
+    NO_ACTION = auto()
+
+    CONTINUE_MONITORING = auto()
+
+    REOPEN_CASE = auto()
+
+    ARCHIVE_CASE = auto()
+
+    ESCALATE = auto()
