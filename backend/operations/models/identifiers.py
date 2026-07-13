@@ -50,3 +50,20 @@ class MonitoringFindingId:
     """
 
     value: UUID
+
+@dataclass(
+    frozen=True,
+    slots=True,
+)
+class OutcomeId:
+    """
+    Strongly typed identifier for an
+    Outcome aggregate.
+    """
+
+    value: UUID
+
+    def __str__(self) -> str:
+        return str(
+            self.value,
+        )
