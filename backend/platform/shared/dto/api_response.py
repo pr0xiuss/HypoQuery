@@ -1,5 +1,5 @@
 from typing import Generic
-from typing import TypeVar
+from typing import TypeVar, Any
 
 from pydantic import BaseModel
 from pydantic import ConfigDict
@@ -26,3 +26,38 @@ class ApiResponse(BaseModel, Generic[T]):
         frozen=True,
         extra="forbid",
     )
+
+
+    @classmethod
+    def success_response(
+        cls,
+        data: T | None = None,
+        meta: dict[str, object] | None = None,
+    ) -> "ApiResponse[T]":
+        """
+        Creates a successful API response.
+        """
+
+        return cls(
+            success=True,
+            data=data,
+            meta=meta or {},
+            errors=[],
+        )
+
+    @classmethod
+    def failure(
+        cls,
+        error: Any,
+        meta: dict[str, object] | None = None,
+    ) -> "ApiResponse[None]":
+        """
+        Creates a failed API response.
+        """
+
+        return cls(
+            success=False,
+            data=None,
+            meta=meta or {},
+            errors=[error],
+        )
