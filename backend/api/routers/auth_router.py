@@ -9,7 +9,8 @@ from backend.platform.auth.dto.user_response import UserResponse
 from backend.platform.auth.dto.login_request import LoginRequest
 from backend.platform.auth.dto.token_response import TokenResponse
 from backend.platform.auth.dto.logout_response import LogoutResponse
-
+from backend.platform.auth.dto.refresh_token_request import RefreshTokenRequest
+from backend.platform.auth.dto.refresh_token_response import RefreshTokenResponse
 
 router = APIRouter(
     prefix="/auth",
@@ -66,4 +67,24 @@ def logout() -> LogoutResponse:
 
     return LogoutResponse(
         message="Successfully logged out.",
+    )
+
+
+@router.post(
+    "/refresh",
+    response_model=RefreshTokenResponse,
+    status_code=status.HTTP_200_OK,
+)
+def refresh_token(
+    request: RefreshTokenRequest,
+    service: AuthenticationService = Depends(
+        get_authentication_service,
+    ),
+) -> RefreshTokenResponse:
+    """
+    Generates a new access token using a refresh token.
+    """
+
+    return service.refresh_token(
+        request.refresh_token,
     )

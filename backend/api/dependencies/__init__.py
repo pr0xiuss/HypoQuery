@@ -15,6 +15,9 @@ from backend.api.dependencies.platform import (
 from backend.api.dependencies.settings import (
     get_application_settings,
 )
+from backend.api.dependencies.get_db_connection_service import (
+    get_database_connection_service,
+)
 
 __all__ = [
     "get_application_settings",
@@ -26,4 +29,5 @@ __all__ = [
     "get_jwt_service",
     "get_organization_service",
     "get_project_service",
+    "get_database_connection_service",
 ]

@@ -1,18 +1,12 @@
 from datetime import datetime, UTC
-from uuid import uuid4
-
-from backend.platform.auth.application.authentication_service import (
-    AuthenticationService,
-)
+from uuid import uuid4, UUID
+import jwt
+from backend.platform.auth.application.authentication_service import AuthenticationService
 from backend.platform.auth.domain.user import User
-from backend.platform.auth.dto.register_user_request import (
-    RegisterUserRequest,
-)
+from backend.platform.auth.dto.register_user_request import RegisterUserRequest
 from backend.platform.auth.dto.user_response import UserResponse
 from backend.platform.auth.repositories.user_repository import UserRepository
-from backend.platform.auth.application.password_hasher import (
-    PasswordHasher,
-)
+from backend.platform.auth.application.password_hasher import PasswordHasher
 from backend.platform.auth.dto.login_request import LoginRequest
 from backend.platform.auth.dto.token_response import TokenResponse
 from backend.platform.auth.application.jwt_service import JWTService
@@ -22,6 +16,9 @@ from backend.platform.shared.exceptions import (
     UserAlreadyExistsError,
     UserNotVerifiedError,
 )
+from backend.platform.auth.dto.refresh_token_response import RefreshTokenResponse
+from backend.platform.auth.dto.logout_response import LogoutResponse
+
 
 
 class AuthenticationServiceImpl(AuthenticationService):
@@ -118,10 +115,64 @@ class AuthenticationServiceImpl(AuthenticationService):
             )
 
         access_token = self._jwt_service.create_access_token(
-            user.id,
+            user,
+        )
+
+        refresh_token = self._jwt_service.create_refresh_token(
+            user,
         )
 
         return TokenResponse(
             access_token=access_token,
-            expires_in=3600,
+            refresh_token=refresh_token,
+            expires_in=self._jwt_service.access_token_expires_in(),
+        )
+    
+
+    def refresh_token(
+        self,
+        refresh_token: str,
+    ) -> RefreshTokenResponse:
+        """
+        Generates a new access token using a valid refresh token.
+        """
+
+        try:
+            user_id = self._jwt_service.verify_refresh_token(
+                refresh_token,
+            )
+        except jwt.InvalidTokenError as exc:
+            raise InvalidCredentialsError(
+                "Invalid refresh token.",
+            ) from exc
+
+        user = self._user_repository.get_by_id(
+            user_id,
+        )
+
+        if user is None:
+            raise InvalidCredentialsError(
+                "Invalid refresh token.",
+            )
+
+        access_token = self._jwt_service.create_access_token(
+            user.id,
+        )
+
+        return RefreshTokenResponse(
+            access_token=access_token,
+        )
+    
+    def logout(
+        self,
+    ) -> LogoutResponse:
+        """
+        Logs out the current user.
+
+        JWT revocation will be implemented
+        in a later module.
+        """
+
+        return LogoutResponse(
+            message="Successfully logged out.",
         )

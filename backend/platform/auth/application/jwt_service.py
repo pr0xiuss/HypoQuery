@@ -5,7 +5,7 @@ from uuid import UUID
 
 class JWTService(ABC):
     """
-    Contract for JWT token generation and validation.
+    Service responsible for issuing and validating JWTs.
     """
 
     @abstractmethod
@@ -16,7 +16,15 @@ class JWTService(ABC):
         """
         Creates an access token.
         """
-        raise NotImplementedError
+
+    @abstractmethod
+    def create_refresh_token(
+        self,
+        user_id: UUID,
+    ) -> str:
+        """
+        Creates a refresh token.
+        """
 
     @abstractmethod
     def verify_access_token(
@@ -24,6 +32,22 @@ class JWTService(ABC):
         token: str,
     ) -> UUID:
         """
-        Verifies an access token and returns the user id.
+        Returns the authenticated user id.
         """
-        raise NotImplementedError
+
+    @abstractmethod
+    def verify_refresh_token(
+        self,
+        token: str,
+    ) -> UUID:
+        """
+        Returns the authenticated user id.
+        """
+
+    @abstractmethod
+    def access_token_expires_in(
+        self,
+    ) -> int:
+        """
+        Access token lifetime in seconds.
+        """
