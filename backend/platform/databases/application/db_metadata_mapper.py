@@ -1,0 +1,34 @@
+from uuid import UUID
+from uuid import uuid4
+
+from backend.platform.databases.domain.db_metadata import (
+    DatabaseMetadata,
+)
+from backend.platform.databases.dto.db_discovery_result import (
+    DatabaseDiscoveryResult,
+)
+
+
+class DatabaseMetadataMapper:
+    """
+    Maps discovery results into domain metadata objects.
+    """
+
+    @staticmethod
+    def to_domain(
+        connection_id: UUID,
+        discovery_result: DatabaseDiscoveryResult,
+    ) -> DatabaseMetadata:
+        return DatabaseMetadata(
+            id=uuid4(),
+            connection_id=connection_id,
+            postgres_version=discovery_result.postgres_version,
+            schemas=discovery_result.schemas,
+            tables=discovery_result.tables,
+            views=discovery_result.views,
+            functions=discovery_result.functions,
+            indexes=discovery_result.indexes,
+            triggers=discovery_result.triggers,
+            sequences=discovery_result.sequences,
+            extensions=discovery_result.extensions,
+        )

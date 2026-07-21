@@ -5,87 +5,40 @@ rootdir: /home/pr0xius/dev/projects/HypoQuery
 configfile: pytest.ini
 plugins: Faker-40.23.0, mock-3.15.1, cov-7.1.0, anyio-4.14.1, asyncio-1.4.0
 asyncio: mode=Mode.STRICT, debug=False, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function
-collecting ... collected 22 items
+collecting ... collected 1 item
 
-tests/platform/auth/test_auth_login_failure.py::test_login_invalid_password PASSED [  4%]
-tests/platform/auth/test_auth_login_failure.py::test_login_unknown_user PASSED [  9%]
-tests/platform/auth/test_auth_service.py::test_register_user PASSED      [ 13%]
-tests/platform/auth/test_auth_service.py::test_login PASSED              [ 18%]
-tests/platform/auth/test_auth_service.py::test_refresh_token PASSED      [ 22%]
-tests/platform/auth/test_auth_service_exceptions.py::test_register_existing_user PASSED [ 27%]
-tests/platform/auth/test_auth_service_exceptions.py::test_refresh_token_user_not_found PASSED [ 31%]
-tests/platform/auth/test_current_user_service.py::test_get_current_user PASSED [ 36%]
-tests/platform/auth/test_current_user_service_exceptions.py::test_missing_user PASSED [ 40%]
-tests/platform/auth/test_jwt_service.py::test_create_access_token PASSED [ 45%]
-tests/platform/auth/test_jwt_service.py::test_verify_access_token FAILED [ 50%]
-tests/platform/auth/test_jwt_service.py::test_invalid_token PASSED       [ 54%]
-tests/platform/auth/test_jwt_service.py::test_create_refresh_token PASSED [ 59%]
-tests/platform/auth/test_jwt_service.py::test_verify_refresh_token FAILED [ 63%]
-tests/platform/auth/test_jwt_service.py::test_access_token_cannot_be_used_as_refresh_token PASSED [ 68%]
-tests/platform/auth/test_jwt_service.py::test_refresh_token_cannot_be_used_as_access_token PASSED [ 72%]
-tests/platform/auth/test_password_hasher.py::test_hash_password PASSED   [ 77%]
-tests/platform/auth/test_password_hasher.py::test_verify_password PASSED [ 81%]
-tests/platform/auth/test_password_hasher.py::test_invalid_password PASSED [ 86%]
-tests/platform/auth/test_user_repo.py::test_save_user PASSED             [ 90%]
-tests/platform/auth/test_user_repo.py::test_get_user_by_identifier PASSED [ 95%]
-tests/platform/auth/test_user_repo.py::test_get_user_by_id PASSED        [100%]
+tests/integration/platform/databases/test_refresh_metadata_api.py::test_refresh_database_metadata FAILED [100%]
 
 =================================== FAILURES ===================================
-___________________________ test_verify_access_token ___________________________
+________________________ test_refresh_database_metadata ________________________
 
-    def test_verify_access_token():
-        """
-        Generated access tokens can be verified.
-        """
-    
-        service = create_jwt_service()
-    
-        user = create_user()
-    
-        token = service.create_access_token(
-            user.id,
-        )
-    
-        subject = service.verify_access_token(
-            token,
-        )
-    
->       assert subject == str(
-            user.id,
-        )
-E       AssertionError: assert UUID('34bc077b-014b-4e84-843a-73d7b6609b84') == '34bc077b-014b-4e84-843a-73d7b6609b84'
-E        +  where '34bc077b-014b-4e84-843a-73d7b6609b84' = str(UUID('34bc077b-014b-4e84-843a-73d7b6609b84'))
-E        +    where UUID('34bc077b-014b-4e84-843a-73d7b6609b84') = User(id=UUID('34bc077b-014b-4e84-843a-73d7b6609b84'), username='john', email='john@example.com', password_hash='hashed-password', is_active=True, is_verified=True, created_at=datetime.datetime(2026, 7, 16, 12, 46, 28, 32777, tzinfo=datetime.timezone.utc), updated_at=datetime.datetime(2026, 7, 16, 12, 46, 28, 32777, tzinfo=datetime.timezone.utc)).id
+client = <starlette.testclient.TestClient object at 0x7ff456d6c080>
+database_connection = <backend.platform.databases.infra.db_connection_model.DatabaseConnectionModel object at 0x7ff455c9f980>
 
-tests/platform/auth/test_jwt_service.py:67: AssertionError
-__________________________ test_verify_refresh_token ___________________________
+    def test_refresh_database_metadata(
+        client: TestClient,
+        database_connection,
+    ):
+        response = client.post(
+            f"/api/v1/database-connections/{database_connection.id}/refresh",
+        )
+    
+        assert response.status_code == 200
+        print(response.json())
+    
+        body = response.json()
+    
+>       assert body["id"] == str(database_connection.id)
+               ^^^^^^^^^^
+E       KeyError: 'id'
 
-    def test_verify_refresh_token():
-        """
-        Refresh tokens can be verified.
-        """
-    
-        service = create_jwt_service()
-    
-        user = create_user()
-    
-        token = service.create_refresh_token(
-            user.id,
-        )
-    
-        subject = service.verify_refresh_token(
-            token,
-        )
-    
->       assert subject == str(
-            user.id,
-        )
-E       AssertionError: assert UUID('3ea51658-b0c2-4e22-9dd4-990c78d0e502') == '3ea51658-b0c2-4e22-9dd4-990c78d0e502'
-E        +  where '3ea51658-b0c2-4e22-9dd4-990c78d0e502' = str(UUID('3ea51658-b0c2-4e22-9dd4-990c78d0e502'))
-E        +    where UUID('3ea51658-b0c2-4e22-9dd4-990c78d0e502') = User(id=UUID('3ea51658-b0c2-4e22-9dd4-990c78d0e502'), username='john', email='john@example.com', password_hash='hashed-password', is_active=True, is_verified=True, created_at=datetime.datetime(2026, 7, 16, 12, 46, 28, 133800, tzinfo=datetime.timezone.utc), updated_at=datetime.datetime(2026, 7, 16, 12, 46, 28, 133800, tzinfo=datetime.timezone.utc)).id
-
-tests/platform/auth/test_jwt_service.py:123: AssertionError
+tests/integration/platform/databases/test_refresh_metadata_api.py:17: KeyError
+----------------------------- Captured stdout call -----------------------------
+{'message': 'Database metadata refreshed successfully.'}
+----------------------------- Captured stderr call -----------------------------
+[2026-07-21 23:56:27,273] INFO | backend.api.middleware.logging_middleware | [4ac68024-527e-4779-893f-ae9afb8760a2] POST /api/v1/database-connections/f7329307-1ad7-4f03-99c1-2c86b5a51bc6/refresh | 200 | 119.94 ms
+------------------------------ Captured log call -------------------------------
+INFO     backend.api.middleware.logging_middleware:logging_middleware.py:39 [4ac68024-527e-4779-893f-ae9afb8760a2] POST /api/v1/database-connections/f7329307-1ad7-4f03-99c1-2c86b5a51bc6/refresh | 200 | 119.94 ms
 =========================== short test summary info ============================
-FAILED tests/platform/auth/test_jwt_service.py::test_verify_access_token - As...
-FAILED tests/platform/auth/test_jwt_service.py::test_verify_refresh_token - A...
-========================= 2 failed, 20 passed in 1.14s =========================
+FAILED tests/integration/platform/databases/test_refresh_metadata_api.py::test_refresh_database_metadata - KeyError: 'id'
+============================== 1 failed in 0.49s ===============================

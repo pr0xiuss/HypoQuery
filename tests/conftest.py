@@ -15,6 +15,12 @@ from backend.platform.shared.database import (
     SessionLocal,
 )
 
+pytest_plugins = [
+    "tests.fixtures.organi",
+    "tests.fixtures.prooject",
+    "tests.fixtures.environ",
+    "tests.fixtures.db_conn"
+]
 
 @pytest.fixture
 def db_session() -> Generator[Session, None, None]:

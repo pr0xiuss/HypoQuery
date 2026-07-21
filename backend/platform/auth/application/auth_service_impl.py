@@ -53,7 +53,8 @@ class AuthenticationServiceImpl(AuthenticationService):
 
         if existing_user is not None:
             raise UserAlreadyExistsError(
-                "A user with this username or email already exists."
+                "A user with this username or email already exists.",
+                request.username
             )
 
         password_hash = self._password_hasher.hash(

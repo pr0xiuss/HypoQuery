@@ -27,6 +27,7 @@ class CurrentUserServiceImpl(CurrentUserService):
         if user is None:
             raise ResourceNotFoundError(
                 "User not found.",
+                user_id
             )
 
         return user

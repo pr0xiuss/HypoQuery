@@ -1,3 +1,4 @@
+from uuid import UUID
 class SeederError(Exception):
     """Base exception for all seeder errors."""
 

@@ -1,29 +1,14 @@
 from fastapi import FastAPI
 
-from backend.api.routers.auth_router import (
-    router as auth_router,
-)
-from backend.api.routers.environment_router import (
-    router as environment_router,
-)
-from backend.api.routers.health_router import (
-    router as health_router,
-)
-from backend.api.routers.org_router import (
-    router as organization_router,
-)
-from backend.api.routers.project_router import (
-    router as project_router,
-)
-from backend.api.routers.root_router import (
-    router as root_router,
-)
-from backend.api.routers.system_router import (
-    router as system_router,
-)
-from backend.api.routers.user_router import (
-    router as user_router,
-)
+from backend.api.routers.auth_router import router as auth_router
+from backend.api.routers.environment_router import router as environment_router
+from backend.api.routers.health_router import router as health_router
+from backend.api.routers.org_router import router as organization_router
+from backend.api.routers.project_router import router as project_router
+from backend.api.routers.root_router import router as root_router
+from backend.api.routers.system_router import router as system_router
+from backend.api.routers.user_router import router as user_router
+from backend.platform.databases.api.db_connection_router import router as database_connection_router
 
 
 def register_routers(
@@ -79,4 +64,10 @@ def register_routers(
         environment_router,
         prefix="/api/v1",
         tags=["Environments"],
+    )
+    
+    app.include_router(
+        database_connection_router,
+        prefix="/api/v1",
+        tags=["Database Connections"],
     )

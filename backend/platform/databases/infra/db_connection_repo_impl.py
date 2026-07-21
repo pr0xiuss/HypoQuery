@@ -2,17 +2,10 @@ from uuid import UUID
 
 from sqlalchemy import select
 from sqlalchemy.orm import Session
-
-from backend.platform.databases.domain.db_connection import (
-    DatabaseConnection,
-)
-from backend.platform.databases.infra.db_connection_model import (
-    DatabaseConnectionModel,
-)
-from backend.platform.databases.repositories.db_connection_repo import (
-    DatabaseConnectionRepository,
-)
-
+from backend.platform.databases.domain.db_connection import DatabaseConnection
+from backend.platform.databases.infra.db_connection_model import DatabaseConnectionModel
+from backend.platform.databases.repositories.db_connection_repo import DatabaseConnectionRepository
+from backend.platform.shared.exceptions.resource import ResourceNotFoundError
 
 class DatabaseConnectionRepositoryImpl(
     DatabaseConnectionRepository,
@@ -34,7 +27,7 @@ class DatabaseConnectionRepositoryImpl(
         model = DatabaseConnectionModel(
             id=connection.id,
             environment_id=connection.environment_id,
-            secret_id=connection.secret_id,
+            password=connection.password,
             name=connection.name,
             host=connection.host,
             port=connection.port,
@@ -110,8 +103,7 @@ class DatabaseConnectionRepositoryImpl(
         )
 
         if model is None:
-            return
-
+            raise ResourceNotFoundError("Database Connection", str(connection_id))
         try:
             self._session.delete(
                 model,
@@ -129,7 +121,7 @@ class DatabaseConnectionRepositoryImpl(
         return DatabaseConnection(
             id=model.id,
             environment_id=model.environment_id,
-            secret_id=model.secret_id,
+            password=model.password,
             name=model.name,
             host=model.host,
             port=model.port,

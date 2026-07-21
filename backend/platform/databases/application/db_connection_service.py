@@ -2,13 +2,9 @@ from abc import ABC
 from abc import abstractmethod
 from uuid import UUID
 
-from backend.platform.databases.dto.create_db_connection_request import (
-    CreateDatabaseConnectionRequest,
-)
-from backend.platform.databases.dto.db_connection_response import (
-    DatabaseConnectionResponse,
-)
-
+from backend.platform.databases.dto.create_db_connection_request import CreateDatabaseConnectionRequest
+from backend.platform.databases.dto.db_connection_response import DatabaseConnectionResponse
+from backend.platform.databases.dto.db_health_result import DatabaseHealthResult
 
 class DatabaseConnectionService(ABC):
     """
@@ -53,3 +49,18 @@ class DatabaseConnectionService(ABC):
         """
         Deletes a database connection.
         """
+
+    @abstractmethod
+    def refresh_metadata(
+        self,
+        connection_id: UUID,
+    ) -> None:
+        raise NotImplementedError
+
+
+    @abstractmethod
+    def check_health(
+        self,
+        connection_id: UUID,
+    ) -> DatabaseHealthResult:
+        raise NotImplementedError

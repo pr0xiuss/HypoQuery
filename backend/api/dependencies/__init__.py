@@ -15,7 +15,7 @@ from backend.api.dependencies.platform import (
 from backend.api.dependencies.settings import (
     get_application_settings,
 )
-from backend.api.dependencies.get_db_connection_service import (
+from backend.api.dependencies.db_connection_dependencies import (
     get_database_connection_service,
 )
 

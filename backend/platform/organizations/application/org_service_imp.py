@@ -50,6 +50,7 @@ class OrganizationServiceImpl(OrganizationService):
         if existing is not None:
             raise ResourceAlreadyExistsError(
                 "An organization with this name already exists.",
+                slug
             )
 
         organization = Organization(

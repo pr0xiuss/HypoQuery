@@ -1,8 +1,6 @@
 from datetime import datetime
 from uuid import UUID
-
-from pydantic import BaseModel
-from pydantic import ConfigDict
+from pydantic import BaseModel, ConfigDict
 
 
 class DatabaseConnectionResponse(BaseModel):
@@ -35,4 +33,5 @@ class DatabaseConnectionResponse(BaseModel):
     model_config = ConfigDict(
         frozen=True,
         extra="forbid",
+        from_attributes=True
     )

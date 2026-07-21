@@ -78,10 +78,18 @@ def import_models() -> None:
     from backend.platform.projects.infra.project_model import (
         ProjectModel,
     )
+    from backend.platform.databases.infra.db_connection_model import (
+        DatabaseConnectionModel,
+    )
+    from backend.platform.databases.infra.db_metadata_model import (
+        DatabaseMetadataModel,
+    )
 
     _ = (
         UserModel,
         OrganizationModel,
         ProjectModel,
         EnvironmentModel,
+        DatabaseConnectionModel,
+        DatabaseMetadataModel,
     )

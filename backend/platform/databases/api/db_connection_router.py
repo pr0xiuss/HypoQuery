@@ -5,18 +5,13 @@ from fastapi import Depends
 from fastapi import HTTPException
 from fastapi import status
 
-from backend.api.dependencies import (
-    get_database_connection_service,
-)
-from backend.platform.databases.application.db_connection_service import (
-    DatabaseConnectionService,
-)
-from backend.platform.databases.dto.create_db_connection_request import (
-    CreateDatabaseConnectionRequest,
-)
-from backend.platform.databases.dto.db_connection_response import (
-    DatabaseConnectionResponse,
-)
+from backend.api.dependencies import get_database_connection_service
+from backend.platform.databases.application.db_connection_service import DatabaseConnectionService
+from backend.platform.databases.dto.create_db_connection_request import CreateDatabaseConnectionRequest
+from backend.platform.databases.dto.db_connection_response import DatabaseConnectionResponse
+from backend.platform.databases.dto.db_health_response import DatabaseHealthResponse
+from backend.platform.databases.dto.refresh_db_metadata_response import RefreshDatabaseMetadataResponse
+
 
 router = APIRouter()
 
@@ -118,4 +113,46 @@ def delete_database_connection(
 
     service.delete(
         connection_id,
+    )
+
+
+@router.post(
+    "/database-connections/{connection_id}/refresh",
+    response_model=RefreshDatabaseMetadataResponse,
+)
+def refresh_metadata(
+    connection_id: UUID,
+    service: DatabaseConnectionService = Depends(
+        get_database_connection_service,
+    ),
+) -> RefreshDatabaseMetadataResponse:
+    service.refresh_metadata(
+        connection_id,
+    )
+
+    return RefreshDatabaseMetadataResponse(
+        message="Database metadata refreshed successfully.",
+    )
+
+
+@router.get(
+    "/database-connections/{connection_id}/health",
+    response_model=DatabaseHealthResponse,
+)
+def check_health(
+    connection_id: UUID,
+    service: DatabaseConnectionService = Depends(
+        get_database_connection_service,
+    ),
+) -> DatabaseHealthResponse:
+    result = service.check_health(
+        connection_id,
+    )
+
+    return DatabaseHealthResponse(
+        healthy=result.healthy,
+        latency_ms=result.latency_ms,
+        postgres_version=result.postgres_version,
+        checked_at=result.checked_at,
+        error=result.error,
     )

@@ -9,6 +9,11 @@ from backend.platform.databases.dto.create_db_connection_request import CreateDa
 from backend.platform.databases.dto.db_connection_response import DatabaseConnectionResponse
 from backend.platform.databases.repositories.db_connection_repo import DatabaseConnectionRepository
 from backend.platform.databases.application.db_discovery_service import DatabaseDiscoveryService
+from backend.platform.databases.dto.db_health_result import DatabaseHealthResult
+from backend.platform.databases.application.db_health_service import DatabaseHealthService
+from backend.platform.databases.application.db_metadata_persistence_service import DatabaseMetadataPersistenceService
+from backend.platform.databases.application.db_discovery_service import DatabaseDiscoveryService
+
 
 class DatabaseConnectionServiceImpl(
     DatabaseConnectionService,
@@ -22,10 +27,14 @@ class DatabaseConnectionServiceImpl(
         repository: DatabaseConnectionRepository,
         validator: DatabaseConnectionValidator,
         discovery_service: DatabaseDiscoveryService,
+        metadata_persistence_service: DatabaseMetadataPersistenceService,
+        health_service: DatabaseHealthService,
     ):
         self._repository = repository
         self._validator = validator
         self._discovery_service = discovery_service
+        self._metadata_persistence_service = metadata_persistence_service
+        self._health_service = health_service
 
     def create(
         self,
@@ -51,11 +60,17 @@ class DatabaseConnectionServiceImpl(
             updated_at=now,
         )
 
-        self._validator.validate(request)
+        self._validator.validate(
+            request,
+        )
 
-        saved_connection = self._repository.save(connection)
+        saved_connection = self._repository.save(
+            connection,
+        )
 
-        self._discovery_service.discover(saved_connection.id)
+        self.refresh_metadata(
+            saved_connection.id,
+        )
 
         return saved_connection
 
@@ -114,5 +129,26 @@ class DatabaseConnectionServiceImpl(
         connection_id: UUID,
     ) -> None:
         self._repository.delete(
+            connection_id,
+        )
+
+    def refresh_metadata(
+        self,
+        connection_id: UUID,
+    ) -> None:
+        discovery_result = self._discovery_service.discover(
+            connection_id,
+        )
+
+        self._metadata_persistence_service.refresh(
+            connection_id,
+            discovery_result,
+        )
+
+    def check_health(
+        self,
+        connection_id: UUID,
+    ) -> DatabaseHealthResult:
+        return self._health_service.check_health(
             connection_id,
         )
