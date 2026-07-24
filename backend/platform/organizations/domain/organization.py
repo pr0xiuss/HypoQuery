@@ -14,6 +14,8 @@ class Organization(BaseModel):
 
     name: str
 
+    description: str | None
+
     slug: str
 
     created_at: datetime

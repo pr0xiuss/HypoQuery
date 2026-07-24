@@ -2,13 +2,9 @@ from abc import ABC
 from abc import abstractmethod
 from uuid import UUID
 
-from backend.platform.organizations.dto.create_organization_request import (
-    CreateOrganizationRequest,
-)
-from backend.platform.organizations.dto.organization_response import (
-    OrganizationResponse,
-)
-
+from backend.platform.organizations.dto.create_organization_request import CreateOrganizationRequest
+from backend.platform.organizations.dto.organization_response import OrganizationResponse
+from backend.platform.organizations.dto.update_org_request import UpdateOrganizationRequest
 
 class OrganizationService(ABC):
     """
@@ -42,5 +38,26 @@ class OrganizationService(ABC):
     ) -> list[OrganizationResponse]:
         """
         Retrieve all organizations visible to the current user.
+        """
+        raise NotImplementedError
+
+    @abstractmethod
+    def delete(
+        self,
+        organization_id: UUID,
+    ) -> None:
+        """
+        Delete an organization.
+        """
+        raise NotImplementedError
+
+    @abstractmethod
+    def update(
+        self,
+        organization_id: UUID,
+        request: UpdateOrganizationRequest,
+    ) -> OrganizationResponse | None:
+        """
+        Update an organization.
         """
         raise NotImplementedError

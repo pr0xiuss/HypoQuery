@@ -51,3 +51,34 @@ class ProjectRepository(ABC):
         within an organization.
         """
         raise NotImplementedError
+
+    @abstractmethod
+    def get_by_organization_and_slug(
+        self,
+        organization_id: UUID,
+        slug: str,
+    ) -> Project | None:
+        """
+        Retrieve a project by organization and slug.
+        """
+        raise NotImplementedError
+
+    @abstractmethod
+    def delete(
+        self,
+        project_id: UUID,
+    ) -> None:
+        """
+        Delete a project.
+        """
+        raise NotImplementedError
+
+    @abstractmethod
+    def update(
+        self,
+        project: Project,
+    ) -> Project:
+        """
+        Update a project.
+        """
+        raise NotImplementedError

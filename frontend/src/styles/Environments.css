@@ -1,0 +1,123 @@
+.environment-type-badge {
+  display: inline-block;
+  border-radius: 9999px;
+  padding: 0.1rem 0.55rem;
+  font-size: 0.7rem;
+  font-weight: 500;
+}
+
+.environments-grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+}
+
+.environment-card {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--color-line);
+  border-radius: 0.85rem;
+  background-color: var(--color-surface);
+  padding: 1.25rem;
+  text-decoration: none;
+  transition: border-color 0.15s ease;
+}
+.environment-card:hover {
+  border-color: var(--color-fog);
+}
+
+.environment-card-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.environment-card-icon {
+  display: flex;
+  height: 2.25rem;
+  width: 2.25rem;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.5rem;
+  background-color: var(--color-signal-soft);
+}
+
+.environment-card-name {
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: var(--color-paper);
+}
+
+.environment-card-badges {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 0.35rem;
+}
+
+.environment-status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  border-radius: 9999px;
+  border: 1px solid var(--color-line);
+  padding: 0.1rem 0.5rem;
+  font-size: 0.7rem;
+  color: var(--color-fog);
+}
+
+.environment-status-dot {
+  height: 0.4rem;
+  width: 0.4rem;
+  border-radius: 9999px;
+  background-color: var(--color-fog);
+}
+
+.environment-card-description {
+  margin-bottom: 0.9rem;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: var(--color-fog);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.environment-card-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.9rem;
+  margin-top: auto;
+  padding-top: 0.9rem;
+  border-top: 1px solid var(--color-line);
+}
+
+.environment-card-meta-item {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.7rem;
+  color: var(--color-fog);
+}
+
+.environment-add-connection-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-top: 0.75rem;
+  border-radius: 0.5rem;
+  border: 1px solid var(--color-line);
+  background-color: var(--color-ink);
+  padding: 0.4rem 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--color-signal);
+  cursor: pointer;
+}
+.environment-add-connection-btn:hover {
+  border-color: var(--color-signal);
+  background-color: var(--color-signal-soft);
+}

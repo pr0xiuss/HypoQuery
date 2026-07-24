@@ -30,6 +30,7 @@ class ProjectRepositoryImpl(ProjectRepository):
             organization_id=project.organization_id,
             name=project.name,
             description=project.description,
+            slug=project.slug,
             created_at=project.created_at,
             updated_at=project.updated_at,
         )
@@ -95,6 +96,62 @@ class ProjectRepositoryImpl(ProjectRepository):
             organization_id=model.organization_id,
             name=model.name,
             description=model.description,
+            slug=model.slug,
             created_at=model.created_at,
             updated_at=model.updated_at,
         )
+
+    def get_by_organization_and_slug(
+        self,
+        organization_id: UUID,
+        slug: str,
+    ) -> Project | None:
+
+        statement = select(ProjectModel).where(
+            ProjectModel.organization_id == organization_id,
+            ProjectModel.slug == slug,
+        )
+
+        model = self._session.scalar(statement)
+
+        if model is None:
+            return None
+
+        return self._to_domain(model)
+
+    def delete(
+        self,
+        project_id: UUID,
+    ) -> None:
+        model = self._session.get(
+            ProjectModel,
+            project_id,
+        )
+
+        if model is None:
+            return
+
+        self._session.delete(model)
+        self._session.commit()
+
+    def update(
+        self,
+        project: Project,
+    ) -> Project:
+        model = self._session.get(
+            ProjectModel,
+            project.id,
+        )
+
+        if model is None:
+            raise ValueError("Project not found")
+
+        model.name = project.name
+        model.description = project.description
+        model.slug = project.slug
+        model.updated_at = project.updated_at
+
+        self._session.commit()
+        self._session.refresh(model)
+
+        return self._to_domain(model)

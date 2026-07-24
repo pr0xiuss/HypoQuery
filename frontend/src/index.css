@@ -1,0 +1,45 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+@import "tailwindcss";
+
+/*
+  HypoQuery design tokens.
+  Registered via Tailwind v4 @theme so they generate real utilities:
+  bg-ink, text-paper, border-line, text-signal, font-display, etc.
+*/
+@theme {
+  --color-ink: #0B0E14;
+  --color-surface: #12161F;
+  --color-surface-raised: #171C28;
+  --color-line: #232A3D;
+  --color-fog: #8A93A6;
+  --color-paper: #E7EAF0;
+
+  --color-signal: #3E6FF2;
+  --color-signal-soft: #17223D;
+  --color-ok: #2FBE7A;
+  --color-ok-soft: #12271E;
+  --color-warn: #E2A63B;
+  --color-warn-soft: #2A2013;
+  --color-danger: #E5484D;
+  --color-danger-soft: #2A1416;
+
+  --font-display: "Space Grotesk", sans-serif;
+  --font-body: "Inter", sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--color-ink);
+  color: var(--color-paper);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background-color: var(--color-signal);
+  color: var(--color-paper);
+}

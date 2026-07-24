@@ -1,0 +1,127 @@
+.app-shell {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  min-height: 100vh;
+  background-color: var(--color-ink);
+}
+
+/* Sidebar */
+.app-sidebar {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid var(--color-line);
+  background-color: var(--color-surface);
+  padding: 1.25rem 0.75rem;
+}
+
+.app-sidebar-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.5rem 1.5rem;
+}
+
+.app-sidebar-nav {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 0.125rem;
+}
+
+.app-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  border-radius: 0.5rem;
+  padding: 0.55rem 0.65rem;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.app-nav-item-active {
+  color: var(--color-fog);
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.app-nav-item-active:hover {
+  background-color: var(--color-surface-raised);
+  color: var(--color-paper);
+}
+
+.app-nav-item-disabled {
+  color: var(--color-fog);
+  opacity: 0.45;
+  cursor: default;
+}
+
+.app-nav-soon {
+  margin-left: auto;
+  border-radius: 9999px;
+  border: 1px solid var(--color-line);
+  padding: 0.05rem 0.4rem;
+  font-size: 0.625rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+
+.app-nav-divider {
+  margin: 0.75rem 0.65rem;
+  height: 1px;
+  background-color: var(--color-line);
+}
+
+.app-sidebar-footer {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+  border-top: 1px solid var(--color-line);
+  padding-top: 0.75rem;
+}
+
+/* Main column */
+.app-main {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.app-topnav {
+  display: flex;
+  align-items: center;
+  height: 56px;
+  border-bottom: 1px solid var(--color-line);
+  padding: 0 1.75rem;
+}
+
+.app-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  list-style: none;
+  font-size: 0.8125rem;
+}
+
+.app-breadcrumb-item {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  text-transform: capitalize;
+}
+
+.app-breadcrumb-link {
+  color: var(--color-fog);
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+.app-breadcrumb-link:hover {
+  color: var(--color-paper);
+}
+
+.app-content {
+  flex: 1;
+  padding: 2rem 1.75rem;
+}

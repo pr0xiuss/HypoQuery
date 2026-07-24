@@ -30,6 +30,7 @@ class OrganizationRepositoryImpl(OrganizationRepository):
         model = OrganizationModel(
             id=organization.id,
             name=organization.name,
+            description=organization.description,
             slug=organization.slug,
             created_at=organization.created_at,
             updated_at=organization.updated_at,
@@ -94,7 +95,52 @@ class OrganizationRepositoryImpl(OrganizationRepository):
         return Organization(
             id=model.id,
             name=model.name,
+            description=model.description,
             slug=model.slug,
             created_at=model.created_at,
             updated_at=model.updated_at,
         )
+
+    def delete(
+        self,
+        organization_id: UUID,
+    ) -> None:
+        model = self._session.get(
+            OrganizationModel,
+            organization_id,
+        )
+
+        if model is None:
+            return
+
+        try:
+            self._session.delete(model)
+            self._session.commit()
+
+        except:
+            self._session.rollback()
+            raise
+
+    def update(
+        self,
+        organization: Organization,
+    ) -> Organization:
+        model = self._session.get(
+            OrganizationModel,
+            organization.id,
+        )
+
+        if model is None:
+            raise ValueError(
+                "Organization not found",
+            )
+
+        model.name = organization.name
+        model.description = organization.description
+        model.slug = organization.slug
+        model.updated_at = organization.updated_at
+
+        self._session.commit()
+        self._session.refresh(model)
+
+        return self._to_domain(model)

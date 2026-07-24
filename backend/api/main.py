@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from backend.api.exception_handlers.global_exception_handler import unhandled_exception_handler
+from fastapi.middleware.cors import CORSMiddleware
 from backend.api.lifespan import lifespan
 from backend.platform.config.settings import get_settings
 from backend.api.middleware.logging_middleware import LoggingMiddleware
@@ -16,6 +16,16 @@ app = FastAPI(
     docs_url="/docs",
     redoc_url="/redoc",
     openapi_url="/openapi.json",
+)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://localhost:5173",
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 register_exception_handlers(app)

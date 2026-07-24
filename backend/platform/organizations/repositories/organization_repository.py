@@ -48,3 +48,23 @@ class OrganizationRepository(ABC):
         Retrieve all organizations.
         """
         raise NotImplementedError
+
+    @abstractmethod
+    def delete(
+        self,
+        organization_id: UUID,
+    ) -> None:
+        """
+        Delete an organization.
+        """
+        raise NotImplementedError
+
+    @abstractmethod
+    def update(
+        self,
+        organization: Organization,
+    ) -> Organization:
+        """
+        Update an organization.
+        """
+        raise NotImplementedError

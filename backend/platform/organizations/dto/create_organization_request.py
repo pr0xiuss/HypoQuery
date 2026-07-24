@@ -13,6 +13,8 @@ class CreateOrganizationRequest(BaseModel):
         max_length=100,
     )
 
+    description: str | None
+
     model_config = ConfigDict(
         frozen=True,
         extra="forbid",

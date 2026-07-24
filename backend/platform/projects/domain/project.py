@@ -18,6 +18,8 @@ class Project(BaseModel):
 
     description: str | None = None
 
+    slug: str
+
     created_at: datetime
 
     updated_at: datetime

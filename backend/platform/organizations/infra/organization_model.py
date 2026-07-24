@@ -28,6 +28,11 @@ class OrganizationModel(Base):
         nullable=False,
     )
 
+    description: Mapped[str | None] = mapped_column(
+        String(500),
+        nullable=True,
+    )
+
     slug: Mapped[str] = mapped_column(
         String(100),
         unique=True,

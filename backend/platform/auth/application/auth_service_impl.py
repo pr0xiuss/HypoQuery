@@ -67,7 +67,7 @@ class AuthenticationServiceImpl(AuthenticationService):
             email=request.email,
             password_hash=password_hash,
             is_active=True, 
-            is_verified=False,
+            is_verified=True,
             created_at=now,
             updated_at=now,
         )

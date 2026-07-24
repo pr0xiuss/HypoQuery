@@ -1,7 +1,6 @@
 from abc import ABC
 from abc import abstractmethod
 from uuid import UUID
-
 from backend.platform.environments.domain.environment import Environment
 
 
@@ -41,13 +40,33 @@ class EnvironmentRepository(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def exists_by_name(
+    def get_by_project_and_slug(
         self,
         project_id: UUID,
-        name: str,
-    ) -> bool:
+        slug: str,
+    ) -> Environment | None:
         """
         Determine whether an environment with the given name already
         exists within a project.
+        """
+        raise NotImplementedError
+
+    @abstractmethod
+    def delete(
+        self,
+        environment_id: UUID,
+    ) -> None:
+        """
+        Delete an environment.
+        """
+        raise NotImplementedError
+
+    @abstractmethod
+    def update(
+        self,
+        environment: Environment,
+    ) -> Environment:
+        """
+        Update an existing environment.
         """
         raise NotImplementedError
