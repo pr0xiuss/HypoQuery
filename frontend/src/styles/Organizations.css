@@ -267,6 +267,40 @@
   color: var(--color-danger);
 }
 
+.dialog-field-row {
+  display: flex;
+  gap: 0.75rem;
+}
+.dialog-field-row .dialog-field {
+  margin-bottom: 1rem;
+}
+.dialog-field-grow {
+  flex: 1;
+}
+.dialog-field-narrow {
+  width: 110px;
+  flex-shrink: 0;
+}
+
+.dialog-checkbox-field {
+  margin-bottom: 1.25rem;
+}
+.dialog-checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--color-paper);
+  cursor: pointer;
+}
+.dialog-checkbox-label input[type="checkbox"] {
+  height: 1rem;
+  width: 1rem;
+  accent-color: var(--color-signal);
+  cursor: pointer;
+}
+
 .dialog-actions {
   display: flex;
   justify-content: flex-end;

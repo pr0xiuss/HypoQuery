@@ -64,13 +64,11 @@ class DatabaseConnectionRepositoryImpl(
             DatabaseConnectionModel,
             connection_id,
         )
-
         if model is None:
             return None
 
-        return self._to_domain(
-            model,
-        )
+        return self._to_domain(model)
+    
 
     def list_by_environment(
         self,
@@ -114,6 +112,45 @@ class DatabaseConnectionRepositoryImpl(
             self._session.rollback()
             raise
 
+    def update(
+        self,
+        connection: DatabaseConnection,
+    ) -> DatabaseConnection:
+        model = self._session.get(
+            DatabaseConnectionModel,
+            connection.id,
+        )
+
+        if model is None:
+            raise ResourceNotFoundError(
+                "Database Connection",
+                str(connection.id),
+            )
+
+        model.name = connection.name
+        model.host = connection.host
+        model.port = connection.port
+        model.database_name = connection.database_name
+        model.username = connection.username
+        model.password = connection.password
+        model.ssl_enabled = connection.ssl_enabled
+        model.is_active = connection.is_active
+        model.updated_at = connection.updated_at
+
+        try:
+            self._session.commit()
+            self._session.refresh(
+                model,
+            )
+
+        except:
+            self._session.rollback()
+            raise
+
+        return self._to_domain(
+            model,
+        )
+
     @staticmethod
     def _to_domain(
         model: DatabaseConnectionModel,
@@ -132,3 +169,4 @@ class DatabaseConnectionRepositoryImpl(
             created_at=model.created_at,
             updated_at=model.updated_at,
         )
+

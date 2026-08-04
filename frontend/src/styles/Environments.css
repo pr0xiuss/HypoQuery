@@ -121,3 +121,38 @@
   border-color: var(--color-signal);
   background-color: var(--color-signal-soft);
 }
+
+.environment-tabs {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid var(--color-line);
+}
+
+.environment-tab {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.65rem 0.9rem;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--color-fog);
+  text-decoration: none;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+}
+.environment-tab:hover {
+  color: var(--color-paper);
+}
+
+.environment-tab-active {
+  color: var(--color-paper);
+  border-bottom-color: var(--color-signal);
+}
+
+.environment-tab-disabled {
+  color: var(--color-fog);
+  opacity: 0.5;
+  cursor: default;
+}

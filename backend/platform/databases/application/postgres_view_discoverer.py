@@ -1,9 +1,7 @@
 import psycopg
-
-from backend.platform.databases.application.view_discoverer import (
-    ViewDiscoverer,
-)
-
+from backend.platform.databases.domain.db_view import DatabaseView
+from backend.platform.databases.application.view_discoverer import ViewDiscoverer
+from uuid import uuid4, UUID
 
 class PostgresViewDiscoverer(
     ViewDiscoverer,
@@ -15,12 +13,14 @@ class PostgresViewDiscoverer(
     def discover(
         self,
         connection: psycopg.Connection,
-    ) -> list[str]:
+        connection_id: UUID,
+    ) -> list[DatabaseView]:
         with connection.cursor() as cursor:
             cursor.execute(
                 """
                 SELECT
-                    table_schema || '.' || table_name
+                    table_schema,
+                    table_name
                 FROM information_schema.views
                 WHERE table_schema NOT IN (
                     'pg_catalog',
@@ -33,6 +33,11 @@ class PostgresViewDiscoverer(
             )
 
             return [
-                row[0]
+                DatabaseView(
+                    id=uuid4(),
+                    connection_id=connection_id,
+                    schema_name=row[0],
+                    name=row[1],
+                )
                 for row in cursor.fetchall()
             ]

@@ -22,6 +22,10 @@ from backend.platform.databases.application.trigger_discoverer import TriggerDis
 from backend.platform.databases.application.version_discoverer import VersionDiscoverer
 from backend.platform.databases.application.view_discoverer import ViewDiscoverer
 from backend.platform.databases.repositories.db_connection_repo import DatabaseConnectionRepository
+from backend.platform.databases.application.column_discoverer import ColumnDiscoverer
+from backend.platform.databases.application.constraint_discoverer import ConstraintDiscoverer
+
+
 
 class PostgresDatabaseDiscoveryService(
     DatabaseDiscoveryService,
@@ -37,6 +41,8 @@ class PostgresDatabaseDiscoveryService(
         schema_discoverer: SchemaDiscoverer,
         extension_discoverer: ExtensionDiscoverer,
         table_discoverer: TableDiscoverer,
+        column_discoverer: ColumnDiscoverer,
+        constraint_discoverer: ConstraintDiscoverer,
         view_discoverer: ViewDiscoverer,
         function_discoverer: FunctionDiscoverer,
         index_discoverer: IndexDiscoverer,
@@ -57,6 +63,8 @@ class PostgresDatabaseDiscoveryService(
         self._schema_discoverer = schema_discoverer
         self._extension_discoverer = extension_discoverer
         self._table_discoverer = table_discoverer
+        self._column_discoverer = column_discoverer
+        self._constraint_discoverer = constraint_discoverer
         self._view_discoverer = view_discoverer
         self._function_discoverer = function_discoverer
         self._index_discoverer = index_discoverer
@@ -114,21 +122,55 @@ class PostgresDatabaseDiscoveryService(
 
             version = self._version_discoverer.discover(db)
 
-            schemas = self._schema_discoverer.discover(db)
+            schemas = self._schema_discoverer.discover(
+                connection=db,
+                connection_id=connection.id,
+            )
 
-            extensions = self._extension_discoverer.discover(db)
+            extensions = self._extension_discoverer.discover(
+                connection=db,
+                connection_id=connection.id,
+            )
 
-            tables = self._table_discoverer.discover(db)
+            tables = self._table_discoverer.discover(
+                connection=db,
+                connection_id=connection.id,
+            )
 
-            views = self._view_discoverer.discover(db)
+            columns = self._column_discoverer.discover(
+                connection=db,
+                connection_id=connection.id,
+            )
 
-            functions = self._function_discoverer.discover(db)
+            constraints = self._constraint_discoverer.discover(
+                connection=db,
+                connection_id=connection.id,
+            )
 
-            indexes = self._index_discoverer.discover(db)
+            views = self._view_discoverer.discover(
+                connection=db,
+                connection_id=connection.id,
+            )
 
-            triggers = self._trigger_discoverer.discover(db)
+            functions = self._function_discoverer.discover(
+                connection=db,
+                connection_id=connection.id,
+            )
 
-            sequences = self._sequence_discoverer.discover(db)
+            indexes = self._index_discoverer.discover(
+                connection=db,
+                connection_id=connection.id,
+            )
+
+            triggers = self._trigger_discoverer.discover(
+                connection=db,
+                connection_id=connection.id,
+            )
+
+            sequences = self._sequence_discoverer.discover(
+                connection=db,
+                connection_id=connection.id,
+            )
 
             settings = (
                 self._database_settings_discoverer.discover(
@@ -182,6 +224,8 @@ class PostgresDatabaseDiscoveryService(
                 postgres_version=version,
                 schemas=schemas,
                 tables=tables,
+                columns=columns,
+                constraints=constraints,
                 views=views,
                 functions=functions,
                 indexes=indexes,

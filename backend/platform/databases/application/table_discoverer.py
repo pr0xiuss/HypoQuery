@@ -1,7 +1,8 @@
 from abc import ABC
 from abc import abstractmethod
-
+from backend.platform.databases.domain.db_table import DatabaseTable
 import psycopg
+from uuid import UUID
 
 
 class TableDiscoverer(ABC):
@@ -13,7 +14,8 @@ class TableDiscoverer(ABC):
     def discover(
         self,
         connection: psycopg.Connection,
-    ) -> list[str]:
+        connection_id: UUID,
+    ) -> list[DatabaseTable]:
         """
         Discover all tables in the database.
         """

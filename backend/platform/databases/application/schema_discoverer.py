@@ -1,7 +1,8 @@
 from abc import ABC
 from abc import abstractmethod
-
+from backend.platform.databases.domain.db_schema import DatabaseSchema
 import psycopg
+from uuid import UUID
 
 
 class SchemaDiscoverer(ABC):
@@ -13,7 +14,8 @@ class SchemaDiscoverer(ABC):
     def discover(
         self,
         connection: psycopg.Connection,
-    ) -> list[str]:
+        connection_id: UUID,
+    ) -> list[DatabaseSchema]:
         """
         Returns the available schemas.
         """

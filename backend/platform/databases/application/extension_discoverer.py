@@ -1,7 +1,8 @@
 from abc import ABC
 from abc import abstractmethod
-
+from backend.platform.databases.domain.db_extension import DatabaseExtension
 import psycopg
+from uuid import UUID
 
 
 class ExtensionDiscoverer(ABC):
@@ -13,7 +14,8 @@ class ExtensionDiscoverer(ABC):
     def discover(
         self,
         connection: psycopg.Connection,
-    ) -> list[str]:
+        connection_id: UUID,
+    ) -> list[DatabaseExtension]:
         """
         Returns installed extensions.
         """

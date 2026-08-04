@@ -9,7 +9,7 @@ from backend.api.routers.root_router import router as root_router
 from backend.api.routers.system_router import router as system_router
 from backend.api.routers.user_router import router as user_router
 from backend.platform.databases.api.db_connection_router import router as database_connection_router
-
+from backend.platform.apis.api.api_router import router as api_router
 
 def register_routers(
     app: FastAPI,
@@ -70,4 +70,10 @@ def register_routers(
         database_connection_router,
         prefix="/api/v1",
         tags=["Database Connections"],
+    )
+
+    app.include_router(
+        api_router,
+        prefix="/api/v1",
+        tags=["APIs"],
     )

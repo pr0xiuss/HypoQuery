@@ -13,9 +13,11 @@ import {
   LogOut,
 } from "lucide-react";
 import { logoutUser } from "../services/authService";
+import { invalidateSession } from "../services/api";
 import { useOrganization } from "../hooks/useOrganizations";
 import { useProject } from "../hooks/useProjects";
 import { useEnvironment } from "../hooks/useEnvironments";
+import { useDatabaseConnection } from "../hooks/useDatabaseConnections";
 import { clearTokens } from "../utils/auth";
 import Breadcrumbs from "../components/layout/Breadcrumbs";
 import { useQueryClient } from "@tanstack/react-query";
@@ -36,6 +38,7 @@ const BREADCRUMB_LABELS = {
   organizations: "Organizations",
   projects: "Projects",
   environments: "Environments",
+  "database-connections": "Database Connections",
   settings: "Settings",
 };
 
@@ -47,10 +50,12 @@ function useBreadcrumbItems(dynamicLabels) {
     if (!label) {
       if (segment === "new") {
         const parent = segments[i - 1];
-        label =
-          parent === "environments" ? "Create Environment" : "Create Project";
+        if (parent === "environments") label = "Create Environment";
+        else if (parent === "database-connections") label = "New Connection";
+        else label = "Create Project";
       } else if (segment === "edit") {
-        label = "Edit Environment";
+        const parent = segments[i - 2];
+        label = parent === "database-connections" ? "Edit Connection" : "Edit Environment";
       } else {
         label = segment;
       }
@@ -62,7 +67,7 @@ function useBreadcrumbItems(dynamicLabels) {
 export default function AppLayout() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const { organizationId, projectId, environmentId } = useParams();
+  const { organizationId, projectId, environmentId, connectionId } = useParams();
   const { data: organization } = useOrganization(organizationId);
   const { data: project } = useProject(organizationId, projectId);
   const { data: environment } = useEnvironment(
@@ -70,11 +75,18 @@ export default function AppLayout() {
     projectId,
     environmentId
   );
+  const { data: connection } = useDatabaseConnection(
+    organizationId,
+    projectId,
+    environmentId,
+    connectionId
+  );
 
   const dynamicLabels = {
     ...(organizationId && { [organizationId]: organization?.name || "…" }),
     ...(projectId && { [projectId]: project?.name || "…" }),
     ...(environmentId && { [environmentId]: environment?.name || "…" }),
+    ...(connectionId && { [connectionId]: connection?.name || "…" }),
   };
   const breadcrumbItems = useBreadcrumbItems(dynamicLabels);
 
@@ -89,6 +101,9 @@ export default function AppLayout() {
       : null;
 
   async function handleLogout() {
+    // Bump this first, synchronously — any refresh already in flight will
+    // see a mismatched epoch when it resolves and discard its result.
+    invalidateSession();
     try {
       await logoutUser();
     } catch {

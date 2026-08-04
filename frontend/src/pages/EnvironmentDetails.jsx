@@ -8,6 +8,7 @@ import {
   Pencil,
   Plug,
   Plus,
+  Server,
   Trash2,
   TriangleAlert,
 } from "lucide-react";
@@ -15,9 +16,12 @@ import {
   useDeleteEnvironment,
   useEnvironment,
 } from "../hooks/useEnvironments";
+import { useDatabaseConnections } from "../hooks/useDatabaseConnections";
+import { useApis } from "../hooks/useApis";
 import { useToast } from "../components/toast/ToastProvider";
 import EnvironmentTypeBadge from "../components/envs/EnvironmentTypeBadge";
 import DeleteEnvironmentDialog from "../components/envs/DeleteEnvironmentDialog";
+import EnvironmentTabs from "../components/envs/EnvironmentTabs";
 import "../styles/Organizations.css";
 import "../styles/dashboard.css";
 import "../styles/Environments.css";
@@ -49,12 +53,22 @@ export default function EnvironmentDetails() {
     refetch,
   } = useEnvironment(organizationId, projectId, environmentId);
   const deleteEnvironment = useDeleteEnvironment(organizationId, projectId);
+  const { data: connections } = useDatabaseConnections(
+    organizationId,
+    projectId,
+    environmentId
+  );
+  const connectionCount = connections?.length ?? 0;
+  const { data: apis } = useApis(organizationId, projectId, environmentId);
+  const apiCount = apis?.length ?? 0;
 
   const basePath = `/organizations/${organizationId}/projects/${projectId}`;
   const isNotFound = isError && error?.response?.status === 404;
 
   return (
     <div>
+      <EnvironmentTabs active="overview" />
+
       <Link to={`${basePath}/environments`} className="dashboard-back-link">
         <ChevronLeft className="h-4 w-4" />
         Environments
@@ -168,31 +182,68 @@ export default function EnvironmentDetails() {
             </div>
           </div>
 
-          {/* Connections — placeholder until the Database Connections module ships */}
-          <div className="dashboard-module-card">
-            <div className="dashboard-module-card-header">
-              <Plug className="h-4 w-4 text-fog" />
-              <span className="text-sm font-medium text-paper">
-                Database Connections
-              </span>
+          {/* Modules */}
+          <div className="dashboard-modules-grid">
+            <div className="dashboard-module-card">
+              <div className="dashboard-module-card-header">
+                <Plug className="h-4 w-4 text-fog" />
+                <span className="text-sm font-medium text-paper">
+                  Database Connections
+                </span>
+              </div>
+              <div className="dashboard-module-empty">
+                <Plug className="h-6 w-6 text-fog" strokeWidth={1.5} />
+                <p className="mt-2 text-sm text-fog">
+                  {connectionCount > 0
+                    ? `${connectionCount} connection${connectionCount === 1 ? "" : "s"} configured.`
+                    : "No database connections added yet."}
+                </p>
+                <Link
+                  to={`${basePath}/environments/${environmentId}/database-connections/new`}
+                  className="environment-add-connection-btn"
+                >
+                  <Plus className="h-3.5 w-3.5" />
+                  Add Connection
+                </Link>
+                {connectionCount > 0 && (
+                  <Link
+                    to={`${basePath}/environments/${environmentId}/database-connections`}
+                    className="dashboard-module-link"
+                  >
+                    View Connections →
+                  </Link>
+                )}
+              </div>
             </div>
-            <div className="dashboard-module-empty">
-              <Plug className="h-6 w-6 text-fog" strokeWidth={1.5} />
-              <p className="mt-2 text-sm text-fog">
-                No database connections added yet.
-              </p>
-              <button
-                className="dashboard-module-link environment-add-connection-btn"
-                onClick={() =>
-                  showToast(
-                    "Database Connections is coming in the next module.",
-                    { type: "success" }
-                  )
-                }
-              >
-                <Plus className="h-3.5 w-3.5" />
-                Add Connection
-              </button>
+
+            <div className="dashboard-module-card">
+              <div className="dashboard-module-card-header">
+                <Server className="h-4 w-4 text-fog" />
+                <span className="text-sm font-medium text-paper">APIs</span>
+              </div>
+              <div className="dashboard-module-empty">
+                <Server className="h-6 w-6 text-fog" strokeWidth={1.5} />
+                <p className="mt-2 text-sm text-fog">
+                  {apiCount > 0
+                    ? `${apiCount} API${apiCount === 1 ? "" : "s"} registered.`
+                    : "No APIs have been registered yet."}
+                </p>
+                <Link
+                  to={`${basePath}/environments/${environmentId}/apis`}
+                  className="environment-add-connection-btn"
+                >
+                  <Plus className="h-3.5 w-3.5" />
+                  Register API
+                </Link>
+                {apiCount > 0 && (
+                  <Link
+                    to={`${basePath}/environments/${environmentId}/apis`}
+                    className="dashboard-module-link"
+                  >
+                    View APIs →
+                  </Link>
+                )}
+              </div>
             </div>
           </div>
         </>

@@ -48,3 +48,12 @@ class DatabaseConnectionRepository(ABC):
         """
         Deletes a database connection.
         """
+
+    @abstractmethod
+    def update(
+        self,
+        connection: DatabaseConnection
+    ) -> DatabaseConnection:
+        """
+        Updates a datbase connection.
+        """

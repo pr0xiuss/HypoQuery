@@ -26,6 +26,15 @@ api.interceptors.request.use((config) => {
 let isRefreshing = false;
 let pendingQueue = [];
 
+// Bumped by invalidateSession() on logout. A refresh that was already in
+// flight when logout happened checks this before writing a token back, so
+// a stale refresh can't silently re-authenticate a user who just logged out.
+let sessionEpoch = 0;
+
+export function invalidateSession() {
+  sessionEpoch += 1;
+}
+
 function flushQueue(error, token) {
   pendingQueue.forEach(({ resolve, reject }) => {
     if (error) reject(error);
@@ -54,6 +63,7 @@ api.interceptors.response.use(
       originalRequest._retry = true;
       isRefreshing = true;
       const refreshToken = getRefreshToken();
+      const epochAtStart = sessionEpoch;
 
       if (!refreshToken) {
         clearTokens();
@@ -66,6 +76,15 @@ api.interceptors.response.use(
           `${import.meta.env.VITE_API_BASE_URL}/api/v1/auth/refresh`,
           { refresh_token: refreshToken }
         );
+
+        // A logout happened while this refresh was in flight — discard the
+        // result instead of writing a fresh token back into a session the
+        // user already ended.
+        if (sessionEpoch !== epochAtStart) {
+          flushQueue(error, null);
+          return Promise.reject(error);
+        }
+
         setAccessToken(data.access_token);
         flushQueue(null, data.access_token);
         originalRequest.headers.Authorization = `Bearer ${data.access_token}`;
@@ -81,10 +100,11 @@ api.interceptors.response.use(
     }
 
     // Normalize the error message in one place (Section 3 contract: message / detail).
-    const friendlyMessage =
-      error.response?.data?.message ||
-      error.response?.data?.detail ||
-      "Something went wrong. Please try again.";
+    const friendlyMessage = error.response
+      ? error.response.data?.message ||
+        error.response.data?.detail ||
+        "Something went wrong. Please try again."
+      : "Cannot reach the server. Check that the backend is running and VITE_API_BASE_URL is correct.";
     return Promise.reject(Object.assign(error, { friendlyMessage }));
   }
 );

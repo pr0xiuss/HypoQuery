@@ -1,9 +1,9 @@
 import psycopg
-
+from backend.platform.databases.domain.db_schema import DatabaseSchema
 from backend.platform.databases.application.schema_discoverer import (
     SchemaDiscoverer,
 )
-
+from uuid import uuid4, UUID
 
 class PostgresSchemaDiscoverer(
     SchemaDiscoverer,
@@ -15,6 +15,7 @@ class PostgresSchemaDiscoverer(
     def discover(
         self,
         connection: psycopg.Connection,
+        connection_id: UUID,
     ) -> list[str]:
         with connection.cursor() as cursor:
             cursor.execute(
@@ -30,6 +31,10 @@ class PostgresSchemaDiscoverer(
             )
 
             return [
-                row[0]
+                DatabaseSchema(
+                    id=uuid4(),
+                    connection_id=connection_id,
+                    name=row[0],
+                )
                 for row in cursor.fetchall()
             ]

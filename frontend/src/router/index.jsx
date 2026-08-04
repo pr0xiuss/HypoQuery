@@ -12,6 +12,11 @@ import EnvironmentsList from "../pages/EnvironmentsList";
 import CreateEnvironment from "../pages/CreateEnvironment";
 import EditEnvironment from "../pages/EditEnvironment";
 import EnvironmentDetails from "../pages/EnvironmentDetails";
+import DatabaseConnectionsList from "../pages/DatabaseConnectionsList";
+import CreateDatabaseConnection from "../pages/CreateDatabaseConnection";
+import EditDatabaseConnection from "../pages/EditDatabaseConnection";
+import DatabaseConnectionDetails from "../pages/DatabaseConnectionDetails";
+import ApisList from "../pages/ApisList";
 import ProtectedRoute from "./ProtectedRoute";
 import GuestRoute from "./GuestRoute";
 
@@ -62,6 +67,26 @@ export const router = createBrowserRouter([
           {
             path: "/organizations/:organizationId/projects/:projectId/environments/:environmentId/edit",
             element: <EditEnvironment />,
+          },
+          {
+            path: "/organizations/:organizationId/projects/:projectId/environments/:environmentId/database-connections",
+            element: <DatabaseConnectionsList />,
+          },
+          {
+            path: "/organizations/:organizationId/projects/:projectId/environments/:environmentId/database-connections/new",
+            element: <CreateDatabaseConnection />,
+          },
+          {
+            path: "/organizations/:organizationId/projects/:projectId/environments/:environmentId/database-connections/:connectionId",
+            element: <DatabaseConnectionDetails />,
+          },
+          {
+            path: "/organizations/:organizationId/projects/:projectId/environments/:environmentId/database-connections/:connectionId/edit",
+            element: <EditDatabaseConnection />,
+          },
+          {
+            path: "/organizations/:organizationId/projects/:projectId/environments/:environmentId/apis",
+            element: <ApisList />,
           },
         ],
       },

@@ -4,10 +4,6 @@ from uuid import UUID
 
 @dataclass(slots=True, kw_only=True)
 class DatabaseTable:
-    """
-    Represents a database table discovered during onboarding.
-    """
-
     id: UUID
 
     connection_id: UUID
@@ -15,3 +11,11 @@ class DatabaseTable:
     schema_name: str
 
     name: str
+
+    estimated_rows: int | None
+
+    size_bytes: int
+
+    column_count: int
+
+    has_primary_key: bool

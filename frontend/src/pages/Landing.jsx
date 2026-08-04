@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import {
   Database,
@@ -10,6 +11,7 @@ import {
   ArrowRight,
   CircleCheck,
 } from "lucide-react";
+import { clearTokens } from "../utils/auth";
 
 const WORKFLOW_STEPS = [
   { label: "Login", detail: "Authenticate into your workspace" },
@@ -67,6 +69,13 @@ const LAYERS = [
 ];
 
 export default function Landing() {
+  // Visiting the landing page always resets the client session — clicking
+  // Login from here should show the login form, never skip straight past
+  // it because an old token was still sitting in localStorage.
+  useEffect(() => {
+    clearTokens();
+  }, []);
+
   return (
     <div className="min-h-screen bg-ink text-paper font-body">
       {/* Top navigation */}

@@ -1,7 +1,8 @@
 from abc import ABC
 from abc import abstractmethod
-
+from backend.platform.databases.domain.db_trigger import DatabaseTrigger
 import psycopg
+from uuid import UUID
 
 
 class TriggerDiscoverer(ABC):
@@ -13,7 +14,8 @@ class TriggerDiscoverer(ABC):
     def discover(
         self,
         connection: psycopg.Connection,
-    ) -> list[str]:
+        connection_id: UUID,
+    ) -> list[DatabaseTrigger]:
         """
         Returns user-defined triggers.
         """

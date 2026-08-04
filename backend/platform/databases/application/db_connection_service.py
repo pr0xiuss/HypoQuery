@@ -1,10 +1,12 @@
 from abc import ABC
 from abc import abstractmethod
 from uuid import UUID
-
+from backend.platform.databases.dto.update_db_connection_request import UpdateDatabaseConnectionRequest
 from backend.platform.databases.dto.create_db_connection_request import CreateDatabaseConnectionRequest
 from backend.platform.databases.dto.db_connection_response import DatabaseConnectionResponse
 from backend.platform.databases.dto.db_health_result import DatabaseHealthResult
+from backend.platform.databases.dto.db_overview_response import DatabaseOverviewResponse
+
 
 class DatabaseConnectionService(ABC):
     """
@@ -64,3 +66,20 @@ class DatabaseConnectionService(ABC):
         connection_id: UUID,
     ) -> DatabaseHealthResult:
         raise NotImplementedError
+
+    @abstractmethod
+    def update(
+        self,
+        connection_id: UUID,
+        request: UpdateDatabaseConnectionRequest,
+    ) -> DatabaseConnectionResponse:
+        """
+        Updates a database connection.
+        """
+
+    @abstractmethod
+    def get_overview(
+        self,
+        connection_id: UUID,
+    ) -> DatabaseOverviewResponse:
+        pass

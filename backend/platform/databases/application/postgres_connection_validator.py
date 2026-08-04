@@ -22,6 +22,11 @@ class PostgresConnectionValidator(
         connection = None
 
         try:
+            print("Validator request:", request)
+            print("Host:", request.host)
+            print("Port:", request.port)
+            print("Database:", request.database_name)
+            print("Username:", request.username)
             connection = psycopg.connect(
                 host=request.host,
                 port=request.port,
@@ -35,6 +40,10 @@ class PostgresConnectionValidator(
                 ),
                 connect_timeout=5,
             )
+            print(request)
+            print(request.host)
+            print(request.port)
+            print(request.database_name)
 
             with connection.cursor() as cursor:
                 cursor.execute(

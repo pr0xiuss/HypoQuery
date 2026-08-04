@@ -1,8 +1,8 @@
 from abc import ABC
 from abc import abstractmethod
-
+from backend.platform.databases.domain.db_view import DatabaseView
 import psycopg
-
+from uuid import UUID
 
 class ViewDiscoverer(ABC):
     """
@@ -13,7 +13,8 @@ class ViewDiscoverer(ABC):
     def discover(
         self,
         connection: psycopg.Connection,
-    ) -> list[str]:
+        connection_id: UUID,
+    ) -> list[DatabaseView]:
         """
         Returns user views.
         """

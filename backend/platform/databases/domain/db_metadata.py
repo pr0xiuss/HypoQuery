@@ -1,5 +1,18 @@
 from dataclasses import dataclass
+from datetime import datetime
 from uuid import UUID
+
+from backend.platform.databases.domain.db_extension import DatabaseExtension
+from backend.platform.databases.domain.db_function import DatabaseFunction
+from backend.platform.databases.domain.db_index import DatabaseIndex
+from backend.platform.databases.domain.db_schema import DatabaseSchema
+from backend.platform.databases.domain.db_sequence import DatabaseSequence
+from backend.platform.databases.domain.db_table import DatabaseTable
+from backend.platform.databases.domain.db_trigger import DatabaseTrigger
+from backend.platform.databases.domain.db_view import DatabaseView
+from backend.platform.databases.dto.db_statistics_result import DatabaseStatisticsResult
+from backend.platform.databases.domain.db_column import DatabaseColumn
+from backend.platform.databases.domain.db_constraint import DatabaseConstraint
 
 
 @dataclass(slots=True, kw_only=True)
@@ -14,18 +27,40 @@ class DatabaseMetadata:
 
     postgres_version: str
 
-    schemas: list[str]
+    database_size: int
 
-    tables: list[str]
+    settings: dict[str, str]
 
-    views: list[str]
+    replication: dict[str, int | bool]
 
-    functions: list[str]
+    database_statistics: DatabaseStatisticsResult
 
-    indexes: list[str]
+    table_statistics: list[dict[str, int | str]]
 
-    triggers: list[str]
+    index_statistics: list[dict[str, int | str]]
 
-    sequences: list[str]
+    connection_statistics: dict[str, int]
 
-    extensions: list[str]
+    lock_statistics: dict[str, int]
+
+    schemas: list[DatabaseSchema]
+
+    tables: list[DatabaseTable]
+
+    columns: list[DatabaseColumn]
+
+    constraints: list[DatabaseConstraint]
+
+    views: list[DatabaseView]
+
+    functions: list[DatabaseFunction]
+
+    indexes: list[DatabaseIndex]
+
+    triggers: list[DatabaseTrigger]
+
+    sequences: list[DatabaseSequence]
+
+    extensions: list[DatabaseExtension]
+
+    last_refreshed: datetime

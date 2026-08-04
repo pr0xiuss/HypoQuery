@@ -1,0 +1,59 @@
+.apis-table-wrap {
+  border: 1px solid var(--color-line);
+  border-radius: 0.75rem;
+  background-color: var(--color-surface);
+  overflow: hidden;
+  overflow-x: auto;
+}
+
+.apis-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.8125rem;
+}
+
+.apis-table thead th {
+  text-align: left;
+  padding: 0.75rem 1.1rem;
+  font-size: 0.7rem;
+  font-weight: 500;
+  color: var(--color-fog);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  border-bottom: 1px solid var(--color-line);
+  white-space: nowrap;
+}
+
+.apis-table tbody td {
+  padding: 0.85rem 1.1rem;
+  color: var(--color-paper);
+  border-bottom: 1px solid var(--color-line);
+  white-space: nowrap;
+}
+
+.apis-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.apis-table-name {
+  font-weight: 500;
+}
+
+.apis-table-mono {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--color-fog);
+  max-width: 260px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.apis-table-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.apis-skeleton-row {
+  height: 2.25rem;
+  border-radius: 0.4rem;
+}

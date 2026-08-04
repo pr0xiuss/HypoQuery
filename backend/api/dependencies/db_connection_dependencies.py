@@ -30,11 +30,14 @@ from backend.platform.databases.application.postgres_table_statistics_discoverer
 from backend.platform.databases.application.postgres_trigger__discoverer import PostgresTriggerDiscoverer
 from backend.platform.databases.application.postgres_version_discoverer import PostgresVersionDiscoverer
 from backend.platform.databases.application.postgres_view_discoverer import PostgresViewDiscoverer
-
+from backend.platform.databases.application.db_overview_service import DatabaseOverviewService
+from backend.platform.databases.application.db_overview_service_impl import DatabaseOverviewServiceImpl
 from backend.platform.databases.infra.db_connection_repo_impl import DatabaseConnectionRepositoryImpl
 from backend.platform.databases.repositories.db_connection_repo import DatabaseConnectionRepository
 from backend.platform.databases.repositories.db_metadata_repo import DatabaseMetadataRepository
 from backend.platform.databases.repositories.db_metadata_repo_impl import DatabaseMetadataRepositoryImpl
+from backend.platform.databases.application.postgres_column_discoverer import PostgresColumnDiscoverer
+from backend.platform.databases.application.postgres_constraint_discoverer import PostgresConstraintDiscoverer
 
 
 def get_database_metadata_repository(
@@ -80,6 +83,8 @@ def get_database_connection_service(
         schema_discoverer=PostgresSchemaDiscoverer(),
         extension_discoverer=PostgresExtensionDiscoverer(),
         table_discoverer=PostgresTableDiscoverer(),
+        column_discoverer=PostgresColumnDiscoverer(),
+        constraint_discoverer=PostgresConstraintDiscoverer(),
         view_discoverer=PostgresViewDiscoverer(),
         function_discoverer=PostgresFunctionDiscoverer(),
         index_discoverer=PostgresIndexDiscoverer(),
@@ -105,12 +110,17 @@ def get_database_connection_service(
         repository,
     )
 
+    overview_service = DatabaseOverviewServiceImpl(
+        repository=metadata_repository,
+    )
+
     return DatabaseConnectionServiceImpl(
         repository=repository,
         validator=validator,
         discovery_service=discovery_service,
         metadata_persistence_service=metadata_persistence_service,
         health_service=health_service,
+        overview_service=overview_service,
     )
 
 def get_database_connection_validator() -> DatabaseConnectionValidator:
@@ -131,6 +141,8 @@ def get_database_discovery_service(
         schema_discoverer=PostgresSchemaDiscoverer(),
         extension_discoverer=PostgresExtensionDiscoverer(),
         table_discoverer=PostgresTableDiscoverer(),
+        column_discoverer=PostgresColumnDiscoverer(),
+        constraint_discoverer=PostgresConstraintDiscoverer(),
         view_discoverer=PostgresViewDiscoverer(),
         function_discoverer=PostgresFunctionDiscoverer(),
         index_discoverer=PostgresIndexDiscoverer(),
@@ -157,4 +169,9 @@ def get_database_metadata_persistence_service(
 
     return DatabaseMetadataPersistenceServiceImpl(
         metadata_repository,
+    )
+
+def get_database_overview_service() -> DatabaseOverviewService:
+    return DatabaseOverviewServiceImpl(
+        repository=get_database_metadata_repository(),
     )
