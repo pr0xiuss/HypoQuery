@@ -48,20 +48,27 @@ def get_current_user(
         get_current_user_service,
     ),
 ) -> User:
-    """
-    Returns the currently authenticated user.
-    """
+
+    print("TOKEN:", credentials.credentials)
 
     try:
         user_id = jwt_service.verify_access_token(
             credentials.credentials,
         )
 
-        return current_user_service.get_current_user(
+        print("USER ID FROM JWT:", user_id)
+
+        user = current_user_service.get_current_user(
             user_id,
         )
 
+        print("USER:", user)
+
+        return user
+
     except Exception as exc:
+        print(type(exc))
+        print(exc)
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid or expired access token.",

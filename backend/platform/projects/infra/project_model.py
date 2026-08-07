@@ -4,8 +4,10 @@ from uuid import uuid4
 
 from sqlalchemy import DateTime
 from sqlalchemy import ForeignKey
+from sqlalchemy import Index
 from sqlalchemy import String
 from sqlalchemy import Text
+from sqlalchemy import UniqueConstraint
 from sqlalchemy import func
 from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
@@ -20,13 +22,29 @@ class ProjectModel(Base):
 
     __tablename__ = "projects"
 
+    __table_args__ = (
+        UniqueConstraint(
+            "organization_id",
+            "slug",
+            name="uq_project_organization_slug",
+        ),
+        Index(
+            "ix_projects_organization_slug",
+            "organization_id",
+            "slug",
+        ),
+    )
+
     id: Mapped[UUID] = mapped_column(
         primary_key=True,
         default=uuid4,
     )
 
     organization_id: Mapped[UUID] = mapped_column(
-        ForeignKey("organizations.id", ondelete="CASCADE"),
+        ForeignKey(
+            "organizations.id",
+            ondelete="CASCADE",
+        ),
         nullable=False,
         index=True,
     )
@@ -44,8 +62,6 @@ class ProjectModel(Base):
     slug: Mapped[str] = mapped_column(
         String(100),
         nullable=False,
-        unique=True,
-        index=True,
     )
 
     created_at: Mapped[datetime] = mapped_column(

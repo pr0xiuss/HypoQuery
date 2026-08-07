@@ -13,9 +13,7 @@ from backend.platform.apis.dto.update_api_request import UpdateApiRequest
 from backend.platform.apis.repositories.api_repo import ApiRepository
 
 
-class ApiServiceImpl(
-    ApiService,
-):
+class ApiServiceImpl(ApiService):
     """
     Default implementation of the API service.
     """
@@ -43,15 +41,15 @@ class ApiServiceImpl(
                 "API with this name already exists.",
             )
 
-        now = datetime.now(
-            UTC,
-        )
+        now = datetime.now(UTC)
 
         api = Api(
             id=uuid4(),
             environment_id=environment_id,
             name=request.name,
             slug=slug,
+            method=request.method,
+            path=request.path,
             description=request.description,
             framework=request.framework,
             base_url=request.base_url,
@@ -132,6 +130,8 @@ class ApiServiceImpl(
             update={
                 "name": request.name,
                 "slug": slug,
+                "method": request.method,
+                "path": request.path,
                 "description": request.description,
                 "framework": request.framework,
                 "base_url": request.base_url,

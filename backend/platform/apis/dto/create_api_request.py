@@ -10,6 +10,10 @@ class CreateApiRequest(
 ):
     name: str = Field(...)
 
+    method: str = Field(...)
+
+    path: str = Field(...)
+
     description: str | None = Field(default=None)
 
     framework: ApiFramework = Field(...)

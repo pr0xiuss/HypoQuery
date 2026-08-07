@@ -1,14 +1,11 @@
 from fastapi import Request
-from fastapi import Depends
-from backend.platform.bootstrap.container import PlatformContainer
-from dependency_injector.wiring import Provide
+from backend.platform.apis.discovery.application.discovery_service import DiscoveryService
 from backend.platform.auth.application.authentication_service import AuthenticationService
-from backend.platform.bootstrap.container import PlatformContainer
 from backend.platform.organizations.application.organization_service import OrganizationService
 from backend.platform.environments.application.environment_service import EnvironmentService
 from backend.platform.projects.application.project_service import ProjectService
 from backend.api.dependencies.container import get_container
-
+from backend.platform.apis.discovery.application.discovery_service import DiscoveryService
 
 
 def get_authentication_service(
@@ -59,3 +56,15 @@ def get_environment_service(
     return container.environment_service()
 
 
+def get_discovery_service(
+    request: Request,
+) -> DiscoveryService:
+    """
+    Returns the API discovery orchestrator.
+    """
+
+    container = get_container(
+        request,
+    )
+
+    return container.discovery_service()

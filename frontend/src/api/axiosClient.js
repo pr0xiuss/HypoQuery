@@ -7,7 +7,7 @@ const axiosClient = axios.create({
 
 // Attach the JWT to every request, if we have one.
 axiosClient.interceptors.request.use((config) => {
-  const token = localStorage.getItem("hypoquery_token");
+  const token = localStorage.getItem("hypoquery_access_token");
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }

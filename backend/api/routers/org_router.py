@@ -3,7 +3,8 @@ from fastapi import HTTPException
 from fastapi import APIRouter
 from fastapi import Depends
 from fastapi import status
-
+from backend.api.dependencies.auth import get_current_user
+from backend.platform.auth.domain.user import User
 from backend.api.dependencies import get_organization_service
 from backend.platform.organizations.application.organization_service import OrganizationService
 from backend.platform.organizations.dto.create_organization_request import CreateOrganizationRequest
@@ -23,18 +24,16 @@ router = APIRouter(
 )
 def create_organization(
     request: CreateOrganizationRequest,
+    current_user: User = Depends(
+        get_current_user,
+    ),
     service: OrganizationService = Depends(
         get_organization_service,
     ),
 ) -> OrganizationResponse:
-    """
-    Create a new organization.
-    """
-
-    owner_id = UUID("00000000-0000-0000-0000-000000000001")
 
     return service.create(
-        owner_id=owner_id,
+        owner_id=current_user.id,
         request=request,
     )
 
@@ -45,40 +44,41 @@ def create_organization(
 )
 def get_organization(
     organization_id: UUID,
+    current_user: User = Depends(
+        get_current_user,
+    ),
     service: OrganizationService = Depends(
         get_organization_service,
     ),
 ) -> OrganizationResponse:
     """
-    Retrieve an organization by ID.
+    Returns a single organization.
     """
 
-    organization = service.get(
-        organization_id,
+    return service.get(
+        organization_id=organization_id,
+        user_id=current_user.id,
     )
-
-    if organization is None:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Organization not found.",
-        )
-
-    return organization
 
 @router.get(
     "",
     response_model=list[OrganizationResponse],
 )
 def list_organizations(
+    current_user: User = Depends(
+        get_current_user,
+    ),
     service: OrganizationService = Depends(
         get_organization_service,
     ),
 ) -> list[OrganizationResponse]:
     """
-    Retrieve all organizations visible to the current user.
+    Returns organizations accessible to the current user.
     """
 
-    return service.list()
+    return service.list(
+        current_user.id,
+    )
 
 @router.delete(
     "/{organization_id}",
@@ -101,28 +101,23 @@ def delete_organization(
 @router.put(
     "/{organization_id}",
     response_model=OrganizationResponse,
-    status_code=status.HTTP_200_OK,
 )
 def update_organization(
     organization_id: UUID,
     request: UpdateOrganizationRequest,
+    current_user: User = Depends(
+        get_current_user,
+    ),
     service: OrganizationService = Depends(
         get_organization_service,
     ),
 ) -> OrganizationResponse:
     """
-    Update an organization.
+    Updates an organization.
     """
 
-    organization = service.update(
+    return service.update(
         organization_id=organization_id,
+        user_id=current_user.id,
         request=request,
     )
-
-    if organization is None:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Organization not found",
-        )
-
-    return organization

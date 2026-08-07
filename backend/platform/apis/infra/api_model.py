@@ -1,24 +1,29 @@
 from datetime import datetime
 from uuid import UUID
 from uuid import uuid4
-from sqlalchemy import Enum
+
 from sqlalchemy import Boolean
 from sqlalchemy import DateTime
+from sqlalchemy import Enum
 from sqlalchemy import ForeignKey
 from sqlalchemy import String
 from sqlalchemy import UniqueConstraint
+from sqlalchemy import func
 from sqlalchemy.dialects.postgresql import UUID as PGUUID
 from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
-from backend.platform.environments.domain.env_type import EnvironmentType
+
+from backend.platform.apis.domain.api_framework import ApiFramework
 from backend.platform.shared.database import Base
-from backend.platform.apis.domain.api_framework import (
-    ApiFramework,
-)
+
 
 class ApiModel(
     Base,
 ):
+    """
+    SQLAlchemy persistence model for APIs.
+    """
+
     __tablename__ = "apis"
 
     __table_args__ = (
@@ -42,6 +47,7 @@ class ApiModel(
             ondelete="CASCADE",
         ),
         nullable=False,
+        index=True,
     )
 
     name: Mapped[str] = mapped_column(
@@ -52,6 +58,17 @@ class ApiModel(
     slug: Mapped[str] = mapped_column(
         String(100),
         nullable=False,
+        index=True,
+    )
+
+    method: Mapped[str] = mapped_column(
+        String(16),
+        nullable=False,
+    )
+
+    path: Mapped[str] = mapped_column(
+        String(500),
+        nullable=False,
     )
 
     description: Mapped[str | None] = mapped_column(
@@ -59,7 +76,12 @@ class ApiModel(
         nullable=True,
     )
 
-    framework: Mapped[EnvironmentType] = mapped_column(
+    service_name: Mapped[str] = mapped_column(
+        String(100),
+        nullable=False,
+    )
+
+    framework: Mapped[ApiFramework] = mapped_column(
         Enum(
             ApiFramework,
             name="apiframwork",
@@ -68,8 +90,33 @@ class ApiModel(
         nullable=False,
     )
 
+    framework_version: Mapped[str] = mapped_column(
+        String(50),
+        nullable=False,
+    )
+
     base_url: Mapped[str] = mapped_column(
         String(255),
+        nullable=False,
+    )
+
+    repository_url: Mapped[str | None] = mapped_column(
+        String(500),
+        nullable=True,
+    )
+
+    openapi_url: Mapped[str | None] = mapped_column(
+        String(500),
+        nullable=True,
+    )
+
+    health_endpoint: Mapped[str | None] = mapped_column(
+        String(255),
+        nullable=True,
+    )
+
+    authentication_type: Mapped[str] = mapped_column(
+        String(50),
         nullable=False,
     )
 
@@ -86,10 +133,13 @@ class ApiModel(
 
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
+        server_default=func.now(),
         nullable=False,
     )
 
     updated_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
+        server_default=func.now(),
+        onupdate=func.now(),
         nullable=False,
     )

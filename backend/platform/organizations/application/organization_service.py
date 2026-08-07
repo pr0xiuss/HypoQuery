@@ -26,18 +26,20 @@ class OrganizationService(ABC):
     def get(
         self,
         organization_id: UUID,
-    ) -> OrganizationResponse | None:
+        user_id: UUID,
+    ) -> OrganizationResponse:
         """
-        Retrieve an organization by its identifier.
+        Returns an organization if the user has access.
         """
         raise NotImplementedError
 
     @abstractmethod
     def list(
         self,
+        user_id: UUID,
     ) -> list[OrganizationResponse]:
         """
-        Retrieve all organizations visible to the current user.
+        Returns organizations accessible to the user.
         """
         raise NotImplementedError
 
@@ -55,9 +57,11 @@ class OrganizationService(ABC):
     def update(
         self,
         organization_id: UUID,
+        user_id: UUID,
         request: UpdateOrganizationRequest,
-    ) -> OrganizationResponse | None:
+    ) -> OrganizationResponse:
         """
-        Update an organization.
+        Updates an organization if the user has access.
         """
         raise NotImplementedError
+    

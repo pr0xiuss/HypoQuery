@@ -3,7 +3,6 @@ from sqlalchemy import create_engine, text
 from sqlalchemy.orm import DeclarativeBase
 from sqlalchemy.orm import Session
 from sqlalchemy.orm import sessionmaker
-
 from backend.platform.config.settings import get_settings
 
 settings = get_settings()
@@ -84,6 +83,12 @@ def import_models() -> None:
     from backend.platform.databases.infra.db_metadata_model import (
         DatabaseMetadataModel,
     )
+    from backend.platform.apis.infra.api_model import (
+        ApiModel
+    )
+    from backend.platform.access_control.infra.org_membership_model import (
+        OrganizationMembershipModel,
+    )
 
     _ = (
         UserModel,
@@ -92,4 +97,6 @@ def import_models() -> None:
         EnvironmentModel,
         DatabaseConnectionModel,
         DatabaseMetadataModel,
+        ApiModel,
+        OrganizationMembershipModel,
     )

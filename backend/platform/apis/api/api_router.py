@@ -1,15 +1,14 @@
 from uuid import UUID
-
-from fastapi import APIRouter
-from fastapi import Depends
-from fastapi import HTTPException
-from fastapi import status
-
+from fastapi import APIRouter, Depends, HTTPException, status
 from backend.api.dependencies.api_dependencies import get_api_service
 from backend.platform.apis.service.api_service import ApiService
 from backend.platform.apis.dto.api_response import ApiResponse
 from backend.platform.apis.dto.create_api_request import CreateApiRequest
 from backend.platform.apis.dto.update_api_request import UpdateApiRequest
+from backend.api.dependencies.platform import get_discovery_service
+from backend.platform.apis.dto.discover_apis_request import DiscoverApisRequest
+from backend.platform.apis.discovery.synchronization.sync_result import SyncResult
+from backend.platform.apis.discovery.application.discovery_service import DiscoveryService
 
 
 router = APIRouter(
@@ -139,4 +138,27 @@ def delete_api(
 ) -> None:
     service.delete(
         api_id,
+    )
+
+@router.post(
+    "/discover",
+    response_model=SyncResult,
+    status_code=status.HTTP_200_OK,
+)
+def discover_apis(
+    organization_id: UUID,
+    project_id: UUID,
+    environment_id: UUID,
+    request: DiscoverApisRequest,
+    discovery_service: DiscoveryService = Depends(
+        get_discovery_service,
+    ),
+) -> SyncResult:
+    """
+    Discovers APIs and synchronizes the API registry.
+    """
+
+    return discovery_service.discover(
+        environment_id=environment_id,
+        request=request,
     )

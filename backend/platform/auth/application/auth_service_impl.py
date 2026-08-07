@@ -116,11 +116,11 @@ class AuthenticationServiceImpl(AuthenticationService):
             )
 
         access_token = self._jwt_service.create_access_token(
-            user,
+            user.id,
         )
 
         refresh_token = self._jwt_service.create_refresh_token(
-            user,
+            user.id,
         )
 
         return TokenResponse(

@@ -68,3 +68,12 @@ class OrganizationRepository(ABC):
         Update an organization.
         """
         raise NotImplementedError
+
+    @abstractmethod
+    def list_accessible_to_user(
+        self,
+        user_id: UUID,
+    ) -> list[Organization]:
+        """
+        Returns organizations the user belongs to.
+        """

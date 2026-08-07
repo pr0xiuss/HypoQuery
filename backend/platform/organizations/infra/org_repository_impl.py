@@ -4,13 +4,9 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from backend.platform.organizations.domain.organization import Organization
-from backend.platform.organizations.infra.organization_model import (
-    OrganizationModel,
-)
-from backend.platform.organizations.repositories.organization_repository import (
-    OrganizationRepository,
-)
-
+from backend.platform.organizations.infra.organization_model import OrganizationModel
+from backend.platform.organizations.repositories.organization_repository import OrganizationRepository
+from backend.platform.access_control.infra.org_membership_model import OrganizationMembershipModel
 
 class OrganizationRepositoryImpl(OrganizationRepository):
     """
@@ -36,16 +32,19 @@ class OrganizationRepositoryImpl(OrganizationRepository):
             updated_at=organization.updated_at,
         )
 
-        try:
-            merged_model = self._session.merge(model)
-            self._session.commit()
-            self._session.refresh(merged_model)
+        merged_model = self._session.merge(
+            model,
+        )
 
-        except:
-            self._session.rollback()
-            raise
-        
-        return self._to_domain(merged_model)
+        self._session.flush()
+
+        self._session.refresh(
+            merged_model,
+        )
+
+        return self._to_domain(
+            merged_model,
+        )
 
     def get_by_id(
         self,
@@ -144,3 +143,32 @@ class OrganizationRepositoryImpl(OrganizationRepository):
         self._session.refresh(model)
 
         return self._to_domain(model)
+
+    def list_accessible_to_user(
+        self,
+        user_id: UUID,
+    ) -> list[Organization]:
+        models = (
+            self._session.query(
+                OrganizationModel,
+            )
+            .join(
+                OrganizationMembershipModel,
+                OrganizationMembershipModel.organization_id
+                == OrganizationModel.id,
+            )
+            .filter(
+                OrganizationMembershipModel.user_id == user_id,
+            )
+            .order_by(
+                OrganizationModel.created_at.desc(),
+            )
+            .all()
+        )
+
+        return [
+            self._to_domain(
+                model,
+            )
+            for model in models
+        ]
