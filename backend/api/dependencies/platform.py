@@ -1,11 +1,11 @@
 from fastapi import Request
-from backend.platform.apis.discovery.application.discovery_service import DiscoveryService
-from backend.platform.auth.application.authentication_service import AuthenticationService
-from backend.platform.organizations.application.organization_service import OrganizationService
-from backend.platform.environments.application.environment_service import EnvironmentService
-from backend.platform.projects.application.project_service import ProjectService
+
 from backend.api.dependencies.container import get_container
 from backend.platform.apis.discovery.application.discovery_service import DiscoveryService
+from backend.platform.auth.application.authentication_service import AuthenticationService
+from backend.platform.environments.application.environment_service import EnvironmentService
+from backend.platform.organizations.application.organization_service import OrganizationService
+from backend.platform.projects.application.project_service import ProjectService
 
 
 def get_authentication_service(
@@ -60,11 +60,9 @@ def get_discovery_service(
     request: Request,
 ) -> DiscoveryService:
     """
-    Returns the API discovery orchestrator.
+    Returns the API discovery application service.
     """
 
-    container = get_container(
-        request,
-    )
+    container = get_container(request)
 
     return container.discovery_service()

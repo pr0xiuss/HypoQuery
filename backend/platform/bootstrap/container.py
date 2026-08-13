@@ -50,6 +50,11 @@ from backend.platform.apis.discovery.registry.registry_mapper_impl import Regist
 from backend.platform.apis.discovery.registry.registry_service import RegistryService
 from backend.platform.apis.discovery.registry.registry_service_impl import RegistryServiceImpl
 from backend.platform.apis.discovery.extractors.fastapi_route_parser import FastAPIRouteParser
+from backend.platform.apis.infra.api_endpoint_model import ApiEndpointModel
+from backend.platform.apis.infra.sqlalchemy_api_endpoint_repo import SQLAlchemyApiEndpointRepository
+from backend.platform.apis.repositories.api_endpoint_repo import ApiEndpointRepository
+from backend.platform.apis.discovery.application.discovery_service import DiscoveryService
+from backend.platform.apis.discovery.application.discovery_service_impl import DiscoveryServiceImpl
 
 
 class PlatformContainer(containers.DeclarativeContainer):
@@ -198,16 +203,23 @@ class PlatformContainer(containers.DeclarativeContainer):
         session=db_session,
     )
 
+    api_endpoint_repository: providers.Provider[
+        ApiEndpointRepository
+    ] = providers.Factory(
+        SQLAlchemyApiEndpointRepository,
+    )
+    
     api_service: providers.Provider[
         ApiService
     ] = providers.Factory(
         ApiServiceImpl,
         repository=api_repository,
+        endpoint_repository=api_endpoint_repository,
     )
 
     synchronization_service = providers.Singleton(
         SynchronizationServiceImpl,
-        api_repository=api_repository,
+        api_endpoint_repository=api_endpoint_repository,
     )
 
     registry_mapper = providers.Singleton(
@@ -216,6 +228,15 @@ class PlatformContainer(containers.DeclarativeContainer):
 
     registry_service = providers.Singleton(
         RegistryServiceImpl,
-        api_service=api_service,
+        api_endpoint_repository=api_endpoint_repository,
         mapper=registry_mapper,
+    )
+
+    discovery_service: providers.Provider[
+        DiscoveryService
+    ] = providers.Factory(
+        DiscoveryServiceImpl,
+        openapi_discovery_service=openapi_discovery_service,
+        synchronization_service=synchronization_service,
+        registry_service=registry_service,
     )

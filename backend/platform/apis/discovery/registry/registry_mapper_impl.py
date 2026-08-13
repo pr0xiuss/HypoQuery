@@ -4,8 +4,8 @@ from backend.platform.apis.discovery.domain.discovered_route import (
 from backend.platform.apis.discovery.registry.registry_mapper import (
     RegistryMapper,
 )
-from backend.platform.apis.dto.create_api_request import (
-    CreateApiRequest,
+from backend.platform.apis.dto.create_api_endpoint_request import (
+    CreateApiEndpointRequest,
 )
 
 
@@ -13,18 +13,17 @@ class RegistryMapperImpl(
     RegistryMapper,
 ):
     """
-    Converts discovered routes into registry DTOs.
+    Maps discovered routes to API endpoint requests.
     """
 
-    def to_create_request(
+    def to_create_endpoint_request(
         self,
         route: DiscoveredRoute,
-    ) -> CreateApiRequest:
+    ) -> CreateApiEndpointRequest:
 
-        return CreateApiRequest(
-            name=route.handler,
+        return CreateApiEndpointRequest(
             method=route.method,
             path=route.path,
-            framework=route.framework,
+            handler=route.handler,
             description=route.description,
         )

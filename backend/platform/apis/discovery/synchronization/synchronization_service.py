@@ -17,6 +17,7 @@ class SynchronizationService(
     def synchronize(
         self,
         environment_id: UUID,
+        api_id: UUID,
         discovered_routes: list[
             DiscoveredRoute
         ],
@@ -24,5 +25,5 @@ class SynchronizationService(
         SyncPlan
     ]:
         """
-        Produces synchronization operations.
+        Synchronizes discovered routes for a specific API.
         """

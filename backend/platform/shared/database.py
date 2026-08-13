@@ -89,7 +89,9 @@ def import_models() -> None:
     from backend.platform.access_control.infra.org_membership_model import (
         OrganizationMembershipModel,
     )
-
+    from backend.platform.apis.infra.api_endpoint_model import (
+        ApiEndpointModel,
+    )
     _ = (
         UserModel,
         OrganizationModel,
@@ -99,4 +101,5 @@ def import_models() -> None:
         DatabaseMetadataModel,
         ApiModel,
         OrganizationMembershipModel,
+        ApiEndpointModel,
     )

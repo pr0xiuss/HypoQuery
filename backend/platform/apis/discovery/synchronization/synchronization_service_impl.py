@@ -1,51 +1,61 @@
 from uuid import UUID
-from backend.platform.apis.discovery.domain.discovered_route import DiscoveredRoute
-from backend.platform.apis.discovery.synchronization.sync_operation import SyncOperation
-from backend.platform.apis.discovery.synchronization.sync_plan import SyncPlan
-from backend.platform.apis.discovery.synchronization.synchronization_service import SynchronizationService
-from backend.platform.apis.repositories.api_repo import ApiRepository
+
+from backend.platform.apis.discovery.domain.discovered_route import (
+    DiscoveredRoute,
+)
+from backend.platform.apis.discovery.synchronization.sync_operation import (
+    SyncOperation,
+)
+from backend.platform.apis.discovery.synchronization.sync_plan import (
+    SyncPlan,
+)
+from backend.platform.apis.discovery.synchronization.synchronization_service import (
+    SynchronizationService,
+)
+from backend.platform.apis.repositories.api_endpoint_repo import (
+    ApiEndpointRepository,
+)
 
 
 class SynchronizationServiceImpl(
     SynchronizationService,
 ):
     """
-    Temporary synchronization implementation.
-
-    Every discovered route is currently treated
-    as a CREATE operation.
-
-    Later this service will compare discovered
-    routes against the persisted API registry.
+    Compares discovered routes against the persisted
+    endpoints belonging to a specific API.
     """
+
     def __init__(
         self,
-        api_repository: ApiRepository,
+        api_endpoint_repository: ApiEndpointRepository,
     ) -> None:
-        """
-        Initializes the synchronization service.
-        """
-
-        self._api_repository = api_repository
+        self._api_endpoint_repository = (
+            api_endpoint_repository
+        )
 
     def synchronize(
         self,
         environment_id: UUID,
+        api_id: UUID,
         discovered_routes: list[
             DiscoveredRoute
         ],
     ) -> list[
         SyncPlan
     ]:
-        existing_apis = self._api_repository.list_by_environment(
-            environment_id,
+
+        existing_endpoints = (
+            self._api_endpoint_repository.list_by_api(
+                api_id,
+            )
         )
-        existing_api_map = {
+
+        existing_endpoint_map = {
             (
-                api.method.upper(),
-                api.path,
-            ): api
-            for api in existing_apis
+                endpoint.method.upper(),
+                endpoint.path,
+            ): endpoint
+            for endpoint in existing_endpoints
         }
 
         discovered_route_map = {
@@ -55,19 +65,20 @@ class SynchronizationServiceImpl(
             ): route
             for route in discovered_routes
         }
+
         plans: list[SyncPlan] = []
 
         for key, route in discovered_route_map.items():
 
-            existing_api = existing_api_map.get(
-                key,
+            existing_endpoint = (
+                existing_endpoint_map.get(key)
             )
 
-            if existing_api is None:
-
+            if existing_endpoint is None:
                 plans.append(
                     SyncPlan(
                         operation=SyncOperation.CREATE,
+                        api_id=api_id,
                         route=route,
                     )
                 )
@@ -75,37 +86,55 @@ class SynchronizationServiceImpl(
                 continue
 
             if (
-                existing_api.name != route.name
-                or existing_api.description != route.description
-                or existing_api.framework != route.framework
+                existing_endpoint.handler
+                != route.handler
+                or existing_endpoint.summary
+                != route.summary
+                or existing_endpoint.description
+                != route.description
+                or existing_endpoint.tags
+                != route.tags
+                or existing_endpoint.version
+                != route.version
+                or (
+                    existing_endpoint.authentication_required
+                    != route.authentication_required
+                )
             ):
-
                 plans.append(
                     SyncPlan(
                         operation=SyncOperation.UPDATE,
+                        api_id=api_id,
                         route=route,
-                        existing_api_id=existing_api.id,
+                        existing_endpoint_id=(
+                            existing_endpoint.id
+                        ),
                     )
                 )
 
             else:
-
                 plans.append(
                     SyncPlan(
                         operation=SyncOperation.UNCHANGED,
+                        api_id=api_id,
                         route=route,
-                        existing_api_id=existing_api.id,
+                        existing_endpoint_id=(
+                            existing_endpoint.id
+                        ),
                     )
                 )
 
-            for key, api in existing_api_map.items():
+        for key, endpoint in existing_endpoint_map.items():
 
-                if key in discovered_route_map:
-                    continue
+            if key in discovered_route_map:
+                continue
 
-                plans.append(
-                    SyncPlan(
-                        operation=SyncOperation.ARCHIVE,
-                        existing_api_id=api.id,
-                    )
+            plans.append(
+                SyncPlan(
+                    operation=SyncOperation.ARCHIVE,
+                    api_id=api_id,
+                    existing_endpoint_id=endpoint.id,
                 )
+            )
+
+        return plans

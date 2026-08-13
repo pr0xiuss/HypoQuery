@@ -15,14 +15,17 @@ class SyncPlan(
     BaseModel,
 ):
     """
-    Represents a synchronization action.
+    Describes a synchronization operation for
+    a discovered endpoint belonging to an API.
     """
 
     operation: SyncOperation
 
+    api_id: UUID
+
     route: DiscoveredRoute | None = None
 
-    existing_api_id: UUID | None = None
+    existing_endpoint_id: UUID | None = None
 
     model_config = ConfigDict(
         frozen=True,

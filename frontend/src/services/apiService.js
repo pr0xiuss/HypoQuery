@@ -40,3 +40,24 @@ export async function updateApi(
 export async function deleteApi(organizationId, projectId, environmentId, apiId) {
   await api.delete(`${basePath(organizationId, projectId, environmentId)}/${apiId}`);
 }
+
+export async function discoverApis(
+  organizationId,
+  projectId,
+  environmentId,
+  apiId,
+  payload
+) {
+  const { data } = await api.post(
+    `${basePath(organizationId, projectId, environmentId)}/${apiId}/discover`,
+    payload
+  );
+  return data;
+}
+
+export async function listApiEndpoints(organizationId, projectId, environmentId, apiId) {
+  const { data } = await api.get(
+    `${basePath(organizationId, projectId, environmentId)}/${apiId}/endpoints`
+  );
+  return data;
+}

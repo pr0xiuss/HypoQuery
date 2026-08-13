@@ -4,24 +4,21 @@ from abc import abstractmethod
 from backend.platform.apis.discovery.domain.discovered_route import (
     DiscoveredRoute,
 )
-from backend.platform.apis.dto.create_api_request import (
-    CreateApiRequest,
+from backend.platform.apis.dto.create_api_endpoint_request import (
+    CreateApiEndpointRequest,
 )
 
 
 class RegistryMapper(
     ABC,
 ):
-    """
-    Maps discovery models into API registry DTOs.
-    """
 
     @abstractmethod
-    def to_create_request(
+    def to_create_endpoint_request(
         self,
         route: DiscoveredRoute,
-    ) -> CreateApiRequest:
+    ) -> CreateApiEndpointRequest:
         """
-        Converts a discovered route into a
-        CreateApiRequest.
+        Maps a discovered route to an endpoint creation request.
         """
+        ...

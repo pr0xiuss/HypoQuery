@@ -61,16 +61,6 @@ class ApiModel(
         index=True,
     )
 
-    method: Mapped[str] = mapped_column(
-        String(16),
-        nullable=False,
-    )
-
-    path: Mapped[str] = mapped_column(
-        String(500),
-        nullable=False,
-    )
-
     description: Mapped[str | None] = mapped_column(
         String(500),
         nullable=True,

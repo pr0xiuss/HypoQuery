@@ -5,6 +5,8 @@ import {
   getApi,
   listApis,
   updateApi,
+  discoverApis,
+  listApiEndpoints,
 } from "../services/apiService";
 
 const listKey = (organizationId, projectId, environmentId) => [
@@ -72,6 +74,34 @@ export function useDeleteApi(organizationId, projectId, environmentId) {
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: listKey(organizationId, projectId, environmentId),
+      });
+    },
+  });
+}
+
+export function useApiEndpoints(organizationId, projectId, environmentId, apiId) {
+  return useQuery({
+    queryKey: [...listKey(organizationId, projectId, environmentId), apiId, "endpoints"],
+    queryFn: () => listApiEndpoints(organizationId, projectId, environmentId, apiId),
+    enabled:
+      Boolean(organizationId) &&
+      Boolean(projectId) &&
+      Boolean(environmentId) &&
+      Boolean(apiId),
+  });
+}
+
+export function useDiscoverApis(organizationId, projectId, environmentId) {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ apiId, payload }) =>
+      discoverApis(organizationId, projectId, environmentId, apiId, payload),
+    onSuccess: (_data, variables) => {
+      queryClient.invalidateQueries({
+        queryKey: [...listKey(organizationId, projectId, environmentId), variables.apiId],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [...listKey(organizationId, projectId, environmentId), variables.apiId, "endpoints"],
       });
     },
   });

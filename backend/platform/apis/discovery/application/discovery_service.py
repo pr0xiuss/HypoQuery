@@ -13,16 +13,16 @@ from backend.platform.apis.discovery.synchronization.sync_result import (
 class DiscoveryService(
     ABC,
 ):
-    """
-    Coordinates API discovery and registry synchronization.
-    """
 
     @abstractmethod
     def discover(
         self,
         environment_id: UUID,
+        api_id: UUID,
         request: DiscoverApisRequest,
     ) -> SyncResult:
         """
-        Discovers APIs and synchronizes the API registry.
+        Discovers routes for a specific registered API
+        and synchronizes its endpoint registry.
         """
+        ...

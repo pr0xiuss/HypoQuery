@@ -9,6 +9,7 @@ from backend.api.dependencies.platform import get_discovery_service
 from backend.platform.apis.dto.discover_apis_request import DiscoverApisRequest
 from backend.platform.apis.discovery.synchronization.sync_result import SyncResult
 from backend.platform.apis.discovery.application.discovery_service import DiscoveryService
+from backend.platform.apis.dto.api_endpoint_response import ApiEndpointResponse
 
 
 router = APIRouter(
@@ -92,6 +93,29 @@ def get_api(
         api,
     )
 
+@router.get(
+    "/{api_id}/endpoints",
+    response_model=list[ApiEndpointResponse],
+)
+def list_api_endpoints(
+    organization_id: UUID,
+    project_id: UUID,
+    environment_id: UUID,
+    api_id: UUID,
+    service: ApiService = Depends(
+        get_api_service,
+    ),
+) -> list[ApiEndpointResponse]:
+    endpoints = service.list_endpoints(
+        api_id,
+    )
+
+    return [
+        ApiEndpointResponse.model_validate(
+            endpoint,
+        )
+        for endpoint in endpoints
+    ]
 
 @router.put(
     "/{api_id}",
@@ -141,7 +165,7 @@ def delete_api(
     )
 
 @router.post(
-    "/discover",
+    "/{api_id}/discover",
     response_model=SyncResult,
     status_code=status.HTTP_200_OK,
 )
@@ -149,16 +173,19 @@ def discover_apis(
     organization_id: UUID,
     project_id: UUID,
     environment_id: UUID,
+    api_id: UUID,
     request: DiscoverApisRequest,
     discovery_service: DiscoveryService = Depends(
         get_discovery_service,
     ),
 ) -> SyncResult:
     """
-    Discovers APIs and synchronizes the API registry.
+    Discovers and synchronizes endpoints for a
+    specific registered API.
     """
 
     return discovery_service.discover(
         environment_id=environment_id,
+        api_id=api_id,
         request=request,
     )

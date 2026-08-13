@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { useParams } from "react-router-dom";
-import { Pencil, Plug, Plus, Trash2, TriangleAlert } from "lucide-react";
+import { useParams, Link } from "react-router-dom";
+import { Pencil, Plug, Plus, Trash2, TriangleAlert, Eye } from "lucide-react";
 import { useEnvironment } from "../hooks/useEnvironments";
 import { useApis, useCreateApi, useDeleteApi, useUpdateApi } from "../hooks/useApis";
 import { useToast } from "../components/toast/ToastProvider";
@@ -150,6 +150,13 @@ export default function ApisList() {
                   <td>{formatDate(api.created_at)}</td>
                   <td>
                     <div className="apis-table-actions">
+                      <Link
+                        to={`/organizations/${organizationId}/projects/${projectId}/environments/${environmentId}/apis/${api.id}`}
+                        className="orgs-secondary-btn project-card-icon-btn"
+                        title="View API Details"
+                      >
+                        <Eye className="h-4 w-4" />
+                      </Link>
                       <button
                         className="orgs-secondary-btn project-card-icon-btn"
                         onClick={() => setEditingApi(api)}

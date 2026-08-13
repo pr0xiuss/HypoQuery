@@ -1,10 +1,11 @@
+from __future__ import annotations
 from datetime import UTC
 from datetime import datetime
 from uuid import UUID
 from uuid import uuid4
-
 from backend.platform.shared.slug import generate_slug
-
+from backend.platform.apis.domain.api_endpoint import ApiEndpoint
+from backend.platform.apis.repositories.api_endpoint_repo import ApiEndpointRepository
 from backend.platform.apis.service.api_service import ApiService
 from backend.platform.apis.domain.api import Api
 from backend.platform.apis.dto.api_response import ApiResponse
@@ -21,8 +22,10 @@ class ApiServiceImpl(ApiService):
     def __init__(
         self,
         repository: ApiRepository,
+        endpoint_repository: ApiEndpointRepository,
     ):
         self._repository = repository
+        self._endpoint_repository = endpoint_repository
 
     def create(
         self,
@@ -48,8 +51,6 @@ class ApiServiceImpl(ApiService):
             environment_id=environment_id,
             name=request.name,
             slug=slug,
-            method=request.method,
-            path=request.path,
             description=request.description,
             framework=request.framework,
             base_url=request.base_url,
@@ -130,8 +131,6 @@ class ApiServiceImpl(ApiService):
             update={
                 "name": request.name,
                 "slug": slug,
-                "method": request.method,
-                "path": request.path,
                 "description": request.description,
                 "framework": request.framework,
                 "base_url": request.base_url,
@@ -156,6 +155,14 @@ class ApiServiceImpl(ApiService):
         api_id: UUID,
     ) -> None:
         self._repository.delete(
+            api_id,
+        )
+
+    def list_endpoints(
+        self,
+        api_id: UUID,
+    ) -> list[ApiEndpoint]:
+        return self._endpoint_repository.list_by_api(
             api_id,
         )
 

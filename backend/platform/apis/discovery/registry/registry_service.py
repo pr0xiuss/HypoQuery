@@ -12,10 +12,6 @@ from backend.platform.apis.discovery.synchronization.sync_result import (
 class RegistryService(
     ABC,
 ):
-    """
-    Applies synchronization plans to the
-    persisted API registry.
-    """
 
     @abstractmethod
     def apply(
@@ -25,6 +21,7 @@ class RegistryService(
         ],
     ) -> SyncResult:
         """
-        Applies a synchronization plan and
-        returns the execution result.
+        Applies endpoint synchronization plans
+        to the API endpoint registry.
         """
+        ...

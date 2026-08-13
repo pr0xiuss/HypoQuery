@@ -24,10 +24,6 @@ class Api(
 
     slug: str
 
-    method: str
-
-    path: str
-
     description: str | None
 
     framework: ApiFramework

@@ -10,19 +10,21 @@ class UpdateApiRequest(
 ):
     name: str = Field(...)
 
-    method: str = Field(...)
-
-    path: str = Field(...)
-
-    description: str | None = Field(default=None)
+    description: str | None = Field(
+        default=None,
+    )
 
     framework: ApiFramework = Field(...)
 
     base_url: str = Field(...)
 
-    version: str | None = Field(default=None)
+    version: str | None = Field(
+        default=None,
+    )
 
-    is_active: bool = Field(default=True)
+    is_active: bool = Field(
+        default=True,
+    )
 
     model_config = ConfigDict(
         frozen=True,

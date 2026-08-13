@@ -24,8 +24,6 @@ class SqlAlchemyApiRepository(
             id=api.id,
             environment_id=api.environment_id,
             name=api.name,
-            method=api.method,
-            path=api.path,
             slug=api.slug,
             description=api.description,
             framework=api.framework,
@@ -56,8 +54,6 @@ class SqlAlchemyApiRepository(
 
         model.name = api.name
         model.slug = api.slug
-        model.method = api.method
-        model.path = api.path
         model.description = api.description
         model.framework = api.framework
         model.base_url = api.base_url
@@ -142,8 +138,6 @@ class SqlAlchemyApiRepository(
             environment_id=model.environment_id,
             name=model.name,
             slug=model.slug,
-            method=model.method,
-            path=model.path,
             description=model.description,
             framework=model.framework,
             base_url=model.base_url,
