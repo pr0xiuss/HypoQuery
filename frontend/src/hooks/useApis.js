@@ -71,9 +71,12 @@ export function useDeleteApi(organizationId, projectId, environmentId) {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (apiId) => deleteApi(organizationId, projectId, environmentId, apiId),
-    onSuccess: () => {
+    onSuccess: (_data, apiId) => {
       queryClient.invalidateQueries({
         queryKey: listKey(organizationId, projectId, environmentId),
+      });
+      queryClient.removeQueries({
+        queryKey: [...listKey(organizationId, projectId, environmentId), apiId],
       });
     },
   });

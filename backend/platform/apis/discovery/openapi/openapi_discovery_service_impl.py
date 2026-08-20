@@ -1,4 +1,5 @@
 from pathlib import Path
+from uuid import UUID
 
 from backend.platform.apis.discovery.domain.discovered_route import (
     DiscoveredRoute,
@@ -31,6 +32,8 @@ class OpenAPIDiscoveryServiceImpl(
 
     def discover(
         self,
+        *,
+        environment_id: UUID,
         specification: Path,
     ) -> list[DiscoveredRoute]:
 
@@ -39,5 +42,6 @@ class OpenAPIDiscoveryServiceImpl(
         )
 
         return self._extractor.extract(
-            document,
+            environment_id=environment_id,
+            specification=document,
         )

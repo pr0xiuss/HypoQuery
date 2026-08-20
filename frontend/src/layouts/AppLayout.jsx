@@ -18,6 +18,7 @@ import { useOrganization } from "../hooks/useOrganizations";
 import { useProject } from "../hooks/useProjects";
 import { useEnvironment } from "../hooks/useEnvironments";
 import { useDatabaseConnection } from "../hooks/useDatabaseConnections";
+import { useApi } from "../hooks/useApis";
 import { clearTokens } from "../utils/auth";
 import Breadcrumbs from "../components/layout/Breadcrumbs";
 import { useQueryClient } from "@tanstack/react-query";
@@ -39,6 +40,7 @@ const BREADCRUMB_LABELS = {
   projects: "Projects",
   environments: "Environments",
   "database-connections": "Database Connections",
+  apis: "APIs",
   settings: "Settings",
 };
 
@@ -52,10 +54,13 @@ function useBreadcrumbItems(dynamicLabels) {
         const parent = segments[i - 1];
         if (parent === "environments") label = "Create Environment";
         else if (parent === "database-connections") label = "New Connection";
+        else if (parent === "apis") label = "Register API";
         else label = "Create Project";
       } else if (segment === "edit") {
         const parent = segments[i - 2];
-        label = parent === "database-connections" ? "Edit Connection" : "Edit Environment";
+        if (parent === "database-connections") label = "Edit Connection";
+        else if (parent === "apis") label = "Edit API";
+        else label = "Edit Environment";
       } else {
         label = segment;
       }
@@ -67,7 +72,7 @@ function useBreadcrumbItems(dynamicLabels) {
 export default function AppLayout() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const { organizationId, projectId, environmentId, connectionId } = useParams();
+  const { organizationId, projectId, environmentId, connectionId, apiId } = useParams();
   const { data: organization } = useOrganization(organizationId);
   const { data: project } = useProject(organizationId, projectId);
   const { data: environment } = useEnvironment(
@@ -81,12 +86,19 @@ export default function AppLayout() {
     environmentId,
     connectionId
   );
+  const { data: api } = useApi(
+    organizationId,
+    projectId,
+    environmentId,
+    apiId
+  );
 
   const dynamicLabels = {
     ...(organizationId && { [organizationId]: organization?.name || "…" }),
     ...(projectId && { [projectId]: project?.name || "…" }),
     ...(environmentId && { [environmentId]: environment?.name || "…" }),
     ...(connectionId && { [connectionId]: connection?.name || "…" }),
+    ...(apiId && { [apiId]: api?.name || "…" }),
   };
   const breadcrumbItems = useBreadcrumbItems(dynamicLabels);
 

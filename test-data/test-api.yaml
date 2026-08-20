@@ -1,0 +1,49 @@
+openapi: 3.0.3
+
+info:
+  title: HypoQuery Test API
+  version: 1.0.0
+  description: Test API for endpoint discovery
+
+paths:
+  /users:
+    get:
+      summary: List users
+      description: Returns all users
+      tags:
+        - Users
+      responses:
+        "200":
+          description: Successful response
+
+    post:
+      summary: Create user
+      tags:
+        - Users
+      responses:
+        "201":
+          description: User created
+
+  /users/{user_id}:
+    get:
+      summary: Get user
+      tags:
+        - Users
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Successful response
+
+  /health:
+    get:
+      summary: Health check
+      tags:
+        - System
+      responses:
+        "200":
+          description: Healthy

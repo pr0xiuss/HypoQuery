@@ -15,10 +15,29 @@ export async function getApi(organizationId, projectId, environmentId, apiId) {
   return data;
 }
 
+function formatApiPayload(payload) {
+  const formatted = {
+    name: payload.name.trim(),
+    framework: payload.framework,
+    base_url: payload.base_url.trim(),
+    is_active: payload.is_active !== undefined ? Boolean(payload.is_active) : true,
+  };
+
+  if (payload.description !== undefined) {
+    formatted.description = payload.description?.trim() || null;
+  }
+  if (payload.version !== undefined) {
+    formatted.version = payload.version?.trim() || null;
+  }
+
+  return formatted;
+}
+
 export async function createApi(organizationId, projectId, environmentId, payload) {
+  const formattedPayload = formatApiPayload(payload);
   const { data } = await api.post(
     basePath(organizationId, projectId, environmentId),
-    payload
+    formattedPayload
   );
   return data;
 }
@@ -30,9 +49,10 @@ export async function updateApi(
   apiId,
   payload
 ) {
+  const formattedPayload = formatApiPayload(payload);
   const { data } = await api.put(
     `${basePath(organizationId, projectId, environmentId)}/${apiId}`,
-    payload
+    formattedPayload
   );
   return data;
 }

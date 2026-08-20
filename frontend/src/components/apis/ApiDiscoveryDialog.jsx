@@ -11,7 +11,7 @@ const discoverySchema = z.object({
   source_type: z.enum(["openapi_file", "openapi_url", "repository"], {
     errorMap: () => ({ message: "Select a valid source type" }),
   }),
-  source: z.string().min(1, "Source path/reference is required"),
+  source: z.string().min(1, "Source path or reference is required"),
 });
 
 export default function ApiDiscoveryDialog({
@@ -21,13 +21,14 @@ export default function ApiDiscoveryDialog({
   apiId,
   onClose,
 }) {
+  const [sourceType, setSourceType] = useState("openapi_file");
   const [syncResult, setSyncResult] = useState(null);
   const discoverApis = useDiscoverApis(organizationId, projectId, environmentId);
 
   const {
     register,
     handleSubmit,
-    watch,
+    setValue,
     formState: { errors },
   } = useForm({
     resolver: zodResolver(discoverySchema),
@@ -37,25 +38,36 @@ export default function ApiDiscoveryDialog({
     },
   });
 
-  const sourceType = watch("source_type");
   const isUnsupported = sourceType === "openapi_url" || sourceType === "repository";
+
+  const handleSourceTypeChange = (e) => {
+    const val = e.target.value;
+    setSourceType(val);
+    setValue("source_type", val);
+  };
 
   const onSubmit = async (values) => {
     try {
       const result = await discoverApis.mutateAsync({
         apiId,
-        payload: values,
+        payload: {
+          source_type: values.source_type,
+          source: values.source.trim(),
+        },
       });
       setSyncResult(result);
     } catch {
-      // Error is handled by the submitError display below
+      // Handled by discoverApis.error state
     }
   };
 
   if (syncResult) {
     return (
       <div className="dialog-overlay" onClick={onClose}>
-        <div className="dialog-card max-w-2xl" onClick={(e) => e.stopPropagation()}>
+        <div
+          className="dialog-card max-w-2xl max-h-[85vh] flex flex-col"
+          onClick={(e) => e.stopPropagation()}
+        >
           <ApiDiscoveryResult result={syncResult} onClose={onClose} />
         </div>
       </div>
@@ -84,11 +96,16 @@ export default function ApiDiscoveryDialog({
             <select
               id="source-type"
               className={`dialog-input ${errors.source_type ? "dialog-input-error" : ""}`}
-              {...register("source_type")}
+              value={sourceType}
+              onChange={handleSourceTypeChange}
             >
               <option value="openapi_file">OpenAPI Specification (File Path)</option>
-              <option value="openapi_url">OpenAPI Specification (URL) - Coming Soon</option>
-              <option value="repository">Code Repository - Coming Soon</option>
+              <option value="openapi_url" disabled>
+                OpenAPI Specification (URL) — Coming Soon
+              </option>
+              <option value="repository" disabled>
+                Code Repository — Coming Soon
+              </option>
             </select>
             {errors.source_type && (
               <p className="dialog-error-text">{errors.source_type.message}</p>
@@ -97,14 +114,14 @@ export default function ApiDiscoveryDialog({
 
           <div className="dialog-field">
             <label className="dialog-label" htmlFor="source">
-              Source Reference
+              Specification File Path
             </label>
             <input
               id="source"
               type="text"
               placeholder={
                 sourceType === "openapi_file"
-                  ? "e.g., /app/data/openapi.yaml (Server Path)"
+                  ? "/path/to/openapi.yaml or spec.json (Server Path)"
                   : "Not yet available"
               }
               className={`dialog-input ${errors.source ? "dialog-input-error" : ""}`}
@@ -115,8 +132,8 @@ export default function ApiDiscoveryDialog({
               <p className="dialog-error-text">{errors.source.message}</p>
             )}
             {sourceType === "openapi_file" && (
-              <p className="mt-1 text-xs text-fog">
-                Note: Currently expects a path on the backend server. A dedicated file upload capability is not yet exposed by the API.
+              <p className="mt-1.5 text-xs text-fog leading-relaxed">
+                Provide the absolute or workspace path on the backend server where the OpenAPI JSON/YAML specification file is located.
               </p>
             )}
           </div>

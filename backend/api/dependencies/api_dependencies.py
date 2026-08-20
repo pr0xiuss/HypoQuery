@@ -8,7 +8,7 @@ from backend.platform.databases.repositories.db_metadata_repo_impl import Databa
 from backend.platform.databases.application.db_explorer_service import DatabaseExplorerService
 from backend.platform.databases.application.db_explorer_service_impl import DatabaseExplorerServiceImpl
 from backend.platform.shared.database import get_db_session
-
+from backend.platform.apis.infra.sqlalchemy_api_endpoint_repo import SQLAlchemyApiEndpointRepository
 
 def get_api_repository(
     session: Session = Depends(
@@ -29,8 +29,11 @@ def get_api_service(
         session,
     )
 
+    endpoint_repository = SQLAlchemyApiEndpointRepository()
+
     return ApiServiceImpl(
         repository=repository,
+        endpoint_repository=endpoint_repository,
     )
 
 def get_database_explorer_service(

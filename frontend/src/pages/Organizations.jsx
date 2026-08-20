@@ -1,11 +1,7 @@
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
 import {
   Building2,
-  Loader2,
   Plus,
   Search,
   Trash2,
@@ -19,11 +15,6 @@ import {
 import "../styles/Organizations.css";
 import OrganizationFormDialog from "../components/orgs/OrganizationFormDialog";
 import DeleteOrganizationDialog from "../components/orgs/DeleteOrganizationDialog";
-
-const organizationSchema = z.object({
-  name: z.string().min(2, "Name must be at least 2 characters"),
-  description: z.string().optional(),
-});
 
 export default function Organizations() {
   const [search, setSearch] = useState("");
@@ -193,124 +184,6 @@ export default function Organizations() {
           isDeleting={deleteOrganization.isPending}
         />
       )}
-    </div>
-  );
-}
-
-function CreateOrganizationDialog({ onClose, onCreate, isSubmitting, submitError }) {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm({ resolver: zodResolver(organizationSchema) });
-
-  return (
-    <div className="dialog-overlay" onClick={onClose}>
-      <div className="dialog-card" onClick={(e) => e.stopPropagation()}>
-        <h2 className="font-display text-lg font-semibold text-paper">
-          Create Organization
-        </h2>
-        <p className="mt-1 text-sm text-fog">
-          Organizations are the top level of your account hierarchy.
-        </p>
-
-        {submitError && <div className="dialog-error">{submitError}</div>}
-
-        <form className="mt-5" onSubmit={handleSubmit(onCreate)} noValidate>
-          <div className="dialog-field">
-            <label className="dialog-label" htmlFor="org-name">
-              Name
-            </label>
-            <input
-              id="org-name"
-              type="text"
-              placeholder="Acme Corporation"
-              className={`dialog-input ${errors.name ? "dialog-input-error" : ""}`}
-              {...register("name")}
-            />
-            {errors.name && (
-              <p className="dialog-error-text">{errors.name.message}</p>
-            )}
-          </div>
-
-          <div className="dialog-field">
-            <label className="dialog-label" htmlFor="org-description">
-              Description <span className="text-fog">(optional)</span>
-            </label>
-            <textarea
-              id="org-description"
-              rows={3}
-              placeholder="What this organization is for"
-              className="dialog-input"
-              {...register("description")}
-            />
-          </div>
-
-          <div className="dialog-actions">
-            <button
-              type="button"
-              className="orgs-secondary-btn"
-              onClick={onClose}
-              disabled={isSubmitting}
-            >
-              Cancel
-            </button>
-            <button type="submit" className="orgs-primary-btn" disabled={isSubmitting}>
-              {isSubmitting ? (
-                <>
-                  <Loader2 className="h-4 w-4 animate-spin" />
-                  Creating…
-                </>
-              ) : (
-                "Create Organization"
-              )}
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
-  );
-}
-
-function ConfirmDeleteDialog({ organization, onClose, onConfirm, isDeleting }) {
-  return (
-    <div className="dialog-overlay" onClick={onClose}>
-      <div className="dialog-card" onClick={(e) => e.stopPropagation()}>
-        <h2 className="font-display text-lg font-semibold text-paper">
-          Delete organization?
-        </h2>
-        <p className="mt-2 text-sm text-fog">
-          This will permanently delete{" "}
-          <span className="text-paper">{organization.name}</span> and every
-          project, environment, and database connection inside it. This
-          cannot be undone.
-        </p>
-        <div className="dialog-actions">
-          <button
-            type="button"
-            className="orgs-secondary-btn"
-            onClick={onClose}
-            disabled={isDeleting}
-          >
-            Cancel
-          </button>
-          <button
-            type="button"
-            className="orgs-danger-btn"
-            onClick={onConfirm}
-            disabled={isDeleting}
-          >
-            {isDeleting ? (
-              <>
-                <Loader2 className="h-4 w-4 animate-spin" />
-                Deleting…
-              </>
-            ) : (
-              "Delete Organization"
-            )}
-          </button>
-        </div>
-      </div>
     </div>
   );
 }

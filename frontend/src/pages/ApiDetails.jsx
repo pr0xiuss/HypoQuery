@@ -8,7 +8,8 @@ import {
   Server,
   Trash2,
   TriangleAlert,
-  Search,
+  Sparkles,
+  Code2,
 } from "lucide-react";
 import { useApi, useDeleteApi, useUpdateApi } from "../hooks/useApis";
 import { useToast } from "../components/toast/ToastProvider";
@@ -18,6 +19,7 @@ import DeleteApiDialog from "../components/apis/DeleteApiDialog";
 import ApiFormDialog from "../components/apis/ApiFormDialog";
 import ApiEndpointList from "../components/apis/ApiEndpointList";
 import ApiDiscoveryDialog from "../components/apis/ApiDiscoveryDialog";
+import EnvironmentTabs from "../components/envs/EnvironmentTabs";
 import "../styles/Organizations.css";
 import "../styles/dashboard.css";
 import "../styles/Environments.css";
@@ -45,13 +47,14 @@ export default function ApiDetails() {
   const [isDeleteOpen, setDeleteOpen] = useState(false);
   const [isDiscoveryOpen, setDiscoveryOpen] = useState(false);
 
-  const { data: api, isLoading, isError, error, refetch } = useApi(
-    organizationId,
-    projectId,
-    environmentId,
-    apiId
-  );
-  
+  const {
+    data: api,
+    isLoading,
+    isError,
+    error,
+    refetch,
+  } = useApi(organizationId, projectId, environmentId, apiId);
+
   const updateApi = useUpdateApi(organizationId, projectId, environmentId);
   const deleteApi = useDeleteApi(organizationId, projectId, environmentId);
 
@@ -60,12 +63,18 @@ export default function ApiDetails() {
 
   return (
     <div>
-      <Link to={`${basePath}/apis`} className="dashboard-back-link mb-6 inline-flex items-center gap-1">
+      <EnvironmentTabs active="apis" />
+
+      {/* Back link */}
+      <Link
+        to={`${basePath}/apis`}
+        className="dashboard-back-link mb-6 inline-flex items-center gap-1"
+      >
         <ChevronLeft className="h-4 w-4" />
-        APIs
+        Back to APIs
       </Link>
 
-      {/* Loading */}
+      {/* Loading Skeleton */}
       {isLoading && (
         <div className="dashboard-skeleton-card">
           <div className="orgs-skeleton dashboard-skeleton-icon" />
@@ -74,7 +83,7 @@ export default function ApiDetails() {
         </div>
       )}
 
-      {/* Not found */}
+      {/* Not found state */}
       {isNotFound && (
         <div className="orgs-empty-state">
           <Server className="h-8 w-8 text-fog" strokeWidth={1.5} />
@@ -82,10 +91,13 @@ export default function ApiDetails() {
           <p className="mt-1 max-w-sm text-sm text-fog">
             This API may have been deleted, or you may not have access to it.
           </p>
+          <Link to={`${basePath}/apis`} className="orgs-primary-btn mt-4">
+            Return to APIs
+          </Link>
         </div>
       )}
 
-      {/* Other errors */}
+      {/* Other error states */}
       {isError && !isNotFound && (
         <div className="orgs-error-state">
           <TriangleAlert className="h-5 w-5 text-danger" />
@@ -101,10 +113,10 @@ export default function ApiDetails() {
         </div>
       )}
 
-      {/* Loaded */}
+      {/* Loaded API Content */}
       {api && (
         <>
-          {/* Header */}
+          {/* Header Card */}
           <div className="dashboard-detail-header">
             <div className="flex gap-4">
               <div className="dashboard-detail-icon">
@@ -116,6 +128,10 @@ export default function ApiDetails() {
                     {api.name}
                   </h1>
                   <ConnectionStatusBadge active={api.is_active} />
+                  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-medium bg-white/5 border border-white/5 text-paper">
+                    <Code2 className="h-3 w-3 text-signal" />
+                    {formatFrameworkLabel(api.framework)}
+                  </span>
                 </div>
                 {api.description && (
                   <p className="mt-2 max-w-2xl text-sm leading-relaxed text-fog">
@@ -135,12 +151,13 @@ export default function ApiDetails() {
               </div>
             </div>
 
+            {/* Actions */}
             <div className="dashboard-detail-header-actions">
               <button
                 className="orgs-primary-btn"
                 onClick={() => setDiscoveryOpen(true)}
               >
-                <Search className="h-4 w-4" />
+                <Sparkles className="h-4 w-4" />
                 Discover Endpoints
               </button>
               <button
@@ -160,24 +177,39 @@ export default function ApiDetails() {
             </div>
           </div>
 
-          {/* General Information */}
+          {/* General Information Card */}
           <div className="dashboard-card mb-8">
             <p className="dashboard-card-title">General Information</p>
             <div className="dashboard-info-grid">
               <InfoRow label="Name" value={api.name} />
+              <InfoRow label="Slug" value={api.slug} isMono />
               <InfoRow label="Framework" value={formatFrameworkLabel(api.framework)} />
               <InfoRow label="Base URL" value={api.base_url} isMono />
               <InfoRow label="Version" value={api.version} />
+              <InfoRow label="Status" value={api.is_active ? "Active" : "Inactive"} />
               <InfoRow label="Description" value={api.description} />
             </div>
           </div>
 
-          {/* Endpoints */}
+          {/* Endpoints Major Section */}
           <div className="dashboard-card">
             <div className="flex justify-between items-center mb-6">
-              <p className="dashboard-card-title !mb-0">Endpoints</p>
+              <div>
+                <p className="dashboard-card-title !mb-0">Endpoints</p>
+                <p className="text-xs text-fog mt-1">
+                  HTTP routes and endpoints registered and synchronized for this API.
+                </p>
+              </div>
+              <button
+                className="orgs-secondary-btn text-xs"
+                onClick={() => setDiscoveryOpen(true)}
+              >
+                <Sparkles className="h-3.5 w-3.5 text-signal" />
+                Discover Endpoints
+              </button>
             </div>
-            <ApiEndpointList 
+
+            <ApiEndpointList
               organizationId={organizationId}
               projectId={projectId}
               environmentId={environmentId}
@@ -188,6 +220,7 @@ export default function ApiDetails() {
         </>
       )}
 
+      {/* Edit Dialog */}
       {isEditOpen && api && (
         <ApiFormDialog
           mode="edit"
@@ -203,6 +236,7 @@ export default function ApiDetails() {
         />
       )}
 
+      {/* Delete Dialog */}
       {isDeleteOpen && api && (
         <DeleteApiDialog
           api={api}
@@ -216,6 +250,7 @@ export default function ApiDetails() {
         />
       )}
 
+      {/* Discovery Dialog */}
       {isDiscoveryOpen && api && (
         <ApiDiscoveryDialog
           apiId={api.id}

@@ -31,12 +31,21 @@
   white-space: nowrap;
 }
 
+.apis-table tbody tr {
+  transition: background-color 0.15s ease;
+}
+
+.apis-table tbody tr:hover {
+  background-color: rgba(255, 255, 255, 0.02);
+}
+
 .apis-table tbody tr:last-child td {
   border-bottom: none;
 }
 
 .apis-table-name {
   font-weight: 500;
+  color: var(--color-paper);
 }
 
 .apis-table-mono {
@@ -51,9 +60,11 @@
 .apis-table-actions {
   display: flex;
   gap: 0.5rem;
+  align-items: center;
 }
 
 .apis-skeleton-row {
   height: 2.25rem;
   border-radius: 0.4rem;
 }
+

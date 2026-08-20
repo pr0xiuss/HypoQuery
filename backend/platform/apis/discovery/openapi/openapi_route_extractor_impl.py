@@ -1,3 +1,5 @@
+from uuid import UUID
+
 from backend.platform.apis.discovery.domain.discovered_route import (
     DiscoveredRoute,
 )
@@ -25,6 +27,8 @@ class OpenAPIRouteExtractorImpl(
 
     def extract(
         self,
+        *,
+        environment_id: UUID,
         specification: dict,
     ) -> list[DiscoveredRoute]:
 
@@ -41,6 +45,7 @@ class OpenAPIRouteExtractorImpl(
 
                 routes.append(
                     self._parser.parse(
+                        environment_id=environment_id,
                         method=method,
                         path=path,
                         handler=metadata.get(

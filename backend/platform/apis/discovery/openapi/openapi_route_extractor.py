@@ -1,6 +1,6 @@
 from abc import ABC
 from abc import abstractmethod
-
+from uuid import UUID
 from backend.platform.apis.discovery.domain.discovered_route import (
     DiscoveredRoute,
 )
@@ -16,6 +16,8 @@ class OpenAPIRouteExtractor(
     @abstractmethod
     def extract(
         self,
+        *,
+        environment_id: UUID,
         specification: dict,
     ) -> list[DiscoveredRoute]:
         """

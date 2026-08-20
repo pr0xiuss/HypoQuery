@@ -1,4 +1,4 @@
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Link, useNavigate } from "react-router-dom";
@@ -55,7 +55,7 @@ export default function Register() {
   const {
     register,
     handleSubmit,
-    watch,
+    control,
     setError,
     formState: { errors, isSubmitting },
   } = useForm({
@@ -63,12 +63,16 @@ export default function Register() {
     defaultValues: { username: "", email: "", password: "", confirmPassword: "" },
   });
 
-  const password = watch("password");
+  const password = useWatch({ control, name: "password", defaultValue: "" });
   const strength = getPasswordStrength(password);
 
   const onSubmit = async (values) => {
     try {
-      const { confirmPassword: _confirmPassword, ...payload } = values;
+      const payload = {
+        username: values.username,
+        email: values.email,
+        password: values.password,
+      };
       await registerUser(payload);
       showToast("Account created. Please log in.", { type: "success" });
       navigate("/login", { replace: true });

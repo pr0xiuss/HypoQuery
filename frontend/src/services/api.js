@@ -100,11 +100,22 @@ api.interceptors.response.use(
     }
 
     // Normalize the error message in one place (Section 3 contract: message / detail).
-    const friendlyMessage = error.response
-      ? error.response.data?.message ||
-        error.response.data?.detail ||
-        "Something went wrong. Please try again."
-      : "Cannot reach the server. Check that the backend is running and VITE_API_BASE_URL is correct.";
+    let friendlyMessage = "Something went wrong. Please try again.";
+    if (!error.response) {
+      friendlyMessage =
+        "Cannot reach the server. Check that the backend is running and VITE_API_BASE_URL is correct.";
+    } else if (error.response.data?.message) {
+      friendlyMessage = error.response.data.message;
+    } else if (error.response.data?.detail) {
+      const detail = error.response.data.detail;
+      if (typeof detail === "string") {
+        friendlyMessage = detail;
+      } else if (Array.isArray(detail)) {
+        friendlyMessage = detail
+          .map((d) => (typeof d === "string" ? d : d.msg || `${d.loc ? d.loc.join(".") + ": " : ""}${d.msg || JSON.stringify(d)}`))
+          .join("; ");
+      }
+    }
     return Promise.reject(Object.assign(error, { friendlyMessage }));
   }
 );

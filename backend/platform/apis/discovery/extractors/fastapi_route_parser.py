@@ -17,7 +17,7 @@ class FastAPIRouteParser:
         method: str,
         path: str,
         handler: str,
-        source_file: Path,
+        source_file: Path | None,
         line_number: int,
     ) -> DiscoveredRoute:
 

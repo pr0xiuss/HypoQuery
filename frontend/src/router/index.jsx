@@ -17,6 +17,8 @@ import CreateDatabaseConnection from "../pages/CreateDatabaseConnection";
 import EditDatabaseConnection from "../pages/EditDatabaseConnection";
 import DatabaseConnectionDetails from "../pages/DatabaseConnectionDetails";
 import ApisList from "../pages/ApisList";
+import CreateApi from "../pages/CreateApi";
+import EditApi from "../pages/EditApi";
 import ApiDetails from "../pages/ApiDetails";
 import ProtectedRoute from "./ProtectedRoute";
 import GuestRoute from "./GuestRoute";
@@ -90,8 +92,16 @@ export const router = createBrowserRouter([
             element: <ApisList />,
           },
           {
+            path: "/organizations/:organizationId/projects/:projectId/environments/:environmentId/apis/new",
+            element: <CreateApi />,
+          },
+          {
             path: "/organizations/:organizationId/projects/:projectId/environments/:environmentId/apis/:apiId",
             element: <ApiDetails />,
+          },
+          {
+            path: "/organizations/:organizationId/projects/:projectId/environments/:environmentId/apis/:apiId/edit",
+            element: <EditApi />,
           },
         ],
       },

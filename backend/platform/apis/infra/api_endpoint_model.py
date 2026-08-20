@@ -7,7 +7,7 @@ from sqlalchemy import ForeignKey
 from sqlalchemy import Integer
 from sqlalchemy import String
 from sqlalchemy import Text
-from sqlalchemy.dialects.postgresql import ARRAY
+from sqlalchemy import JSON
 from sqlalchemy.dialects.postgresql import UUID as PGUUID
 from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
@@ -76,7 +76,7 @@ class ApiEndpointModel(
     )
 
     tags: Mapped[list[str]] = mapped_column(
-        ARRAY(String),
+        JSON,
         nullable=False,
         default=list,
     )

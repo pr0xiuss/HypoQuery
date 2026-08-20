@@ -66,11 +66,6 @@ class ApiModel(
         nullable=True,
     )
 
-    service_name: Mapped[str] = mapped_column(
-        String(100),
-        nullable=False,
-    )
-
     framework: Mapped[ApiFramework] = mapped_column(
         Enum(
             ApiFramework,
@@ -80,33 +75,8 @@ class ApiModel(
         nullable=False,
     )
 
-    framework_version: Mapped[str] = mapped_column(
-        String(50),
-        nullable=False,
-    )
-
     base_url: Mapped[str] = mapped_column(
         String(255),
-        nullable=False,
-    )
-
-    repository_url: Mapped[str | None] = mapped_column(
-        String(500),
-        nullable=True,
-    )
-
-    openapi_url: Mapped[str | None] = mapped_column(
-        String(500),
-        nullable=True,
-    )
-
-    health_endpoint: Mapped[str | None] = mapped_column(
-        String(255),
-        nullable=True,
-    )
-
-    authentication_type: Mapped[str] = mapped_column(
-        String(50),
         nullable=False,
     )
 

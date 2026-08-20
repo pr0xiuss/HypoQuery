@@ -57,7 +57,7 @@ def get_environment_service(
 
 
 def get_discovery_service(
-    request: Request,
+    request: Request, 
 ) -> DiscoveryService:
     """
     Returns the API discovery application service.
