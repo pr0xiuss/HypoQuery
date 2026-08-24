@@ -1,5 +1,5 @@
-from infrastructure.postgres.scripts.models.review import Review
-from infrastructure.postgres.scripts.repositories.base_repo import BaseRepository
+from backend.models.review import Review
+from backend.repositories.base_repo import BaseRepository
 
 
 class ReviewRepository(BaseRepository):

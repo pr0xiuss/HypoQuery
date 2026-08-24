@@ -1,9 +1,9 @@
-from infrastructure.postgres.scripts.common.config import CONFIG
+from backend.shared.settings import CONFIG
 from infrastructure.postgres.scripts.common.exceptions import ValidationError
-from infrastructure.postgres.scripts.repositories.customer_repo import (
+from backend.repositories.customer_repo import (
     CustomerRepository,
 )
-from infrastructure.postgres.scripts.seeders.base_seeder import BaseSeeder
+from backend.seeders.base_seeder import BaseSeeder
 from infrastructure.postgres.scripts.services.customer_data_generator import (
     CustomerDataGenerator,
 )

@@ -5,6 +5,9 @@ from backend.execution.pipeline.definition import (
     NodeDefinition,
     PipelineDefinition,
 )
+from backend.optimization.history.repositories.execution_record_repository import (
+    ExecutionRecordRepository,
+)
 from backend.optimization.analysis.composition import build_analysis_engine
 from backend.execution.pipeline.pipeline import Pipeline
 from backend.execution.pipeline.registry import NodeRegistry
@@ -36,8 +39,13 @@ class OptimizationPipelineBuilder:
     Phase 1 becomes a reusable execution pipeline.
     """
 
-    def __init__(self, connection: Connection,) -> None:
+    def __init__(
+        self,
+        connection: Connection,
+        history_repository: ExecutionRecordRepository | None = None,
+    ) -> None:
         self._connection = connection
+        self._history_repository = history_repository
 
     def build(self) -> Pipeline:
 
@@ -119,7 +127,7 @@ class OptimizationPipelineBuilder:
 
         registry.register(
             HistoryNode(
-                build_history_engine(),
+                build_history_engine(self._history_repository),
             ),
         )
 

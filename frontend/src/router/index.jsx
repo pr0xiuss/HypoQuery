@@ -22,6 +22,11 @@ import EditApi from "../pages/EditApi";
 import ApiDetails from "../pages/ApiDetails";
 import ProtectedRoute from "./ProtectedRoute";
 import GuestRoute from "./GuestRoute";
+import Dashboard from "../pages/Dashboard";
+import WorkloadsList from "../pages/WorkloadsList";
+import QueriesList from "../pages/QueriesList";
+import QueryDetails from "../pages/QueryDetails";
+import OperationsList from "../pages/OperationsList";
 
 export const router = createBrowserRouter([
   { path: "/", element: <Landing /> },
@@ -38,6 +43,11 @@ export const router = createBrowserRouter([
       {
         element: <AppLayout />,
         children: [
+          { path: "/dashboard", element: <Dashboard /> },
+          { path: "/workloads", element: <WorkloadsList /> },
+          { path: "/queries", element: <QueriesList /> },
+          { path: "/queries/:queryId", element: <QueryDetails /> },
+          { path: "/operations", element: <OperationsList /> },
           { path: "/organizations", element: <Organizations /> },
           {
             path: "/organizations/:organizationId",

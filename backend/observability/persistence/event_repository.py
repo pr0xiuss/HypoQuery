@@ -68,3 +68,74 @@ class EventRepository:
             )
 
         self._connection.commit()
+
+    def list_executions(self, limit: int = 100, offset: int = 0):
+        # We fetch the distinct execution_ids, order by max occurred_at descending
+        # Then we just return the raw payloads to be processed, or a simple grouping
+        with self._connection.cursor() as cursor:
+            cursor.execute(
+                """
+                SELECT execution_id
+                FROM execution_events
+                GROUP BY execution_id
+                ORDER BY MAX(occurred_at) DESC
+                LIMIT %s OFFSET %s
+                """,
+                (limit, offset)
+            )
+            rows = cursor.fetchall()
+            if not rows:
+                return []
+            
+            execution_ids = [row[0] for row in rows]
+            
+            # Now fetch all events for these executions
+            cursor.execute(
+                """
+                SELECT event_id, execution_id, trace_id, event_type, event_version, occurred_at, payload
+                FROM execution_events
+                WHERE execution_id = ANY(%s)
+                ORDER BY occurred_at ASC
+                """,
+                (execution_ids,)
+            )
+            event_rows = cursor.fetchall()
+            
+            events = []
+            for r in event_rows:
+                events.append({
+                    "event_id": str(r[0]),
+                    "execution_id": str(r[1]),
+                    "trace_id": str(r[2]),
+                    "event_type": r[3],
+                    "event_version": r[4],
+                    "occurred_at": r[5],
+                    "payload": r[6]
+                })
+            return events
+
+    def get_execution(self, execution_id: str):
+        with self._connection.cursor() as cursor:
+            cursor.execute(
+                """
+                SELECT event_id, execution_id, trace_id, event_type, event_version, occurred_at, payload
+                FROM execution_events
+                WHERE execution_id = %s
+                ORDER BY occurred_at ASC
+                """,
+                (execution_id,)
+            )
+            rows = cursor.fetchall()
+            
+            events = []
+            for r in rows:
+                events.append({
+                    "event_id": str(r[0]),
+                    "execution_id": str(r[1]),
+                    "trace_id": str(r[2]),
+                    "event_type": r[3],
+                    "event_version": r[4],
+                    "occurred_at": r[5],
+                    "payload": r[6]
+                })
+            return events

@@ -1,7 +1,9 @@
+import logging
 from backend.execution.bus.event_bus import EventBus
 from backend.execution.bus.subscriber_registry import SubscriberRegistry
 from backend.execution.contracts.events.base import ExecutionEvent
 
+logger = logging.getLogger(__name__)
 
 class InProcessEventBus(EventBus):
     """
@@ -23,5 +25,9 @@ class InProcessEventBus(EventBus):
         for subscriber in subscribers:
             try:
                 subscriber.handle(event)
-            except Exception:
+            except Exception as e:
+                logger.error(
+                    f"Subscriber {subscriber.__class__.__name__} failed to handle event {event.__class__.__name__}: {e}",
+                    exc_info=True
+                )
                 continue

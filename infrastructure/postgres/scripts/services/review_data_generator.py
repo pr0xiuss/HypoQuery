@@ -2,7 +2,7 @@ import random
 from datetime import datetime
 
 from infrastructure.postgres.scripts.common.constants import REVIEW_TEMPLATES
-from infrastructure.postgres.scripts.models.review import Review
+from backend.models.review import Review
 
 
 class ReviewDataGenerator:

@@ -2,7 +2,7 @@ import random
 from datetime import datetime
 
 from infrastructure.postgres.scripts.common.constants import PRODUCT_EVENT_TYPES
-from infrastructure.postgres.scripts.models.product_event import ProductEvent
+from backend.models.product_event import ProductEvent
 
 
 class ProductEventDataGenerator:

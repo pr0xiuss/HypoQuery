@@ -57,6 +57,17 @@ from backend.platform.apis.discovery.application.discovery_service import Discov
 from backend.platform.apis.discovery.application.discovery_service_impl import DiscoveryServiceImpl
 
 
+
+from backend.assistant.bootstrap import build_assistant_platform
+from backend.knowledge.composition import build_context_service, build_explanation_service
+from backend.product.dashboard.dashboard_service import DashboardService
+from backend.product.workloads.workload_service import WorkloadService
+from backend.product.queries.query_service import QueryService
+from backend.product.operations.operations_service import OperationsService
+from backend.execution.projections.execution_projection_store import ExecutionProjectionStore
+from backend.execution.observability.repositories.pipeline_log_repo import PipelineLogRepository
+from backend.optimization.history.repositories.postgres_repository import PostgresExecutionRecordRepository
+import psycopg
 class PlatformContainer(containers.DeclarativeContainer):
     """
     Dependency Injection container for the Product Platform.
@@ -239,4 +250,76 @@ class PlatformContainer(containers.DeclarativeContainer):
         openapi_discovery_service=openapi_discovery_service,
         synchronization_service=synchronization_service,
         registry_service=registry_service,
+    )
+    # Module 5 specific providers
+    execution_projection_store = providers.Singleton(
+        ExecutionProjectionStore,
+    )
+
+    from backend.observability.persistence.event_serializer import EventSerializer
+    from backend.observability.persistence.event_repository import EventRepository
+    
+    psycopg_connection = providers.Factory(
+        psycopg.connect,
+        conninfo=providers.Callable(lambda s: f"postgresql://{s.database_user}:{s.database_password}@{s.database_host}:{s.database_port}/{s.target_database_name}", settings.provided),
+    )
+
+    psycopg_platform_connection = providers.Factory(
+        psycopg.connect,
+        conninfo=providers.Callable(lambda s: f"postgresql://{s.database_user}:{s.database_password}@{s.database_host}:{s.database_port}/{s.database_name}", settings.provided),
+    )
+
+    event_serializer = providers.Singleton(
+        EventSerializer,
+    )
+
+    event_repository = providers.Factory(
+        EventRepository,
+        connection=psycopg_platform_connection,
+        serializer=event_serializer,
+    )
+
+    # Note: AssistantPlatform provides facade
+    assistant_platform = providers.Singleton(
+        build_assistant_platform,
+    )
+
+    assistant_service_facade = providers.Callable(
+        lambda platform: platform._assistant,
+        platform=assistant_platform,
+    )
+
+    context_service = providers.Singleton(
+        build_context_service,
+    )
+
+    explanation_service = providers.Singleton(
+        build_explanation_service,
+    )
+
+    execution_record_repository = providers.Singleton(
+        PostgresExecutionRecordRepository,
+        connection=psycopg_connection,
+    )
+
+    dashboard_service = providers.Factory(
+        DashboardService,
+        execution_projection_store=execution_projection_store,
+        execution_record_repository=execution_record_repository,
+    )
+
+    workload_service = providers.Factory(
+        WorkloadService,
+        execution_record_repository=execution_record_repository,
+    )
+
+    query_service = providers.Factory(
+        QueryService,
+        execution_record_repository=execution_record_repository,
+    )
+
+    operations_service = providers.Factory(
+        OperationsService,
+        execution_projection_store=execution_projection_store,
+        event_repository=event_repository,
     )

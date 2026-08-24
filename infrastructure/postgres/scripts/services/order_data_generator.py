@@ -3,7 +3,7 @@ from datetime import datetime
 from decimal import Decimal
 
 from infrastructure.postgres.scripts.common.constants import ORDER_STATUSES
-from infrastructure.postgres.scripts.models.order import Order
+from backend.models.order import Order
 
 
 class OrderDataGenerator:

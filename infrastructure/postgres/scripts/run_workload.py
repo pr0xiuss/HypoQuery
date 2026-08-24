@@ -1,4 +1,4 @@
-from infrastructure.postgres.scripts.common.db import get_connection
+from backend.shared.db import get_connection
 from infrastructure.postgres.scripts.workload.workload import Workload
 
 

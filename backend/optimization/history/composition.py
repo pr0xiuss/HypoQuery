@@ -1,5 +1,8 @@
 from __future__ import annotations
 
+from backend.optimization.history.repositories.execution_record_repository import (
+    ExecutionRecordRepository,
+)
 from backend.optimization.history.builders.execution_record_builder import (
     ExecutionRecordBuilder,
 )
@@ -20,7 +23,9 @@ from backend.optimization.history.comparison.comparison_engine import (
 )
 
 
-def build_history_engine() -> HistoryEngine:
+def build_history_engine(
+    repository: ExecutionRecordRepository | None = None,
+) -> HistoryEngine:
     """
     Builds the History bounded context.
     """
@@ -34,7 +39,7 @@ def build_history_engine() -> HistoryEngine:
         snapshot_builder,
     )
 
-    repository = MemoryExecutionRecordRepository()
+    repository = repository or MemoryExecutionRecordRepository()
 
     comparison_engine = ComparisonEngine()
 

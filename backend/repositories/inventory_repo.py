@@ -1,5 +1,5 @@
-from infrastructure.postgres.scripts.models.inventory import Inventory
-from infrastructure.postgres.scripts.repositories.base_repo import BaseRepository
+from backend.models.inventory import Inventory
+from backend.repositories.base_repo import BaseRepository
 
 
 class InventoryRepository(BaseRepository):

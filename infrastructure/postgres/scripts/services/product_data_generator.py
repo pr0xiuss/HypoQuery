@@ -2,7 +2,7 @@ import random
 from decimal import Decimal
 from datetime import datetime
 from infrastructure.postgres.scripts.common.constants import PRODUCT_CATEGORIES
-from infrastructure.postgres.scripts.models.product import Product
+from backend.models.product import Product
 
 
 class ProductDataGenerator:

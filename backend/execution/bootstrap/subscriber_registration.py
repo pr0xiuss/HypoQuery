@@ -36,7 +36,10 @@ from .event_registration import (
     subscribe_to_execution_events,
 )
 
-def register_execution_subscribers(registry: SubscriberRegistry,) -> None:
+def register_execution_subscribers(
+    registry: SubscriberRegistry,
+    projection_store: ExecutionProjectionStore = None,
+) -> None:
     """
     Register the default execution subscribers.
     """
@@ -45,7 +48,8 @@ def register_execution_subscribers(registry: SubscriberRegistry,) -> None:
     metrics_subscriber = MetricsSubscriber()
     tracing_subscriber = TracingSubscriber()
 
-    projection_store = ExecutionProjectionStore()
+    if projection_store is None:
+        projection_store = ExecutionProjectionStore()
 
     projection_builder = ProjectionBuilder(
         projection_store,

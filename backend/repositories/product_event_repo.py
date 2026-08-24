@@ -1,7 +1,7 @@
 from psycopg.types.json import Json
 
-from infrastructure.postgres.scripts.models.product_event import ProductEvent
-from infrastructure.postgres.scripts.repositories.base_repo import BaseRepository
+from backend.models.product_event import ProductEvent
+from backend.repositories.base_repo import BaseRepository
 
 
 class ProductEventRepository(BaseRepository):

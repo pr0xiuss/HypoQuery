@@ -49,8 +49,13 @@ class Settings(BaseSettings):
     )
 
     database_name: str = Field(
-        default="hypoquery",
+        default="hypoquery_platform",
         validation_alias="PLATFORM_POSTGRES_DB",
+    )
+
+    target_database_name: str = Field(
+        default="hypoquery",
+        validation_alias="POSTGRES_DB",
     )
 
     database_user: str = Field(

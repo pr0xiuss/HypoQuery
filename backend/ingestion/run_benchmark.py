@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from backend.shared.db import get_connection
+from backend.platform.config.settings import get_settings
 
 from backend.execution.bus.in_process_event_bus import InProcessEventBus
 from backend.execution.bus.subscriber_registry import SubscriberRegistry
@@ -40,6 +41,9 @@ from backend.ingestion.services.ingestion_service import (
 from backend.optimization.pipeline.optimization_pipeline_builder import (
     OptimizationPipelineBuilder,
 )
+from backend.optimization.history.repositories.postgres_repository import (
+    PostgresExecutionRecordRepository,
+)
 from backend.observability.persistence.event_repository import (
     EventRepository,
 )
@@ -55,10 +59,16 @@ from backend.execution.bootstrap.event_registration import (
 
 def main() -> None:
     connection = get_connection()
+    connection.autocommit = True
 
     try:
+        history_repository = PostgresExecutionRecordRepository(
+            connection,
+        )
+
         pipeline = OptimizationPipelineBuilder(
             connection,
+            history_repository,
         ).build()
 
         collector = BenchmarkCollector(
@@ -82,9 +92,20 @@ def main() -> None:
         )
 
         serializer = EventSerializer()
+        
+        settings = get_settings()
+        import psycopg
+        platform_connection = psycopg.connect(
+            host=settings.database_host,
+            port=settings.database_port,
+            dbname=settings.database_name,
+            user=settings.database_user,
+            password=settings.database_password,
+            autocommit=True
+        )
 
         repository = EventRepository(
-            connection,
+            platform_connection,
             serializer,
         )
 
@@ -163,6 +184,10 @@ def main() -> None:
         print(f"Successful: {successful}")
         print(f"Failed    : {failed}")
         print("==============================")
+        
+        for r in results:
+            if r.status == PipelineStatus.FAILED:
+                print(f"Failed job {r.execution.job.job_id}: {r.execution.state.errors}")
 
     finally:
         connection.close()

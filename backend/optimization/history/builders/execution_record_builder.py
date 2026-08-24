@@ -46,7 +46,7 @@ class ExecutionRecordBuilder:
         metadata = ExecutionMetadata(
             execution_id=context.execution_id,
             trace_id=context.trace_id,
-            fingerprint=execution.state.fingerprint,
+            fingerprint=execution.state.fingerprint.hash if execution.state.fingerprint else "",
             normalized_sql=execution.state.normalized_sql,
             pipeline_name=context.pipeline_name,
             pipeline_version=context.pipeline_version,

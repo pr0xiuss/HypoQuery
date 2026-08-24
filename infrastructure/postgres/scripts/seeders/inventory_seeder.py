@@ -1,11 +1,11 @@
 from infrastructure.postgres.scripts.common.exceptions import ValidationError
-from infrastructure.postgres.scripts.repositories.inventory_repo import (
+from backend.repositories.inventory_repo import (
     InventoryRepository,
 )
-from infrastructure.postgres.scripts.repositories.product_repo import (
+from backend.repositories.product_repo import (
     ProductRepository,
 )
-from infrastructure.postgres.scripts.seeders.base_seeder import BaseSeeder
+from backend.seeders.base_seeder import BaseSeeder
 from infrastructure.postgres.scripts.services.inventory_data_generator import (
     InventoryDataGenerator,
 )

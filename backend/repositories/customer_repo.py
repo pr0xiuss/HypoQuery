@@ -1,5 +1,5 @@
-from infrastructure.postgres.scripts.models.customer import Customer
-from infrastructure.postgres.scripts.repositories.base_repo import (
+from backend.models.customer import Customer
+from backend.repositories.base_repo import (
     BaseRepository,
 )
 

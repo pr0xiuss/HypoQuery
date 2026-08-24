@@ -7,7 +7,7 @@ from infrastructure.postgres.scripts.common.constants import (
     COUNTRY_DISTRIBUTION,
     FAKER_LOCALES,
 )
-from infrastructure.postgres.scripts.models.customer import Customer
+from backend.models.customer import Customer
 
 
 class CustomerDataGenerator:

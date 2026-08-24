@@ -1,5 +1,5 @@
-from infrastructure.postgres.scripts.models.order import Order
-from infrastructure.postgres.scripts.repositories.base_repo import BaseRepository
+from backend.models.order import Order
+from backend.repositories.base_repo import BaseRepository
 
 
 class OrderRepository(BaseRepository):

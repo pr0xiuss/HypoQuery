@@ -175,15 +175,25 @@ export default function AppLayout() {
             </span>
           )}
 
-          <div className="app-nav-divider" />
+          <Link to="/dashboard" className="app-nav-item app-nav-item-active">
+            <Activity className="h-4 w-4" strokeWidth={2} />
+            Dashboard
+          </Link>
 
-          {FUTURE_NAV_ITEMS.map(({ label, icon: Icon }) => (
-            <span key={label} className="app-nav-item app-nav-item-disabled">
-              <Icon className="h-4 w-4" strokeWidth={2} />
-              {label}
-              <span className="app-nav-soon">Soon</span>
-            </span>
-          ))}
+          <Link to="/workloads" className="app-nav-item app-nav-item-active">
+            <Layers3 className="h-4 w-4" strokeWidth={2} />
+            Workloads
+          </Link>
+
+          <Link to="/queries" className="app-nav-item app-nav-item-active">
+            <BookOpen className="h-4 w-4" strokeWidth={2} />
+            Queries
+          </Link>
+
+          <Link to="/operations" className="app-nav-item app-nav-item-active">
+            <Sparkles className="h-4 w-4" strokeWidth={2} />
+            Operations
+          </Link>
         </nav>
 
         <div className="app-sidebar-footer">

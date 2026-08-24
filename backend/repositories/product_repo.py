@@ -1,5 +1,5 @@
-from infrastructure.postgres.scripts.models.product import Product
-from infrastructure.postgres.scripts.repositories.base_repo import BaseRepository
+from backend.models.product import Product
+from backend.repositories.base_repo import BaseRepository
 from psycopg.types.json import Json
 
 

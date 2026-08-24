@@ -2,7 +2,7 @@ import random
 from datetime import datetime
 
 from infrastructure.postgres.scripts.common.constants import WAREHOUSES
-from infrastructure.postgres.scripts.models.inventory import Inventory
+from backend.models.inventory import Inventory
 
 
 class InventoryDataGenerator:

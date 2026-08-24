@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS optimization_history
 
     fingerprint TEXT NOT NULL,
 
-    normalized_sql TEXT NOT NULL
+    normalized_sql TEXT NOT NULL,
 
     pipeline_name TEXT NOT NULL,
 
