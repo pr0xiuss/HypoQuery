@@ -84,6 +84,7 @@ class ExecutionRuntime:
         self,
         execution: PipelineExecution,
         error: str,
+        error_type: str | None = None,
         duration_ms: float | None = None,
     ) -> None:
         self._context.lifecycle.fail(execution)
@@ -91,6 +92,7 @@ class ExecutionRuntime:
         event = self._context.event_factory.pipeline_failed(
             execution,
             error,
+            error_type,
             duration_ms,
         )
 

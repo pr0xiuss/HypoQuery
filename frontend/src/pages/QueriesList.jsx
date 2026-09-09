@@ -1,4 +1,4 @@
-import React from "react";
+
 import { Link, useSearchParams } from "react-router-dom";
 import { useQueries } from "../hooks/useProduct";
 import { BookOpen, ChevronRight, Clock, Zap, Database } from "lucide-react";

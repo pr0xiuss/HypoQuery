@@ -6,7 +6,6 @@ import {
   Sparkles,
   BookOpen,
   Activity,
-  Bell,
   Settings,
   User,
   Database,
@@ -21,18 +20,13 @@ import { useDatabaseConnection } from "../hooks/useDatabaseConnections";
 import { useApi } from "../hooks/useApis";
 import { clearTokens } from "../utils/auth";
 import Breadcrumbs from "../components/layout/Breadcrumbs";
+import NotificationBell from "../components/notifications/NotificationBell";
 import { useQueryClient } from "@tanstack/react-query";
 import "../styles/AppLayout.css";
 
 // Organizations is always reachable. Projects and Environments are nested
 // resources — their target route depends on which org/project you're
 // currently inside, so they're computed per-render instead of being static.
-const FUTURE_NAV_ITEMS = [
-  { label: "Recommendations", icon: Sparkles },
-  { label: "Knowledge", icon: BookOpen },
-  { label: "Operations", icon: Activity },
-  { label: "Notifications", icon: Bell },
-];
 
 // Static path-segment → label map for breadcrumbs.
 const BREADCRUMB_LABELS = {
@@ -216,6 +210,9 @@ export default function AppLayout() {
       <div className="app-main">
         <header className="app-topnav">
           <Breadcrumbs items={breadcrumbItems} />
+          <div className="flex items-center space-x-4">
+            <NotificationBell />
+          </div>
         </header>
 
         <main className="app-content">

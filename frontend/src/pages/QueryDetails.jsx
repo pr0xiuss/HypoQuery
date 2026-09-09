@@ -1,4 +1,4 @@
-import React from "react";
+
 import { useParams, Link } from "react-router-dom";
 import { useQueryDetail } from "../hooks/useProduct";
 import { ArrowLeft, Clock, Zap, CheckCircle, Database, ChevronRight, Activity } from "lucide-react";

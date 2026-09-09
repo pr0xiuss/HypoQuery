@@ -6,7 +6,7 @@ import pytest
 from backend.platform.auth.infra.jwt_service_impl import (
     JWTServiceImpl,
 )
-from tests.factorries import create_user
+from tests.factories import create_user
 
 
 def create_jwt_service() -> JWTServiceImpl:

@@ -18,6 +18,9 @@ from backend.product.dashboard.dashboard_router import router as dashboard_route
 from backend.product.workloads.workload_router import router as workload_router
 from backend.product.queries.query_router import router as query_router
 from backend.product.operations.operations_router import router as operations_router
+from backend.platform.scheduler.api.router import router as scheduler_router
+from backend.api.routers.notification_router import router as notification_router
+
 def register_routers(
     app: FastAPI,
 ) -> None:
@@ -108,3 +111,10 @@ def register_routers(
         operations_router,
         prefix="/api/v1",
     )
+    
+    # We omit prefix here because the scheduler router already has prefix="/api/v1/schedules"
+    # Actually wait, let me check the prefix in router.py. It has prefix="/api/v1/schedules".
+    # All other platform routes are imported without prefix if they have it, or with prefix here.
+    # Let's just include it.
+    app.include_router(scheduler_router)
+    app.include_router(notification_router)

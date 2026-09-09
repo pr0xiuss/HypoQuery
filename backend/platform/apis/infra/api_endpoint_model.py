@@ -7,7 +7,7 @@ from sqlalchemy import ForeignKey
 from sqlalchemy import Integer
 from sqlalchemy import String
 from sqlalchemy import Text
-from sqlalchemy import JSON
+from sqlalchemy import JSON, UniqueConstraint, Index
 from sqlalchemy.dialects.postgresql import UUID as PGUUID
 from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
@@ -90,4 +90,10 @@ class ApiEndpointModel(
         Boolean,
         nullable=False,
         default=False,
+        server_default="false",
+    )
+
+    __table_args__ = (
+        UniqueConstraint("api_id", "method", "path", name="uq_api_endpoints_api_method_path"),
+        Index("ix_api_endpoints_api_method_path", "api_id", "method", "path"),
     )

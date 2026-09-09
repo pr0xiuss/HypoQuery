@@ -11,7 +11,7 @@ from backend.platform.auth.dto.login_request import (
 from backend.platform.shared.exceptions import (
     InvalidCredentialsError,
 )
-from tests.factorries import create_user
+from tests.factories import create_user
 
 
 def test_login_invalid_password():

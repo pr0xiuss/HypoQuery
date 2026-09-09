@@ -1,4 +1,3 @@
-import React from "react";
 import { useOperations } from "../hooks/useProduct";
 import { Sparkles, Clock, CheckCircle2, XCircle, Loader2 } from "lucide-react";
 

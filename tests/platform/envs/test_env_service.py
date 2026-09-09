@@ -6,7 +6,7 @@ from backend.platform.environments.application.environment_service_impl import (
 from backend.platform.environments.dto.create_environment_request import (
     CreateEnvironmentRequest,
 )
-from tests.factorries import (
+from tests.factories import (
     create_environment,
     create_project,
     create_organization,

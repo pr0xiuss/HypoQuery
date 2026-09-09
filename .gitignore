@@ -9,7 +9,6 @@ venv/
 .venv/
 
 
-.env
 
 
 .vscode/
@@ -52,3 +51,12 @@ exports/
 *.tmp
 *.swp
 *.swo
+
+node_modules/
+
+.env.*
+!.env.example
+
+*.sqlite
+*.sqlite3
+*.db

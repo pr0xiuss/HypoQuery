@@ -32,6 +32,7 @@ class ExecutionEventMetadataProvider:
             sequence_number=self._sequence_numbers[execution_id],
             timestamp=datetime.now(UTC),
             event_version=CURRENT_EVENT_VERSION,
+            metadata=execution.context.metadata,
         )
 
     def reset(

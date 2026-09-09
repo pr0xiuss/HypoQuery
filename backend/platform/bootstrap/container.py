@@ -55,8 +55,27 @@ from backend.platform.apis.infra.sqlalchemy_api_endpoint_repo import SQLAlchemyA
 from backend.platform.apis.repositories.api_endpoint_repo import ApiEndpointRepository
 from backend.platform.apis.discovery.application.discovery_service import DiscoveryService
 from backend.platform.apis.discovery.application.discovery_service_impl import DiscoveryServiceImpl
-
-
+from backend.platform.scheduler.application.job_service import JobService
+from backend.platform.scheduler.application.job_lifecycle_subscriber import JobLifecycleSubscriber
+from backend.platform.scheduler.repositories.job_repository import JobRepository
+from backend.platform.scheduler.infra.sqlalchemy_job_repo import SqlAlchemyJobRepository
+from backend.platform.scheduler.application.schedule_calculator import ScheduleCalculator
+from backend.platform.scheduler.application.schedule_service import ScheduleService
+from backend.platform.scheduler.application.scheduler import Scheduler
+from backend.platform.scheduler.application.retry_policy import DefaultRetryClassifier, ExponentialBackoffRetryPolicy
+from backend.platform.scheduler.application.retry_orchestrator import RetryOrchestrator
+from backend.platform.scheduler.infra.sqlalchemy_schedule_repo import SqlAlchemyScheduleRepository
+from backend.platform.scheduler.repositories.schedule_repository import ScheduleRepository
+from backend.platform.notifications.repositories.notification_repository import NotificationRepository
+from backend.platform.notifications.infra.sqlalchemy_notification_repo import SQLAlchemyNotificationRepository
+from backend.platform.notifications.repositories.preference_repository import NotificationPreferenceRepository
+from backend.platform.notifications.infra.sqlalchemy_preference_repo import SQLAlchemyPreferenceRepository
+from backend.platform.notifications.application.delivery_port import NotificationDeliveryPort
+from backend.platform.notifications.infra.logging_delivery import LoggingNotificationDeliveryAdapter
+from backend.platform.notifications.application.notification_service import NotificationService
+from backend.platform.notifications.application.notification_subscriber import NotificationSubscriber
+from backend.execution.queue.memory_queue import InMemoryQueue
+from backend.execution.runtime.system_clock import SystemClock
 
 from backend.assistant.bootstrap import build_assistant_platform
 from backend.knowledge.composition import build_context_service, build_explanation_service
@@ -76,6 +95,9 @@ class PlatformContainer(containers.DeclarativeContainer):
     wiring_config = containers.WiringConfiguration(
         packages=[
             "backend.api",
+        ],
+        modules=[
+            "backend.api.routers.notification_router",
         ]
     )
 
@@ -251,7 +273,110 @@ class PlatformContainer(containers.DeclarativeContainer):
         synchronization_service=synchronization_service,
         registry_service=registry_service,
     )
-    # Module 5 specific providers
+
+    # --- Scheduling & Jobs ---
+
+    execution_queue = providers.Singleton(
+        InMemoryQueue,
+    )
+
+    job_repository: providers.Provider[JobRepository] = providers.Factory(
+        SqlAlchemyJobRepository,
+        session=db_session,
+    )
+
+    job_service: providers.Provider[JobService] = providers.Factory(
+        JobService,
+        job_repository=job_repository,
+        transaction_manager=transaction_manager,
+        queue=execution_queue,
+    )
+
+    system_clock: providers.Provider[SystemClock] = providers.Singleton(
+        SystemClock,
+    )
+
+    retry_classifier = providers.Singleton(
+        DefaultRetryClassifier,
+    )
+    
+    retry_policy = providers.Singleton(
+        ExponentialBackoffRetryPolicy,
+        classifier=retry_classifier,
+        clock=system_clock,
+    )
+    
+    # --- Notifications ---
+    
+    notification_repository: providers.Provider[NotificationRepository] = providers.Factory(
+        SQLAlchemyNotificationRepository,
+        session=db_session,
+    )
+    
+    notification_preference_repository: providers.Provider[NotificationPreferenceRepository] = providers.Factory(
+        SQLAlchemyPreferenceRepository,
+        session=db_session,
+    )
+    
+    notification_delivery_port: providers.Provider[NotificationDeliveryPort] = providers.Singleton(
+        LoggingNotificationDeliveryAdapter,
+    )
+    
+    notification_service: providers.Provider[NotificationService] = providers.Factory(
+        NotificationService,
+        notification_repository=notification_repository,
+        preference_repository=notification_preference_repository,
+        delivery_port=notification_delivery_port,
+        job_repository=job_repository,
+    )
+
+    notification_subscriber = providers.Singleton(
+        NotificationSubscriber,
+        notification_service=notification_service,
+        retry_classifier=retry_classifier,
+    )
+
+    job_lifecycle_subscriber = providers.Singleton(
+        JobLifecycleSubscriber,
+        job_repository=job_repository,
+        transaction_manager=transaction_manager,
+        retry_policy=retry_policy,
+    )
+
+    retry_orchestrator: providers.Provider[RetryOrchestrator] = providers.Factory(
+        RetryOrchestrator,
+        job_repository=job_repository,
+        job_service=job_service,
+        clock=system_clock,
+        transaction_manager=transaction_manager,
+    )
+
+    schedule_repository: providers.Provider[ScheduleRepository] = providers.Factory(
+        SqlAlchemyScheduleRepository,
+        session=db_session,
+    )
+
+    schedule_calculator: providers.Provider[ScheduleCalculator] = providers.Singleton(
+        ScheduleCalculator,
+        clock=system_clock,
+    )
+
+    schedule_service: providers.Provider[ScheduleService] = providers.Factory(
+        ScheduleService,
+        schedule_repository=schedule_repository,
+        transaction_manager=transaction_manager,
+        schedule_calculator=schedule_calculator,
+    )
+
+    scheduler: providers.Provider[Scheduler] = providers.Factory(
+        Scheduler,
+        schedule_repository=schedule_repository,
+        job_service=job_service,
+        schedule_calculator=schedule_calculator,
+        transaction_manager=transaction_manager,
+    )
+
+    # --- Initialization ---
     execution_projection_store = providers.Singleton(
         ExecutionProjectionStore,
     )

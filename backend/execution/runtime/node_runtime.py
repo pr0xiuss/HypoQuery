@@ -79,6 +79,7 @@ class NodeRuntime:
                     execution,
                     node.name,
                     str(exc),
+                    type(exc).__name__,
                     duration_ms,
                 )
             )

@@ -78,6 +78,7 @@ def run_migrations_online() -> None:
             target_metadata=target_metadata,
             compare_type=True,
             compare_server_default=True,
+            include_name=lambda name, type_, parent_names: name != "execution_events",
         )
 
         with context.begin_transaction():

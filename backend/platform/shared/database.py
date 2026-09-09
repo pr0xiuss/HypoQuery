@@ -92,6 +92,18 @@ def import_models() -> None:
     from backend.platform.apis.infra.api_endpoint_model import (
         ApiEndpointModel,
     )
+    from backend.platform.scheduler.infra.job_model import (
+        JobModel,
+    )
+    from backend.platform.scheduler.infra.schedule_model import (
+        ScheduleModel,
+    )
+    from backend.platform.notifications.infra.notification_model import (
+        NotificationModel,
+    )
+    from backend.platform.notifications.infra.preference_model import (
+        NotificationPreferenceModel,
+    )
     _ = (
         UserModel,
         OrganizationModel,
@@ -102,4 +114,8 @@ def import_models() -> None:
         ApiModel,
         OrganizationMembershipModel,
         ApiEndpointModel,
+        JobModel,
+        ScheduleModel,
+        NotificationModel,
+        NotificationPreferenceModel,
     )

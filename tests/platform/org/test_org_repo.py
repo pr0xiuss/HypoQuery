@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from backend.platform.organizations.infra.org_repository_impl import (
     OrganizationRepositoryImpl,
 )
-from tests.factorries import create_organization
+from tests.factories import create_organization
 
 
 def test_save_organization(

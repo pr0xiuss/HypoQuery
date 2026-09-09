@@ -27,6 +27,7 @@ import WorkloadsList from "../pages/WorkloadsList";
 import QueriesList from "../pages/QueriesList";
 import QueryDetails from "../pages/QueryDetails";
 import OperationsList from "../pages/OperationsList";
+import Settings from "../pages/Settings";
 
 export const router = createBrowserRouter([
   { path: "/", element: <Landing /> },
@@ -113,6 +114,7 @@ export const router = createBrowserRouter([
             path: "/organizations/:organizationId/projects/:projectId/environments/:environmentId/apis/:apiId/edit",
             element: <EditApi />,
           },
+          { path: "/settings", element: <Settings /> },
         ],
       },
     ],

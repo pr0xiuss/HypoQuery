@@ -7,7 +7,7 @@ from backend.platform.organizations.application.org_service_imp import (
 from backend.platform.organizations.dto.create_organization_request import (
     CreateOrganizationRequest,
 )
-from tests.factorries import create_organization
+from tests.factories import create_organization
 
 
 def test_create_organization():
@@ -20,7 +20,9 @@ def test_create_organization():
     repository.save.return_value = create_organization()
 
     service = OrganizationServiceImpl(
-        repository,
+        organization_repository=repository,
+        access_control_service=Mock(),
+        transaction_manager=Mock(),
     )
 
     owner_id = uuid4()
@@ -29,6 +31,7 @@ def test_create_organization():
         owner_id,
         CreateOrganizationRequest(
             name="Acme",
+            description="Test Org",
         ),
     )
 
@@ -48,11 +51,14 @@ def test_get_organization():
     repository.get_by_id.return_value = organization
 
     service = OrganizationServiceImpl(
-        repository,
+        organization_repository=repository,
+        access_control_service=Mock(),
+        transaction_manager=Mock(),
     )
 
     response = service.get(
         organization.id,
+        uuid4()
     )
 
     assert response.id == organization.id

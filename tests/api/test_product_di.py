@@ -26,7 +26,7 @@ def test_module_5_di_resolution():
     with container.psycopg_connection.override(mock_conn):
         operations_service = container.operations_service()
         assert operations_service is not None
-        assert operations_service.pipeline_log_repository is not None
+        assert operations_service.event_repository is not None
         assert operations_service.execution_projection_store is not None
 
     # Test Assistant and Knowledge facades

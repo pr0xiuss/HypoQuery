@@ -28,6 +28,7 @@ class PipelineFailedEvent(PipelineEvent):
     """
 
     error: str
+    error_type: Optional[str] = None
     duration_ms: Optional[float] = None
 
 

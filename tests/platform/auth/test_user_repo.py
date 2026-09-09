@@ -1,4 +1,4 @@
-from tests.factorries import create_user
+from tests.factories import create_user
 
 
 def test_save_user(

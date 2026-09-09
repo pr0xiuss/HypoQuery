@@ -9,7 +9,7 @@ from backend.platform.auth.dto.login_request import (
 from backend.platform.auth.dto.register_user_request import (
     RegisterUserRequest,
 )
-from tests.factorries import create_user
+from tests.factories import create_user
 
 
 def test_register_user():

@@ -7,7 +7,7 @@ from backend.platform.projects.application.project_service_impl import (
 from backend.platform.projects.dto.create_project_request import (
     CreateProjectRequest,
 )
-from tests.factorries import (
+from tests.factories import (
     create_organization,
     create_project,
 )
@@ -21,7 +21,7 @@ def test_create_project():
     organization = create_organization()
 
     repository = Mock()
-
+    repository.get_by_organization_and_slug.return_value = None
     repository.save.return_value = create_project(
         organization.id,
         name="Backend",

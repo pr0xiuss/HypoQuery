@@ -59,6 +59,7 @@ class PipelineExecutor:
                     self._runtime.fail(
                         execution,
                         str(exc),
+                        type(exc).__name__,
                         duration_ms,
                     )
 

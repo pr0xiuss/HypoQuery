@@ -43,10 +43,11 @@ class ExecutionEventFactory:
             duration_ms=duration_ms,
         )
 
-    def pipeline_failed(self, execution: PipelineExecution, error: str, duration_ms: float | None = None,) -> PipelineFailedEvent:
+    def pipeline_failed(self, execution: PipelineExecution, error: str, error_type: str | None = None, duration_ms: float | None = None,) -> PipelineFailedEvent:
         return PipelineFailedEvent(
             metadata=self._metadata_provider.create(execution),
             error=error,
+            error_type=error_type,
             duration_ms=duration_ms,
         )
 
@@ -63,11 +64,12 @@ class ExecutionEventFactory:
             duration_ms=duration_ms,
         )
 
-    def node_failed(self, execution: PipelineExecution, node_name: str, error: str, duration_ms: float | None = None,) -> NodeFailedEvent:
+    def node_failed(self, execution: PipelineExecution, node_name: str, error: str, error_type: str | None = None, duration_ms: float | None = None,) -> NodeFailedEvent:
         return NodeFailedEvent(
             metadata=self._metadata_provider.create(execution),
             node_name=node_name,
             error=error,
+            error_type=error_type,
             duration_ms=duration_ms,
         )
 

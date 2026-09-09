@@ -27,4 +27,5 @@ class NodeFailedEvent(NodeEvent):
     """
 
     error: str
+    error_type: Optional[str] = None
     duration_ms: Optional[float] = None

@@ -6,7 +6,7 @@ from backend.platform.auth.application.auth_service_impl import AuthenticationSe
 from backend.platform.auth.dto.register_user_request import RegisterUserRequest
 from backend.platform.shared.exceptions import UserAlreadyExistsError
 from backend.platform.shared.exceptions import InvalidCredentialsError
-from tests.factorries import create_user
+from tests.factories import create_user
 
 
 def test_register_existing_user():

@@ -7,7 +7,7 @@ from backend.platform.organizations.infra.org_repository_impl import (
 from backend.platform.projects.infra.project_repository_impl import (
     ProjectRepositoryImpl,
 )
-from tests.factorries import (
+from tests.factories import (
     create_environment,
     create_organization,
     create_project,
